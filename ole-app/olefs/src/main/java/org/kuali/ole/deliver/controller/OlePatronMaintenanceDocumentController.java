@@ -330,14 +330,15 @@ public class OlePatronMaintenanceDocumentController extends MaintenanceDocumentC
         boolean isValidPhoneNumber=false;
         if (LOG.isDebugEnabled()) {
             LOG.debug("Validating the Phone Number  Format - ##########, (###)###-#### , ###-###-#### , ### ###-#### , ### ### ####");
+            LOG.debug("Validating the Phone Number  Format for SOAS");
         }
         if(oleEntityPhoneBo != null && oleEntityPhoneBo.getEntityPhoneBo() != null) {
             if (oleEntityPhoneBo.getEntityPhoneBo().getPhoneNumber().matches("\\d{10}")) isValidPhoneNumber=true;
-            else if (oleEntityPhoneBo.getEntityPhoneBo().getPhoneNumber().matches("\\d{3}[-]\\d{3}[-]\\d{4}")) isValidPhoneNumber=true;
+           /* else if (oleEntityPhoneBo.getEntityPhoneBo().getPhoneNumber().matches("\\d{3}[-]\\d{3}[-]\\d{4}")) isValidPhoneNumber=true;
             else if (oleEntityPhoneBo.getEntityPhoneBo().getPhoneNumber().matches("\\d{3}[\\s]\\d{3}[-]\\d{4}")) isValidPhoneNumber=true;
             else if (oleEntityPhoneBo.getEntityPhoneBo().getPhoneNumber().matches("\\d{3}[\\s]\\d{3}[\\s]\\d{4}")) isValidPhoneNumber=true;
             else if (oleEntityPhoneBo.getEntityPhoneBo().getPhoneNumber().matches("\\(\\d{3}\\)[\\s]\\d{3}[-]\\d{4}")) isValidPhoneNumber=true;
-            else if (oleEntityPhoneBo.getEntityPhoneBo().getPhoneNumber().matches("^\\+(?:[0-9].?){6,14}[0-9]$")) isValidPhoneNumber=true;
+            else if (oleEntityPhoneBo.getEntityPhoneBo().getPhoneNumber().matches("^\\+(?:[0-9].?){6,14}[0-9]$")) isValidPhoneNumber=true;*/
             else isValidPhoneNumber=false;
         }
         if(!isValidPhoneNumber){

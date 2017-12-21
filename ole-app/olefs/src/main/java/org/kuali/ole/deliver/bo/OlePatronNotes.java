@@ -183,6 +183,7 @@ public class OlePatronNotes extends PersistableBusinessObjectBase implements Ole
         OlePatronNotes bo = new OlePatronNotes();
         bo.patronNoteId = im.getPatronNoteId();
         bo.olePatronId = im.getOlePatronId();
+        bo.noteCreatedOrUpdatedDate = im.getNoteCreatedOrUpdatedDate();
         //bo.olePatron = OlePatronDocument.from(im.getOlePatron());
         bo.olePatronNoteType = OlePatronNoteType.from(im.getOlePatronNoteType());
         bo.patronNoteTypeId = im.getOlePatronNoteType().getPatronNoteTypeId();

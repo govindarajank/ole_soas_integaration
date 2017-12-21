@@ -123,9 +123,9 @@ public class OlePlaceRequestCirculationDeskKeyValue extends UifKeyValuesFinderBa
 
         if(defaultPickupLocation!=null){
             options.add(0,new ConcreteKeyValue(defaultPickupLocation.getCirculationDeskId(),defaultPickupLocation.getCirculationDeskCode()));
-        }else{
+        }/*else{
             options.add(0,new ConcreteKeyValue("",""));
-        }
+        }*/
         return options;
     }
 

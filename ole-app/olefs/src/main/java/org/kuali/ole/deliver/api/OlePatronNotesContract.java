@@ -3,6 +3,8 @@ package org.kuali.ole.deliver.api;
 import org.kuali.rice.core.api.mo.common.Identifiable;
 import org.kuali.rice.core.api.mo.common.Versioned;
 
+import java.sql.Timestamp;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ?
@@ -23,6 +25,8 @@ public interface OlePatronNotesContract extends Versioned, Identifiable {
     public boolean isActive();
 
     public String getObjectId();
+
+    public Timestamp getNoteCreatedOrUpdatedDate();
 
     //public OlePatronContract getOlePatron();
 }

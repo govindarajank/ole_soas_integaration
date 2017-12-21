@@ -98,11 +98,11 @@
         <property name="items">
             <list>
                 <!--<bean id="myAccount_nameType" parent="Uif-DataField" p:propertyName="olePatronDocument.name.nameType.name" p:label="Name Type" p:readOnly="true"/>-->
-                <bean id="myAccount_namePrefix" parent="Uif-DataField" p:propertyName="olePatronDocument.name.namePrefix" p:label="Title"/>
+                <bean id="myAccount_middleName" parent="Uif-DataField" p:propertyName="olePatronDocument.name.middleName" p:label="Student ID" p:required="true"/>
                 <bean id="myAccount_firstName" parent="Uif-DataField" p:propertyName="olePatronDocument.name.firstName" p:label="First Name" p:required="true"/>
-                <bean id="myAccount_middleName" parent="Uif-DataField" p:propertyName="olePatronDocument.name.middleName" p:label="Middle Name"/>
                 <bean id="myAccount_lastName" parent="Uif-DataField" p:propertyName="olePatronDocument.name.lastName" p:label="Last Name" p:required="true"/>
-                <bean id="myAccount_nameSuffix" parent="Uif-DataField" p:propertyName="olePatronDocument.name.nameSuffix" p:label="Suffix"/>
+                <bean id="myAccount_namePrefix" parent="Uif-DataField" p:propertyName="olePatronDocument.name.namePrefix" p:label="PCODE1"/>
+                <bean id="myAccount_nameSuffix" parent="Uif-DataField" p:propertyName="olePatronDocument.name.nameSuffix" p:label="PCODE2"/>
             </list>
         </property>
     </bean>

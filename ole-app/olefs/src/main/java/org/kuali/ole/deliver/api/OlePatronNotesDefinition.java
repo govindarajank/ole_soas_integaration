@@ -8,6 +8,7 @@ import org.w3c.dom.Element;
 
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Collection;
 
 /**
@@ -26,6 +27,7 @@ import java.util.Collection;
         OlePatronNotesDefinition.Elements.NOTE_TEXT,
         OlePatronNotesDefinition.Elements.NOTE_TYPE,
         OlePatronNotesDefinition.Elements.ACTIVE,
+        OlePatronNotesDefinition.Elements.NOTECREATEDORUPDATEDDATE,
         //OlePatronNotesDefinition.Elements.PATRON,
         CoreConstants.CommonElements.OBJECT_ID,
         CoreConstants.CommonElements.VERSION_NUMBER,
@@ -35,6 +37,9 @@ public class OlePatronNotesDefinition extends AbstractDataTransferObject impleme
 
     private static final long serialVersionUID = 1L;
 
+
+    @XmlElement(name = Elements.NOTECREATEDORUPDATEDDATE, required = false)
+    private final Timestamp noteCreatedOrUpdatedDate;
     @XmlElement(name = Elements.NOTE_ID, required = false)
     private final String patronNoteId;
     @XmlElement(name = Elements.PATRON_ID, required = false)
@@ -63,6 +68,7 @@ public class OlePatronNotesDefinition extends AbstractDataTransferObject impleme
     private final Collection<Element> _futureElements = null;
 
     public OlePatronNotesDefinition() {
+        noteCreatedOrUpdatedDate = null;
         patronNoteId = null;
         olePatronId = null;
         patronNoteTypeId = null;
@@ -75,6 +81,7 @@ public class OlePatronNotesDefinition extends AbstractDataTransferObject impleme
     }
 
     public OlePatronNotesDefinition(Builder builder) {
+        noteCreatedOrUpdatedDate = builder.getNoteCreatedOrUpdatedDate();
         patronNoteId = builder.getPatronNoteId();
         olePatronId = builder.getOlePatronId();
         patronNoteTypeId = builder.getOlePatronNoteType().getPatronNoteTypeId();
@@ -92,6 +99,7 @@ public class OlePatronNotesDefinition extends AbstractDataTransferObject impleme
         public String olePatronId;
         public String patronNoteTypeId;
         public String patronNoteText;
+        public Timestamp noteCreatedOrUpdatedDate;
         public OlePatronNoteTypeDefinition.Builder olePatronNoteType;
         public OlePatronDefinition.Builder olePatron;
         public Long versionNumber;
@@ -100,7 +108,7 @@ public class OlePatronNotesDefinition extends AbstractDataTransferObject impleme
 
         private Builder(String patronNoteId, String olePatronId,
                         String patronNoteText,
-                        OlePatronNoteTypeDefinition.Builder olePatronNoteType) {
+                        OlePatronNoteTypeDefinition.Builder olePatronNoteType,Timestamp noteCreatedOrUpdatedDate) {
             //OlePatronDefinition.Builder olePatron) {
 
             setOlePatronId(olePatronId);
@@ -108,6 +116,7 @@ public class OlePatronNotesDefinition extends AbstractDataTransferObject impleme
             setOlePatronNoteType(olePatronNoteType);
             setPatronNoteTypeId(olePatronNoteType.getId());
             setPatronNoteId(patronNoteId);
+            setNoteCreatedOrUpdatedDate(noteCreatedOrUpdatedDate);
 //            setOlePatron(olePatron);
 //            setOlePatron(olePatron);
 
@@ -115,15 +124,16 @@ public class OlePatronNotesDefinition extends AbstractDataTransferObject impleme
 
         public static Builder create(String patronNoteId, String olePatronId,
                                      String patronNoteText,
-                                     OlePatronNoteTypeDefinition.Builder olePatronNoteType) {
+                                     Timestamp noteCreatedOrUpdatedDate, OlePatronNoteTypeDefinition.Builder olePatronNoteType) {
             //OlePatronDefinition.Builder olePatron) {
-            return new Builder(patronNoteId, olePatronId, patronNoteText, olePatronNoteType);
+            return new Builder(patronNoteId, olePatronId, patronNoteText, olePatronNoteType,noteCreatedOrUpdatedDate);
         }
 
         public static Builder create(OlePatronNotesContract patronNotesDefinition) {
             Builder builder = Builder.create(patronNotesDefinition.getPatronNoteId(),
                     patronNotesDefinition.getOlePatronId(),
                     patronNotesDefinition.getPatronNoteText(),
+                    patronNotesDefinition.getNoteCreatedOrUpdatedDate(),
                     OlePatronNoteTypeDefinition.Builder.create(patronNotesDefinition.getOlePatronNoteType()));
             //OlePatronDefinition.Builder.create(patronNotesDefinition.getOlePatron()));
             builder.setVersionNumber(patronNotesDefinition.getVersionNumber());
@@ -136,6 +146,14 @@ public class OlePatronNotesDefinition extends AbstractDataTransferObject impleme
         @Override
         public String getPatronNoteId() {
             return this.patronNoteId;
+        }
+
+        public Timestamp getNoteCreatedOrUpdatedDate() {
+            return noteCreatedOrUpdatedDate;
+        }
+
+        public void setNoteCreatedOrUpdatedDate(Timestamp noteCreatedOrUpdatedDate) {
+            this.noteCreatedOrUpdatedDate = noteCreatedOrUpdatedDate;
         }
 
         @Override
@@ -260,6 +278,10 @@ public class OlePatronNotesDefinition extends AbstractDataTransferObject impleme
         return this.objectId;
     }
 
+    public Timestamp getNoteCreatedOrUpdatedDate() {
+        return this.noteCreatedOrUpdatedDate;
+    }
+
     /*public OlePatronDefinition getOlePatron() {
         return this.olePatron;
     }*/
@@ -276,6 +298,7 @@ public class OlePatronNotesDefinition extends AbstractDataTransferObject impleme
         public static final String NOTE_TYPE = "olePatronNoteType";
         public static final String PATRON = "olePatron";
         public static final String ACTIVE = "active";
+        public static final String  NOTECREATEDORUPDATEDDATE= "noteCreatedOrUpdatedDate";
     }
 
     public static class Cache {
