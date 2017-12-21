@@ -61,9 +61,9 @@
         <property name="items">
             <list>
                 <bean id="circRenew_selectAll" parent="Uif-SecondaryActionButton" p:actionLabel="Select All"
-                      p:actionScript="jq('.renewItemCBClass').attr('checked','true');"  p:style = "margin-top:20px"/>
+                      p:actionScript="jq('.renewItemCBClass').attr('checked','true');"  />
                 <bean id="circRenew_deselectAll" parent="Uif-SecondaryActionButton" p:actionLabel="Deselect All"
-                      p:actionScript="jq('.renewItemCBClass').removeAttr('checked');" p:style = "margin-top:20px"/>
+                      p:actionScript="jq('.renewItemCBClass').removeAttr('checked');" />
             </list>
         </property>
     </bean>
@@ -76,12 +76,19 @@
         <property name="renderAddLine" value="false"/>
         <property name="layoutManager.richTable.render" value="true"/>
         <property name="layoutManager.richTable.disableTableSort" value="true" />
+        <property name="layoutManager.richTable.templateOptions">
+            <map merge="true">
+                <entry key="bPaginate" value="true"/>
+                <entry key="bFilter" value="false"/>
+                <entry key="iDisplayLength" value="100"/>
+            </map>
+        </property>
         <property name="footer">
             <bean id="circ_renewFooters" parent="Uif-LookupResultsFooter">
                 <property name="items">
                     <list>
-                        <bean id="circRenew_selectAll_top" parent="Uif-SecondaryActionButton" p:actionLabel="Select All" p:actionScript="jq('.renewItemCBClass').attr('checked','true');"/>
-                        <bean id="circRenew_deselectAll_top" parent="Uif-SecondaryActionButton" p:actionLabel="Deselect All" p:actionScript="jq('.renewItemCBClass').removeAttr('checked');"/>
+                        <bean parent="Uif-SecondaryActionButton" p:actionLabel="Select All" p:actionScript="jq('.renewItemCBClass').attr('checked','true');"/>
+                        <bean parent="Uif-SecondaryActionButton" p:actionLabel="Deselect All" p:actionScript="jq('.renewItemCBClass').removeAttr('checked');"/>
                     </list>
                 </property>
             </bean>
@@ -112,7 +119,7 @@
                 <bean id="circ_renewDueDateForNonCirculatingItem" parent="Uif-VerticalFieldGroup" p:label="Due Date" p:render="@{#line.nonCirculatingItem eq true}">
                     <property name="items">
                         <list>
-                            <bean id="circ_renewDueDateForNonCirculatingItem_Date" parent="Loan-Uif-InputField" p:propertyName="renewalDateMap" p:render="@{#line.nonCirculatingItem eq true}">
+                            <bean id="circ_renewDueDateForNonCirculatingItem_Date" parent="Loan-Uif-InputField" p:propertyName="renewalDateMap" p:render="@{#line.nonCirculatingItem eq true}" p:required="true">
                                 <property name="control">
                                     <bean parent="Uif-DateControl" p:size="10" />
                                 </property>

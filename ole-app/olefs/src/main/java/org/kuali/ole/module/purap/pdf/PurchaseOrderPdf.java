@@ -568,7 +568,7 @@ public class PurchaseOrderPdf extends PurapPdf {
         p = new Paragraph();
         p.add(new Chunk("  Billing Address", ver_5_normal));
         p.add(new Chunk("     " + billToInfo.toString(), cour_7_normal));
-        p.add(new Chunk("\n Invoice status inquiry: " + statusInquiryUrl, ver_6_normal));
+        //p.add(new Chunk("\n Invoice status inquiry: " + statusInquiryUrl, ver_6_normal));
         cell = new PdfPCell(p);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         infoTable.addCell(cell);

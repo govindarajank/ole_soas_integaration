@@ -158,7 +158,12 @@ public abstract class RenewItemsService {
                 DroolsResponse droolsResponse = (org.kuali.ole.deliver.util.DroolsResponse) context.get(itemUuid);
                 OLERenewItem oleRenewItem = null;
                 if(StringUtils.isNotBlank(droolsResponse.getSucessMessage())){
-                    oleRenewItem = getRenewItemControllerUtil().getRenewItemForSuccessLoanDocument((OleLoanDocument) droolsResponse.getDroolsExchange().getContext().get(itemUuid));
+                    if(droolsResponse.getSucessMessage().equalsIgnoreCase("Successfully Renewed. Overdue fine exists")){
+                        oleRenewItem = getRenewItemControllerUtil().getRenewItemForSuccessLoanDocument((OleLoanDocument) droolsResponse.getDroolsExchange().getContext().get(itemUuid));
+                        oleRenewItem.setMessage(oleRenewItem.getMessage()+" - overdue fee incurred");
+                    }else {
+                        oleRenewItem = getRenewItemControllerUtil().getRenewItemForSuccessLoanDocument((OleLoanDocument) droolsResponse.getDroolsExchange().getContext().get(itemUuid));
+                    }
                 }else{
                     Object individualObject = droolsResponse.getDroolsExchange().getContext().get(itemUuid);
                     oleRenewItem = getRenewItemControllerUtil().getRenewItemForFailureLoanDocument((OleLoanDocument) individualObject);

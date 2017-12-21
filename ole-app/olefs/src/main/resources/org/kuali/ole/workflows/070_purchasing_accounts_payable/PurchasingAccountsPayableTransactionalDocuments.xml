@@ -317,130 +317,8 @@
             </policies>
             <routePaths>
                 <routePath>
-                    <start name="AdHoc" nextNode="RequiresBudgetReview"  nextAppDocStatus="Awaiting Budget Approval"/>
-                    <!--nextAppDocStatus="Awaiting License Review"/>
-               <split name="HasLicenseRequest" nextNode="RequiresBudgetReview" nextAppDocStatus="Awaiting Budget Approval">
-                   <branch name="True">
-                       <split name="HasFirmFixedWithLicenseRequest" >
-                          <branch name="True">
-                               <simple name="HavingFirmFixedWithLR" nextNode="JoinFirmFixedWithLicenseRequest"/>
-                          </branch>
-                          <branch name="False">
-                               <role name="LicenseRequest" nextNode="JoinLicenseRequest" />
-                        </branch>
-                          <join name="JoinFirmFixedWithLicenseRequest"/>
-                       </split>
-
-
-                       &lt;!&ndash; role name="LicenseRequest" /&ndash;&gt;
-                   </branch>
-                   <branch name="False">
-                   <simple name="NoLicenseRequest" nextNode="JoinLicenseRequest"/>
-                  </branch>
-                       <join name="JoinLicenseRequest"/>
-                   </split>-->
-
-                    <!-- Added for Req SFC start -->
-                    <split name="RequiresBudgetReview" nextNode="NotifyBudgetReview">
-                        <branch name="True">
-                            <role name="Budget" nextNode="JoinRequiredBudgetReview" />
-                        </branch>
-                        <branch name="False">
-                            <simple name="NoOpRequiresBudgetReview" nextNode="JoinRequiredBudgetReview" />
-                        </branch>
-                        <join name="JoinRequiredBudgetReview" />
-                    </split>
-                    <!-- End -->
-
-                    <!-- Added for FYI start -->
-                    <split name="NotifyBudgetReview" nextNode="HasVendor">
-                        <branch name="True">
-                            <role name="FYIBudget" nextNode="JoinRequiredFYIBudgetReview" />
-                        </branch>
-                        <branch name="False">
-                            <simple name="NoOpRequiresFYIBudgetReview" nextNode="JoinRequiredFYIBudgetReview" />
-                        </branch>
-                        <join name="JoinRequiredFYIBudgetReview" />
-                    </split>
-                    <!-- End -->
-
-                    <split name="HasVendor" nextNode="HasFirmFixedYBPOrders">
-                        <branch name="True">
-                            <simple name="HavingVendor" nextNode="JoinHasVendor"/>
-                        </branch>
-                        <branch name="False">
-                            <simple name="NoVendor" nextNode="JoinHasVendor"/>
-                        </branch>
-                        <join name="JoinHasVendor"/>
-                    </split>
-
-                    <split name="HasFirmFixedYBPOrders">
-                        <branch name="True">
-                            <simple name="FirmFixedYBPOrders" nextNode="JoinFirmFixedYBPOrders"/>
-                        </branch>
-                        <branch name="False">
-
-                            <split name="HasStandingOrders" nextNode="Organization">
-                                <branch name="True">
-                                    <simple name="StandingOrders" nextNode="JoinStandingOrders"/>
-                                </branch>
-                                <branch name="False">
-
-                                    <split name="HasSubscriptionOrders" nextNode="JoinStandingOrders">
-                                        <branch name="True">
-                                            <simple name="SubscriptionOrders" nextNode="JoinSubscriptionOrders"/>
-                                        </branch>
-                                        <branch name="False">
-
-
-                                            <split name ="HasApprovalOrders" nextNode="JoinSubscriptionOrders">
-                                                <branch name="True">
-                                                    <simple name="ApprovalOrders" nextNode="JoinApprovalOrders"/>
-                                                </branch>
-                                                <branch name="False">
-                                                    <simple name="NoApprovalOrders" nextNode="JoinApprovalOrders"/>
-                                                </branch>
-                                                <join name="JoinApprovalOrders" />
-                                            </split>
-                                        </branch>
-                                        <join name="JoinSubscriptionOrders" />
-                                    </split>
-
-
-                                </branch>
-                                <join name="JoinStandingOrders" />
-
-                            </split>
-                            <role name="Organization" nextNode="HasAccountingLines"/>
-                            <split name="HasAccountingLines" nextNode="SubAccount">
-                                <branch name="True">
-                                    <simple name="NoOpHasAccountingLines" nextNode="JoinHasAccountingLines"   nextAppDocStatus = "Awaiting Sub Account"/>
-                                </branch>
-                                <branch name="False">
-                                    <role name="Initiator" nextNode="JoinHasAccountingLines" nextAppDocStatus = "Awaiting Sub Account"/>
-                                </branch>
-                                <join name="JoinHasAccountingLines"/>
-                            </split>
-
-
-                            <role name="SubAccount" nextNode="Account"    nextAppDocStatus = "Awaiting Fiscal Officer"/>
-                            <role name="Account" nextNode="AccountingOrganizationHierarchy" nextAppDocStatus="Awaiting Base Org Review" />
-                            <role name="AccountingOrganizationHierarchy" nextNode="Commodity" nextAppDocStatus="Awaiting Commodity Code"/>
-                            <role name="Commodity" nextNode="AmountRequiresSeparationOfDutiesReview" nextAppDocStatus ="Awaiting Separation of Duties"/>
-
-                            <split name="AmountRequiresSeparationOfDutiesReview">
-                                <branch name="True">
-                                    <role name="SeparationOfDuties" nextNode="JoinRequiresSeparationOfDutiesReview"/>
-                                </branch>
-                                <branch name="False">
-                                    <simple name="NoOp" nextNode="JoinRequiresSeparationOfDutiesReview"/>
-                                </branch>
-                                <join name="JoinRequiresSeparationOfDutiesReview"/>
-                            </split>
-
-                        </branch>
-                        <join name="JoinFirmFixedYBPOrders"/>
-                    </split>
+                    <start name="AdHoc" nextNode="final"  nextAppDocStatus="Awaiting Contract Manager Assignment"/>
+                    <simple name="final" />
                 </routePath>
             </routePaths>
 
@@ -449,181 +327,9 @@
 
             <routeNodes>
                 <start name="AdHoc"/>
-                <split name="HasFirmFixedYBPOrders">
-                    <type>org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode</type>
-                </split>
-                <simple name="FirmFixedYBPOrders">
+                <simple name="final">
                     <type>org.kuali.rice.kew.engine.node.NoOpNode</type>
                 </simple>
-                <split name="HasStandingOrders">
-                    <type>org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode</type>
-                </split>
-                <simple name="StandingOrders">
-                    <type>org.kuali.rice.kew.engine.node.NoOpNode</type>
-                </simple>
-                <split name="HasSubscriptionOrders">
-                    <type>org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode</type>
-                </split>
-                <simple name="SubscriptionOrders">
-                    <type>org.kuali.rice.kew.engine.node.NoOpNode</type>
-                </simple>
-                <split name="HasApprovalOrders">
-                    <type>org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode</type>
-                </split>
-                <simple name="ApprovalOrders">
-                    <type>org.kuali.rice.kew.engine.node.NoOpNode</type>
-                </simple>
-                <simple name="NoApprovalOrders">
-                    <type>org.kuali.rice.kew.engine.node.NoOpNode</type>
-                </simple>
-
-                <join name="JoinHasVendor"/>
-                <join name="JoinFirmFixedYBPOrders"/>
-                <join name="JoinStandingOrders"/>
-                <join name="JoinSubscriptionOrders"/>
-                <join name="JoinApprovalOrders"/>
-                <!--<split name="HasLicenseRequest">
-                 <type>org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode</type>
-               </split>
-               <role name="LicenseRequest">
-                 <qualifierResolverClass>
-                   org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                 </qualifierResolverClass>
-               </role>
-               <simple name="NoLicenseRequest">
-                 <type>org.kuali.rice.kew.engine.node.NoOpNode</type>
-               </simple>-->
-                <!-- Added for Req SFC Start -->
-                <split name="RequiresBudgetReview">
-                    <type>
-                        org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode
-                    </type>
-                </split>
-                <role name="Budget">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>
-                        P
-                    </activationType>
-                </role>
-                <join name="JoinRequiredBudgetReview" />
-                <simple name="NoOpRequiresBudgetReview">
-                    <type>
-                        org.kuali.rice.kew.engine.node.NoOpNode
-                    </type>
-                </simple>
-                <!-- End -->
-                <!-- Start Notification-->
-                <split name="NotifyBudgetReview">
-                    <type>
-                        org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode
-                    </type>
-                </split>
-                <role name="FYIBudget">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>
-                        P
-                    </activationType>
-                </role>
-                <join name="JoinRequiredFYIBudgetReview" />
-                <simple name="NoOpRequiresFYIBudgetReview">
-                    <type>
-                        org.kuali.rice.kew.engine.node.NoOpNode
-                    </type>
-                </simple>
-                <!-- End -->
-
-                <split name="HasVendor">
-                    <type>org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode</type>
-                </split>
-                <simple name="HavingVendor">
-                    <type>org.kuali.rice.kew.engine.node.NoOpNode</type>
-                </simple>
-                <role name="NoVendor">
-                    <qualifierResolverClass>org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver</qualifierResolverClass>
-                </role>
-                <role name="Organization">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>P</activationType>
-                </role>
-                <split name="HasAccountingLines">
-                    <type>
-                        org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode
-                    </type>
-                </split>
-                <simple name="NoOpHasAccountingLines">
-                    <type>
-                        org.kuali.rice.kew.engine.node.NoOpNode
-                    </type>
-                </simple>
-                <join name="JoinHasAccountingLines"/>
-                <role name="Initiator">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>P</activationType>
-                </role>
-                <role name="SubAccount">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>P</activationType>
-                </role>
-                <role name="Account">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>P</activationType>
-                    <mandatoryRoute>
-                        true
-                    </mandatoryRoute>
-                </role>
-
-
-
-                <role name="AccountingOrganizationHierarchy">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>P</activationType>
-                </role>
-                <role name="Commodity">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>P</activationType>
-                </role>
-                <split name="AmountRequiresSeparationOfDutiesReview">
-                    <type>
-                        org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode
-                    </type>
-                </split>
-                <role name="SeparationOfDuties">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>P</activationType>
-                </role>
-                <join name="JoinRequiresSeparationOfDutiesReview"/>
-                <simple name="NoOp">
-                    <type>
-                        org.kuali.rice.kew.engine.node.NoOpNode
-                    </type>
-                </simple>
-
-                <!-- <join name="JoinLicenseRequest"/>
-                  <join name="JoinFirmFixedWithLicenseRequest"/>
-                  <split name="HasFirmFixedWithLicenseRequest">
-                     <type>org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode</type>
-                  </split>
-                  <simple name="HavingFirmFixedWithLR">
-                    <type>org.kuali.rice.kew.engine.node.NoOpNode</type>
-                  </simple>-->
             </routeNodes>
         </documentType>
         <documentType>
@@ -743,7 +449,7 @@
                         </branch>
                         <join name="JoinRequiresBudgetReview" />
                     </split>
-                    <split name="NotifyBudgetReview" nextNode="VendorIsEmployeeOrNonResidentAlien">
+                    <split name="NotifyBudgetReview">  <!-- nextNode="VendorIsEmployeeOrNonResidentAlien" -->
                         <branch name="True">
                             <role name="FYIBudget" nextNode="JoinRequiredFYIBudgetReview"  />
                         </branch>
@@ -752,7 +458,7 @@
                         </branch>
                         <join name="JoinRequiredFYIBudgetReview" />
                     </split>
-                    <split name="VendorIsEmployeeOrNonResidentAlien">
+                    <!--<split name="VendorIsEmployeeOrNonResidentAlien">
                         <branch name="True">
                             <role name="Tax" nextNode="JoinVendorIsEmployeeOrNonResidentAlien" nextAppDocStatus="Awaiting Tax Approval"/>
                         </branch>
@@ -760,7 +466,7 @@
                             <simple name="NoOpVendorIsEmployeeOrNonResidentAlien" nextNode="JoinVendorIsEmployeeOrNonResidentAlien"/>
                         </branch>
                         <join name="JoinVendorIsEmployeeOrNonResidentAlien" />
-                    </split>
+                    </split>-->
                 </routePath>
             </routePaths>
             <routeNodes>
@@ -849,7 +555,7 @@
                         org.kuali.rice.kew.engine.node.NoOpNode
                     </type>
                 </simple>
-                <split name="VendorIsEmployeeOrNonResidentAlien">
+                <!--<split name="VendorIsEmployeeOrNonResidentAlien">
                     <type>
                         org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode
                     </type>
@@ -867,7 +573,7 @@
                     <type>
                         org.kuali.rice.kew.engine.node.NoOpNode
                     </type>
-                </simple>
+                </simple>-->
             </routeNodes>
         </documentType>
 
@@ -2110,109 +1816,12 @@
                 <routePath>
                     <start name="AdHoc" nextNode="RequiresBudgetReview"
                            nextAppDocStatus="Awaiting Budget Approval" />
-                    <split name = "RequiresBudgetReview" nextNode = "NotifyBudgetReview">
-                        <branch name="True">
-                            <role name="Budget" nextNode="JoinRequiresBudgetReview"/>
-                        </branch>
-                        <branch name="False">
-                            <simple name="NoOpRequiresBudgetReview" nextNode="JoinRequiresBudgetReview"/>
-                        </branch>
-                        <join name="JoinRequiresBudgetReview"/>
-                    </split>
-                    <split name="NotifyBudgetReview" nextNode="RequiresImageAttachment">
-                        <branch name="True">
-                            <role name="FYIBudget" nextNode="JoinRequiredFYIBudgetReview" />
-                        </branch>
-                        <branch name="False">
-                            <simple name="NoOpRequiresFYIBudgetReview" nextNode="JoinRequiredFYIBudgetReview" />
-                        </branch>
-                        <join name="JoinRequiredFYIBudgetReview" />
-                    </split>
-
-
-                    <split name="RequiresImageAttachment" nextNode="PurchaseWasReceived">
-                        <branch name="True">
-                            <role name="ImageAttachment" nextNode="JoinRequiresImageAttachment"
-                                  nextAppDocStatus="Awaiting AP Review" />
-                        </branch>
-                        <branch name="False">
-                            <simple name="NoOpRequiresImageAttachment" nextNode="JoinRequiresImageAttachment"
-                                    nextAppDocStatus="Awaiting Receiving" />
-                        </branch>
-                        <join name="JoinRequiresImageAttachment" />
-                    </split>
-                    <split name="PurchaseWasReceived" nextNode="SubAccount">
-                        <branch name="True">
-                            <role name="Receiving" nextNode="JoinReceiving"
-                                  nextAppDocStatus="Awaiting Sub-Account Manager Approval" />
-                        </branch>
-                        <branch name="False">
-                            <simple name="NoOpReceiving" nextNode="JoinReceiving" />
-                        </branch>
-                        <join name="JoinReceiving" />
-                    </split>
-                    <role name="SubAccount" nextNode="Account"
-                          nextAppDocStatus="Awaiting Fiscal Officer Approval" />
-                    <role name="Account" nextNode="AccountingOrganizationHierarchy"
-                          nextAppDocStatus="Awaiting Chart Approval" />
-                    <role name="AccountingOrganizationHierarchy" nextNode="VendorIsEmployeeOrNonResidentAlien"
-                          nextAppDocStatus="Awaiting Tax Approval" />
-                    <split name="VendorIsEmployeeOrNonResidentAlien" nextNode="RequiresSeparationOfDutiesReview">
-                        <branch name="True">
-                            <role name="Tax" nextNode="JoinVendorIsEmployeeOrNonResidentAlien" />
-                        </branch>
-                        <branch name="False">
-                            <simple name="NoOpVendorIsEmployeeOrNonResidentAlien"
-                                    nextNode="JoinVendorIsEmployeeOrNonResidentAlien" />
-                        </branch>
-                        <join name="JoinVendorIsEmployeeOrNonResidentAlien" />
-                    </split>
-                    <split name="RequiresSeparationOfDutiesReview" nextNode="Payment" >
-                        <branch name="True">
-                            <role name="SeparationOfDuties" nextNode="JoinRequiresSeparationOfDutiesReview" nextAppDocStatus="Awaiting Payment Method Approval" />
-                        </branch>
-                        <branch name="False">
-                            <simple name="NoOp" nextNode="JoinRequiresSeparationOfDutiesReview" nextAppDocStatus="Awaiting Payment Method Approval"/>
-                        </branch>
-                        <join name="JoinRequiresSeparationOfDutiesReview" />
-                    </split>
-                    <role name="Payment" nextNode="HasVendorDepositAccount" />
-                    <split name="HasVendorDepositAccount" nextNode="HasInvoiceType">
-                        <branch name="True">
-                            <role name="VendorDepositAccount" nextNode="JoinHasVendorDepositAccount" />
-                        </branch>
-                        <branch name="False">
-                            <simple name="NoOpHasVendorDepositAccount" nextNode="JoinHasVendorDepositAccount" />
-                        </branch>
-                        <join name="JoinHasVendorDepositAccount" />
-                    </split>
-                    <split name="HasInvoiceType">
-                        <branch name="True">
-                            <split name="HasPrepaidInvoiceType" nextNode="JoinHasInvoiceType">
-                                <branch name="True">
-                                    <role name="PrepaidInvoiceType" nextNode="JoinHasPrepaidInvoiceType" />
-                                </branch>
-                                <branch name="False">
-                                    <role name="NoPrepaidInvoiceType" nextNode="JoinHasPrepaidInvoiceType" />
-                                </branch>
-                                <join name="JoinHasPrepaidInvoiceType" />
-                            </split>
-                        </branch>
-                        <branch name="False">
-                            <simple name="NoOpHasInvoiceType" nextNode="JoinHasInvoiceType" />
-                        </branch>
-                        <join name="JoinHasInvoiceType" />
-                    </split>
+                    <role name="RequiresBudgetReview"/>
                 </routePath>
             </routePaths>
             <routeNodes>
                 <start name="AdHoc" />
-                <split name="RequiresBudgetReview">
-                    <type>
-                        org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode
-                    </type>
-                </split>
-                <role name="Budget">
+                <role name="RequiresBudgetReview">
                     <qualifierResolverClass>
                         org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
                     </qualifierResolverClass>
@@ -2220,177 +1829,8 @@
                         P
                     </activationType>
                 </role>
-                <join name="JoinRequiresBudgetReview"/>
-                <simple name="NoOpRequiresBudgetReview">
-                    <type>
-                        org.kuali.rice.kew.engine.node.NoOpNode
-                    </type>
-                </simple>
-                <split name="NotifyBudgetReview">
-                    <type>
-                        org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode
-                    </type>
-                </split>
-                <role name="FYIBudget">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>
-                        P
-                    </activationType>
-                </role>
-                <join name="JoinRequiredFYIBudgetReview" />
-                <simple name="NoOpRequiresFYIBudgetReview">
-                    <type>
-                        org.kuali.rice.kew.engine.node.NoOpNode
-                    </type>
-                </simple>
-
-                <split name="RequiresImageAttachment">
-                    <type>
-                        org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode
-                    </type>
-                </split>
-                <role name="ImageAttachment">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>P</activationType>
-                </role>
-                <join name="JoinRequiresImageAttachment" />
-                <simple name="NoOpRequiresImageAttachment">
-                    <type>
-                        org.kuali.rice.kew.engine.node.NoOpNode
-                    </type>
-                </simple>
-                <split name="PurchaseWasReceived">
-                    <type>
-                        org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode
-                    </type>
-                </split>
-                <role name="Receiving">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>P</activationType>
-                </role>
-                <join name="JoinReceiving" />
-                <simple name="NoOpReceiving">
-                    <type>
-                        org.kuali.rice.kew.engine.node.NoOpNode
-                    </type>
-                </simple>
-                <role name="SubAccount">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>P</activationType>
-                </role>
-                <role name="Account">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>P</activationType>
-                    <mandatoryRoute>
-                        true
-                    </mandatoryRoute>
-                </role>
-                <role name="AccountingOrganizationHierarchy">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>P</activationType>
-                </role>
-                <split name="VendorIsEmployeeOrNonResidentAlien">
-                    <type>
-                        org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode
-                    </type>
-                </split>
-                <role name="Tax">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>P</activationType>
-                </role>
-                <join name="JoinVendorIsEmployeeOrNonResidentAlien" />
-                <simple name="NoOpVendorIsEmployeeOrNonResidentAlien">
-                    <type>
-                        org.kuali.rice.kew.engine.node.NoOpNode
-                    </type>
-                </simple>
-                <split name="HasPrepaidInvoiceType">
-                    <type>
-                        org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode
-                    </type>
-                </split>
-                <role name="PrepaidInvoiceType">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                </role>
-                <role name="NoPrepaidInvoiceType">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                </role>
-                <join name="JoinHasPrepaidInvoiceType" />
-                <role name="VendorDepositAccount">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>
-                        P
-                    </activationType>
-                </role>
-                <split name="HasVendorDepositAccount">
-                    <type>
-                        org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode
-                    </type>
-                </split>
-                <join name="JoinHasVendorDepositAccount" />
-                <simple name="NoOpHasVendorDepositAccount">
-                    <type>
-                        org.kuali.rice.kew.engine.node.NoOpNode
-                    </type>
-                </simple>
-                <split name="HasInvoiceType">
-                    <type>
-                        org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode
-                    </type>
-                </split>
-                <join name="JoinHasInvoiceType" />
-                <simple name="NoOpHasInvoiceType">
-                    <type>
-                        org.kuali.rice.kew.engine.node.NoOpNode
-                    </type>
-                </simple>
-                <split name="RequiresSeparationOfDutiesReview">
-                    <type>
-                        org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode
-                    </type>
-                </split>
-                <role name="SeparationOfDuties">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                </role>
-                <role name="Payment">
-                    <qualifierResolverClass>
-                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
-                    </qualifierResolverClass>
-                    <activationType>
-                        P
-                    </activationType>
-                </role>
-                <join name="JoinRequiresSeparationOfDutiesReview" />
-                <simple name="NoOp">
-                    <type>
-                        org.kuali.rice.kew.engine.node.NoOpNode
-                    </type>
-                </simple>
             </routeNodes>
         </documentType>
-
 
         <documentType>
             <name>

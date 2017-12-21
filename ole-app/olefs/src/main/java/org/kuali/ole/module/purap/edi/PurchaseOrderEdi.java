@@ -544,8 +544,11 @@ public class PurchaseOrderEdi {
                 char[] digitCheck = isbn.toCharArray();
                 for(int ch =0; ch<digitCheck.length;ch++){
                     if(!Character.isDigit(digitCheck[ch])){
-                        isbn = isbn.substring(0,ch);
-                        break;
+                        if(digitCheck[ch]=='x'||digitCheck[ch]=='X'){
+                        }else{
+                            isbn = isbn.substring(0,ch);
+                            break;
+                        }
                     }
                 }
             }
@@ -568,15 +571,15 @@ public class PurchaseOrderEdi {
                     lineCount++;
                 }
                 if (oleBatchProcessProfileConstantsBo.getAttributeName().equalsIgnoreCase(OLEConstants.ITM_AUT)) {
-                    ediItemValues.put(OLEConstants.ITM_AUT, oleBatchProcessProfileConstantsBo.getAttributeValue().replace(OLEConstants.EDIBatchProfile.SYMBOL_ASTERISK, purchaseOrderItem.getDocData().getAuthor()));
+                    ediItemValues.put(OLEConstants.ITM_AUT, oleBatchProcessProfileConstantsBo.getAttributeValue().replace(OLEConstants.EDIBatchProfile.SYMBOL_ASTERISK, purchaseOrderItem.getDocData().getAuthor()!=null ? purchaseOrderItem.getDocData().getAuthor().replace("'","?'") : purchaseOrderItem.getDocData().getAuthor()));
                     lineCount++;
                 }
                 if (oleBatchProcessProfileConstantsBo.getAttributeName().equalsIgnoreCase(OLEConstants.ITM_TIT)) {
-                    ediItemValues.put(OLEConstants.ITM_TIT, oleBatchProcessProfileConstantsBo.getAttributeValue().replace(OLEConstants.EDIBatchProfile.SYMBOL_ASTERISK, purchaseOrderItem.getDocData().getTitle()));
+                    ediItemValues.put(OLEConstants.ITM_TIT, oleBatchProcessProfileConstantsBo.getAttributeValue().replace(OLEConstants.EDIBatchProfile.SYMBOL_ASTERISK, purchaseOrderItem.getDocData().getTitle()!=null ? purchaseOrderItem.getDocData().getTitle().replace("'","?'") : purchaseOrderItem.getDocData().getTitle()));
                     lineCount++;
                 }
                 if (oleBatchProcessProfileConstantsBo.getAttributeName().equalsIgnoreCase(OLEConstants.EDIBatchProfile.ITEM_PUBLISHER)) {
-                    ediItemValues.put(OLEConstants.EDIBatchProfile.ITEM_PUBLISHER, oleBatchProcessProfileConstantsBo.getAttributeValue().replace(OLEConstants.EDIBatchProfile.SYMBOL_ASTERISK, purchaseOrderItem.getDocData().getPublisher()));
+                    ediItemValues.put(OLEConstants.EDIBatchProfile.ITEM_PUBLISHER, oleBatchProcessProfileConstantsBo.getAttributeValue().replace(OLEConstants.EDIBatchProfile.SYMBOL_ASTERISK, purchaseOrderItem.getDocData().getPublisher()!=null ? purchaseOrderItem.getDocData().getPublisher().replace("'","?'") : purchaseOrderItem.getDocData().getPublisher()));
                     lineCount++;
                 }
                 if (oleBatchProcessProfileConstantsBo.getAttributeName().equalsIgnoreCase(OLEConstants.EDIBatchProfile.ITEM_PUBLISHER_DATE)) {
@@ -625,8 +628,6 @@ public class PurchaseOrderEdi {
                 text.append(ediItemValues.get(OLEConstants.EDIBatchProfile.LINE_ITEM) + OLEConstants.OLEBatchProcess.lineSeparator);
             if (ediItemValues.containsKey(OLEConstants.EDIBatchProfile.PURCHASE_LINE_ITEM))
                 text.append(ediItemValues.get(OLEConstants.EDIBatchProfile.PURCHASE_LINE_ITEM) + OLEConstants.OLEBatchProcess.lineSeparator);
-            if (ediItemValues.containsKey(OLEConstants.EDIBatchProfile.ITEM_PRICE))
-                text.append(ediItemValues.get(OLEConstants.EDIBatchProfile.ITEM_PRICE) + OLEConstants.OLEBatchProcess.lineSeparator);
             if (ediItemValues.containsKey(OLEConstants.ITM_AUT))
                 text.append(ediItemValues.get(OLEConstants.ITM_AUT) + OLEConstants.OLEBatchProcess.lineSeparator);
             if (ediItemValues.containsKey(OLEConstants.ITM_TIT))
@@ -637,6 +638,8 @@ public class PurchaseOrderEdi {
                 text.append(ediItemValues.get(OLEConstants.EDIBatchProfile.ITEM_PUBLISHER_DATE) + OLEConstants.OLEBatchProcess.lineSeparator);
             if (ediItemValues.containsKey(OLEConstants.EDIBatchProfile.ITEM_QUANTITY))
                 text.append(ediItemValues.get(OLEConstants.EDIBatchProfile.ITEM_QUANTITY) + OLEConstants.OLEBatchProcess.lineSeparator);
+            if (ediItemValues.containsKey(OLEConstants.EDIBatchProfile.ITEM_PRICE))
+                text.append(ediItemValues.get(OLEConstants.EDIBatchProfile.ITEM_PRICE) + OLEConstants.OLEBatchProcess.lineSeparator);
             if (ediItemValues.containsKey(OLEConstants.EDIBatchProfile.REFERENCE_QUALIFIER_1))
                 text.append(ediItemValues.get(OLEConstants.EDIBatchProfile.REFERENCE_QUALIFIER_1) + OLEConstants.OLEBatchProcess.lineSeparator);
             if (ediItemValues.containsKey(OLEConstants.EDIBatchProfile.REFERENCE_QUALIFIER_2))

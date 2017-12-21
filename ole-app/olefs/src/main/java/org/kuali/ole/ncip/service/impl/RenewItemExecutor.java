@@ -1,5 +1,6 @@
 package org.kuali.ole.ncip.service.impl;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.kuali.ole.OLEConstants;
@@ -96,11 +97,13 @@ public class RenewItemExecutor implements Callable {
                                 List<OLEDeliverNotice> oleDeliverNotices = getCircUtilController().processNotices(oleLoanDocument, oleItemRecordForCirc.getItemRecord(), null);
                                         oleLoanDocument.setDeliverNotices(oleDeliverNotices);
                                         if (null != oleLoanDocument.getLoanId()) {
-                                            finalDroolResponse.setSucessMessage("Successfully Renewed");
+                                            String billNumber = getCircUtilController().generateBillPayment(oleLoanDocument.getCirculationLocationId(), oleLoanDocument, new Timestamp(new Date().getTime()), new Timestamp(oleLoanDocument.getPastDueDate().getTime()),true);
+                                            if(StringUtils.isNotEmpty(billNumber)){
+                                                finalDroolResponse.setSucessMessage("Successfully Renewed. Overdue fine exists");
+                                            }else{
+                                                finalDroolResponse.setSucessMessage("Successfully Renewed");
+                                            }
                                             finalDroolResponse.getDroolsExchange().addToContext(oleLoanDocument.getItemUuid(), oleLoanDocument);
-
-                                            getCircUtilController().generateBillPayment(oleLoanDocument.getCirculationLocationId(), oleLoanDocument, new Timestamp(new Date().getTime()), new Timestamp(oleLoanDocument.getPastDueDate().getTime()),true);
-
                                         }
                                     } else {
                                         oleLoanDocument.setLoanDueDate(loanDueDate);
@@ -108,7 +111,8 @@ public class RenewItemExecutor implements Callable {
                                         oleLoanDocument.setErrorMessage("The past and the current due data are same and hence item wasn't renewed.");
                                         finalDroolResponse.getDroolsExchange().addToContext(itemBarcode, oleLoanDocument);
                                     }
-                                } catch (Exception e) {
+
+                                }catch (Exception e) {
                                     oleLoanDocument.setLoanDueDate(loanDueDate);
                                     oleLoanDocument.setPastDueDate(pastDueDate);
                                     if (e.getMessage().equalsIgnoreCase("No Fixed Due Date found for the renewal policy")) {
@@ -161,7 +165,7 @@ public class RenewItemExecutor implements Callable {
         Timestamp pastLoanDueDate = oleLoanDocument.getLoanDueDate();
         Date newLoanDueDate = oleLoanDocument.getPastDueDate();
         if (pastLoanDueDate != null) {
-            return (new Date(pastLoanDueDate.getTime()).compareTo(newLoanDueDate) == 0 ? true : false);
+            return (DateUtils.isSameDay(newLoanDueDate, new Date(pastLoanDueDate.getTime())));
         } else {
             throw new Exception("No Fixed Due Date found for the renewal policy");
         }

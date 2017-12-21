@@ -18,7 +18,7 @@ public class ReplacementBillNoticeEmailContentFormattter extends NoticeMailConte
        if(oleLoanDocument.getReplacementBill() != null) {
            BigDecimal feeamount = oleLoanDocument.getReplacementBill();
            feeamount = feeamount.setScale(2, BigDecimal.ROUND_HALF_UP);
-           oleNoticeBo.setFeeAmount("$" + feeamount.toString());
+           oleNoticeBo.setFeeAmount(feeamount.toString());
        }
     }
 

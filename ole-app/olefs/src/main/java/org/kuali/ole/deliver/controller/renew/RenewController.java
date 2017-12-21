@@ -82,11 +82,16 @@ public class RenewController extends CircUtilController {
                                         Item itemForUpdate = getItemForUpdate(oleLoanDocument);
                                         if (null != itemForUpdate) {
                                             itemList.add(itemForUpdate);
-                                            droolsResponse.setSucessMessage("Successfully Renewed");
+
+                                            String billNumber = generateBillPayment(oleLoanDocument.getCirculationLocationId(), oleLoanDocument, new Timestamp(new Date().getTime()), new Timestamp(oleLoanDocument.getPastDueDate().getTime()),true);
+                                            if (StringUtils.isNotEmpty(billNumber)) {
+                                                droolsResponse.setSucessMessage("Successfully Renewed. Overdue fine exists");
+                                            } else {
+                                                droolsResponse.setSucessMessage("Successfully Renewed");
+                                            }
                                             droolsResponse.getDroolsExchange().addToContext(oleLoanDocument.getItemUuid(), oleLoanDocument);
                                             finalDroolResponse.getDroolsExchange().getContext().put(oleLoanDocument.getItemUuid(), droolsResponse);
 
-                                            generateBillPayment(oleLoanDocument.getCirculationLocationId(),oleLoanDocument, new Timestamp(new Date().getTime()), new Timestamp(oleLoanDocument.getPastDueDate().getTime()),true);
                                             if (oleItemRecordForCirc.getItemStatusRecord() != null && OLEConstants.ITEM_STATUS_LOST.equalsIgnoreCase(oleItemRecordForCirc.getItemStatusRecord().getCode())){
                                                 oleLoanDocument.setItemStatus(OLEConstants.ITEM_STATUS_CHECKEDOUT);
                                                 processLostItem(GlobalVariables.getUserSession().getPrincipalId(), oleLoanDocument, true);
@@ -181,6 +186,10 @@ public class RenewController extends CircUtilController {
                     OleLoanDocument oleLoanDocument = (OleLoanDocument) individualDroolResponse.getDroolsExchange().getContext().get(key);
                     String content = "Successfully renewed for item (" + oleLoanDocument.getItemId() + ")";
                     appendContentToStrinBuilder(messageContentForRenew, content);
+                }else if (StringUtils.isNotBlank(individualDroolResponse.getSucessMessage()) && individualDroolResponse.getSucessMessage().equalsIgnoreCase("Successfully Renewed. Overdue fine exists")) {
+                    OleLoanDocument oleLoanDocument = (OleLoanDocument) individualDroolResponse.getDroolsExchange().getContext().get(key);
+                    String content = "Successfully renewed for item (" + oleLoanDocument.getItemId() + "). Overdue fine exists";
+                    appendContentToStrinBuilder(messageContentForRenew, content);
                 } else if (individualDroolResponse.retriveErrorCode().equalsIgnoreCase("No renewal policy found")) {
                     Map<String, Object> individualResponseMap = individualDroolResponse.getDroolsExchange().getContext();
                     OleLoanDocument individualLoanDocument = (OleLoanDocument) individualResponseMap.get(key);
@@ -268,10 +277,15 @@ public class RenewController extends CircUtilController {
                 DroolsResponse individualDroolResponse = (DroolsResponse) context.get(key);
                 if (StringUtils.isNotBlank(individualDroolResponse.getSucessMessage()) && individualDroolResponse.getSucessMessage().equalsIgnoreCase("Successfully Renewed")) {
                     OleLoanDocument oleLoanDocument = (OleLoanDocument) individualDroolResponse.getDroolsExchange().getContext().get(key);
-                    String content = "Successfully renewed for item (" + oleLoanDocument.getItemId() + ")";
+                    String billNumber = generateBillPayment(oleLoanDocument.getCirculationLocationId(), oleLoanDocument, new Timestamp(new Date().getTime()), new Timestamp(oleLoanDocument.getPastDueDate().getTime()),true);
+                    String content = "";
+                    if(StringUtils.isNotEmpty(billNumber)){
+                        content = "Successfully Renewed. Overdue fine exists for Item (" + oleLoanDocument.getItemId() + ")";
+                    }else{
+                        content = "Successfully renewed for item (" + oleLoanDocument.getItemId() + ")";
+                    }
                     appendContentToStrinBuilder(stringBuilder, content);
 
-                    generateBillPayment(oleLoanDocument.getCirculationLocationId(), oleLoanDocument, new Timestamp(new Date().getTime()), new Timestamp(oleLoanDocument.getPastDueDate().getTime()),true);
                     if (StringUtils.isNotBlank(oleLoanDocument.getItemStatus()) && oleLoanDocument.getItemStatus().equalsIgnoreCase(OLEConstants.ITEM_STATUS_LOST)) {
                         oleLoanDocument.setItemStatus(OLEConstants.ITEM_STATUS_CHECKEDOUT);
                         processLostItem(GlobalVariables.getUserSession().getPrincipalId(), oleLoanDocument, true);

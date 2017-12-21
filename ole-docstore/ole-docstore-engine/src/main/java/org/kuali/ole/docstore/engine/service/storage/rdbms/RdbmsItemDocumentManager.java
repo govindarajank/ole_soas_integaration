@@ -102,13 +102,11 @@ public class RdbmsItemDocumentManager extends RdbmsHoldingsDocumentManager imple
         itemRecord.setStaffOnlyFlag(itemDocument.isStaffOnly());
         itemRecord.setHoldingsId(DocumentUniqueIDPrefix.getDocumentId(holdingsId));
         itemRecord.setUniqueIdPrefix(DocumentUniqueIDPrefix.PREFIX_WORK_ITEM_OLEML);
-
         if(itemDocument.getCreatedBy() != null){
             itemRecord.setCreatedBy(itemDocument.getCreatedBy());
         }else{
             itemRecord.setCreatedBy(itemDocument.getHolding().getCreatedBy());
         }
-
         itemRecord.setCreatedDate(createdDate());
         itemRecord.setUpdatedBy(itemRecord.getCreatedBy());
         itemRecord.setUpdatedDate(itemRecord.getCreatedDate());
@@ -543,9 +541,9 @@ public class RdbmsItemDocumentManager extends RdbmsHoldingsDocumentManager imple
             SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String DATE_FORMAT_HH_MM_SS_REGX = "^(1[0-2]|0[1-9])/(3[0|1]|[1|2][0-9]|0[1-9])/[0-9]{4}(\\s)((([1|0][0-9])|([2][0-4]))):[0-5][0-9]:[0-5][0-9]$";
             Date dueDateTime = null;
-            DateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mm:ssa");
-            DateFormat df1 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-            DateFormat displayLoanTime = new SimpleDateFormat("MM/dd/yyyy hh:mma");
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm:ssa");
+            DateFormat df1 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            DateFormat displayLoanTime = new SimpleDateFormat(CoreApiServiceLocator.getKualiConfigurationService().getPropertyValueAsString("info.DateFormat")+" hh:mma");
             try {
                 dueDateTime = format2.parse(itemRecord.getDueDateTime().toString());
                 item.setDueDateTime(format1.format(dueDateTime).toString());
@@ -1269,7 +1267,7 @@ public class RdbmsItemDocumentManager extends RdbmsHoldingsDocumentManager imple
         String DATE_FORMAT_AM_PM_REGX = "^(1[0-2]|0[1-9])/(3[0|1]|[1|2][0-9]|0[1-9])/[0-9]{4}(\\s)(00|1[012]|0[1-9]):[0-5][0-9]:[0-5][0-9]?(?i)(am|pm)";
         String DATE_FORMAT_HH_MM_SS_REGX = "^(1[0-2]|0[1-9])/(3[0|1]|[1|2][0-9]|0[1-9])/[0-9]{4}(\\s)((([1|0][0-9])|([2][0-4]))):[0-5][0-9]:[0-5][0-9]$";
         if (StringUtils.isNotBlank(dateString) && dateString.matches(DATE_FORMAT_AM_PM_REGX)) {
-            DateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mm:ssa");
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm:ssa");
             try {
                 if (!"".equals(dateString) && dateString != null) {
                     dueDateTime1 = new Timestamp(df.parse(dateString).getTime());
@@ -1436,7 +1434,7 @@ public class RdbmsItemDocumentManager extends RdbmsHoldingsDocumentManager imple
         if (noteList.size() > 0) {
             for (int i = 0; i < noteList.size(); i++) {
                 Note note = noteList.get(i);
-                if (note.getType() != null && ("public".equalsIgnoreCase(note.getType()) || "nonPublic".equalsIgnoreCase(note.getType()))) {
+                if (note.getType() != null && ("public".equalsIgnoreCase(note.getType()) || "nonPublic".equalsIgnoreCase(note.getType()) || "acquired".equalsIgnoreCase(note.getType()))) {
                     ItemNoteRecord itemNoteRecord = new ItemNoteRecord();
                     itemNoteRecord.setType(note.getType());
                     itemNoteRecord.setNote(note.getValue());
