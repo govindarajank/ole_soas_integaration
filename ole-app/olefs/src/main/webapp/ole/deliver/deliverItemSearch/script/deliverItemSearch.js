@@ -1,4 +1,10 @@
 jq(document).ready(function(){
+    jq(document).keypress(function(e) {
+        if(e.which == 13) {
+            e.preventDefault();
+            jq('#itemSearch_search_button').focus().click()
+        }
+    });
     if(jq("#itemLocation_line0").val() == undefined && jq("#location_line0").val() == undefined ){
         jq("#OLEDeliverItemSearchResult-AdditionalCopies span").css("color", "#808080");
     }

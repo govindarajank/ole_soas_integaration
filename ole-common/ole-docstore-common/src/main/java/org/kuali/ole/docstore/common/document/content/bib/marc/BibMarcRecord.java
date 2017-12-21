@@ -81,9 +81,11 @@ public class BibMarcRecord {
     }
 
     public String getRecordId() {
-        for (ControlField cf : controlFields) {
-            if (cf.getTag().equals("001")) {
-                return cf.getValue();
+        if(controlFields!=null){
+            for (ControlField cf : controlFields) {
+                if (cf.getTag()!=null && cf.getTag().equals("001")) {
+                    return cf.getValue();
+                }
             }
         }
         return "";

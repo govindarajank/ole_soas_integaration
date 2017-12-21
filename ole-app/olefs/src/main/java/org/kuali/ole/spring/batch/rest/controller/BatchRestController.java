@@ -79,7 +79,7 @@ public class BatchRestController extends OleNgControllerBase {
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST, produces = {MediaType. APPLICATION_JSON + OleNGConstants.CHARSET_UTF_8})
     @ResponseBody
-    public String UploadFile(@RequestParam("file") MultipartFile file, @RequestParam("profileName") String profileName,
+    public String UploadFile(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("profileName") String profileName,
                              @RequestParam("batchType") String batchType, HttpServletRequest request) throws Exception {
         try {
             if (StringUtils.isNotBlank(profileName) && StringUtils.isNotBlank(batchType)) {

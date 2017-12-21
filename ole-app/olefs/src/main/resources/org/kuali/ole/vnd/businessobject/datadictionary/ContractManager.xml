@@ -114,15 +114,15 @@
 	<bean id="ContractManager-contractManagerPhoneNumber" parent="ContractManager-contractManagerPhoneNumber-parentBean" />
 
 	<bean id="ContractManager-contractManagerPhoneNumber-parentBean"
-		abstract="true" parent="AttributeDefinition">
+		abstract="true" parent="GenericAttributes-phoneNumberWithValidation">
 		<property name="name" value="contractManagerPhoneNumber" />
 		<property name="forceUppercase" value="true" />
 		<property name="label" value="Published Phone Number" />
 		<property name="shortLabel" value="Number" />
 		<property name="maxLength" value="45" />
-		<property name="validationPattern">
+		<!--<property name="validationPattern">
 			<ref bean="AnyCharacterWithWhitespaceValidation" />
-		</property>
+		</property>-->
 		<property name="control">
 			<bean parent="TextControlDefinition" p:size="47" />
 		</property>

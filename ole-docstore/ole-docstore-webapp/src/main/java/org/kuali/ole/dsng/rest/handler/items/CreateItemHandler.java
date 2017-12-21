@@ -55,6 +55,9 @@ public class CreateItemHandler extends Handler {
                                 exchange.add(OleNGConstants.ITEM_RECORD, itemRecord);
                                 processDataMappings(itemJSONObject, exchange);
                                 setCommonValuesToItemRecord(requestJsonObject, itemRecord);
+                                if(itemRecord.getBarCode().endsWith("x")){
+                                    itemRecord.setBarCode(itemRecord.getBarCode().toUpperCase());
+                                }
                                 itemRecords.add(itemRecord);
                             }
                         }

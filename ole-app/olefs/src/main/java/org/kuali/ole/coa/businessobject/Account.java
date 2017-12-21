@@ -17,12 +17,7 @@
 package org.kuali.ole.coa.businessobject;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -68,7 +63,7 @@ public class Account extends PersistableBusinessObjectBase implements AccountInt
     protected String accountStateCode;
     protected String accountStreetAddress;
     protected String accountZipCode;
-    protected String accountCountryCode = OLEConstants.COUNTRY_CODE_UNITED_STATES;
+    protected String accountCountryCode = Locale.getDefault().getCountry();
     protected Date accountCreateDate;
     protected Date accountEffectiveDate;
     protected Date accountExpirationDate;

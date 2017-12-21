@@ -782,13 +782,17 @@ public class BatchProcessExportData extends AbstractBatchProcess {
                         InstanceMappingHelper instanceMappingHelper = new InstanceMappingHelper();
                         String filterFieldNameTag = instanceMappingHelper.getTagForExportFilter(bo.getFilterFieldName());
                         String filterFieldNameCode = instanceMappingHelper.getCodeForExportFilter(bo.getFilterFieldName());
-                        if (StringUtils.isEmpty(filterFieldNameTag) || StringUtils.isEmpty(filterFieldNameCode)) {
-                            searchField.setFieldName(bo.getFilterFieldName());
+                        if (StringUtils.isNotBlank(filterFieldNameTag)) {
+                            if (filterFieldNameTag.toCharArray().length == 3) {
+                                // Convert marc data field tag into its corresponding solr field
+                                filterFieldNameTag = OLEConstants.OLEBatchProcess.DYNAMIC_FIELD_PREFIX + filterFieldNameTag;
+                                String docField = filterFieldNameTag + filterFieldNameCode;
+                                searchField.setFieldName(docField);
+                            } else if (filterFieldNameTag.toCharArray().length > 3) {
+                                searchField.setFieldName(bo.getFilterFieldName());
+                            }
                         } else {
-                            // Convert marc data field tag into its corresponding solr field
-                            filterFieldNameTag = OLEConstants.OLEBatchProcess.DYNAMIC_FIELD_PREFIX + filterFieldNameTag;
-                            String docField = filterFieldNameTag + filterFieldNameCode;
-                            searchField.setFieldName(docField);
+                            searchField.setFieldName(bo.getFilterFieldName());
                         }
                         condition.setSearchScope(NONE);
                     } catch (StringIndexOutOfBoundsException e) {

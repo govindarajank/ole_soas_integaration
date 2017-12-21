@@ -186,36 +186,61 @@ public class BatchExportUtil extends BatchUtil {
                             addDocType = true;
                             queryBuilder.append(buildFilterQueryForTypeDate("statusUpdatedOn",filterCriteriaList.get(i)));
                             break;
-                        case "Date Updated":
+                        case "Date Updated(of Bib, Holdings or Item)":
+                            addDocType = true;
                             queryBuilder.append(buildFilterQueryForTypeDate("dateUpdated",filterCriteriaList.get(i)));
                             break;
-                        case "Date Entered":
+                        case "Date Entered(of Bib, Holdings or Item)":
+                            addDocType = true;
                             queryBuilder.append(buildFilterQueryForTypeDate("dateEntered",filterCriteriaList.get(i)));
                             break;
-                        case "Created By":
+                        case "Created By(of Bib, Holdings or Item)":
+                            addDocType=true;
                             if (StringUtils.isNotBlank(filterCriteriaList.get(i).getFieldValue())) {
                                 queryBuilder.append("(createdBy:" + filterCriteriaList.get(i).getFieldValue() + ")");
                             }
                             break;
-                        case "Updated By":
+                        case "Updated By(of Bib, Holdings or Item)":
+                            addDocType = true;
                             if (StringUtils.isNotBlank(filterCriteriaList.get(i).getFieldValue())) {
                                 queryBuilder.append("(updatedBy:" + filterCriteriaList.get(i).getFieldValue() + ")");
                             }
                             break;
                         case "Staff Only(of Bib, Holdings or Item)":
+                            addDocType = true;
                             if (StringUtils.isNotBlank(filterCriteriaList.get(i).getFieldValue())) {
                                 queryBuilder.append("(staffOnlyFlag:" + filterCriteriaList.get(i).getFieldValue() + ")");
+                            }
+                            break;
+                        case "Resource Type":
+                            addDocType=true;
+                            if (StringUtils.isNotBlank(filterCriteriaList.get(i).getFieldValue())) {
+                                queryBuilder.append("(ResourceType_search:" + filterCriteriaList.get(i).getFieldValue() + ")");
                             }
                             break;
                     }
                 } else if (StringUtils.isNotBlank(filterCriteriaList.get(i).getFieldNameText())) {
                     addDocType = true;
                     String filterFieldList[]=filterCriteriaList.get(i).getFieldNameText().split("\\$");
-                    if(filterFieldList.length==2) {
-                        if (getMarcRecordUtil().isControlField(filterFieldList[0].trim())) {
-                            queryBuilder.append("(" + OleNGConstants.CONTROL_FIELD_ + filterFieldList[0].trim() + ":" + filterCriteriaList.get(i).getFieldValue() + ")");
-                        } else {
-                            queryBuilder.append("(" + OleNGConstants.MDF_ + filterFieldList[0].trim() + filterFieldList[1] + ":" + filterCriteriaList.get(i).getFieldValue() + ")");
+                    if(filterCriteriaList != null && filterCriteriaList.size() > 0) {
+                        if(StringUtils.isNotBlank(filterCriteriaList.get(i).getFieldValue())) {
+                            if (getMarcRecordUtil().isControlField(filterFieldList[0].trim())) {
+                                queryBuilder.append("(" + OleNGConstants.CONTROL_FIELD_ + filterFieldList[0].trim() + ":" + filterCriteriaList.get(i).getFieldValue() + ")");
+                            } else {
+                                queryBuilder.append("(" + OleNGConstants.MDF_ + filterFieldList[0].trim() + filterFieldList[1] + ":" + filterCriteriaList.get(i).getFieldValue() + ")");
+                            }
+                        } else if (StringUtils.isNotBlank(filterCriteriaList.get(i).getRangeFrom()) && StringUtils.isNotBlank(filterCriteriaList.get(i).getRangeTo())){
+                            if (getMarcRecordUtil().isControlField(filterFieldList[0].trim())) {
+                                queryBuilder.append("(" + OleNGConstants.CONTROL_FIELD_ + filterFieldList[0].trim() + ":[" + filterCriteriaList.get(i).getRangeFrom() + " TO " + filterCriteriaList.get(i).getRangeTo() + "])");
+                            } else {
+                                queryBuilder.append("(" + OleNGConstants.MDF_ + filterFieldList[0].trim() + filterFieldList[1] + ":[" + filterCriteriaList.get(i).getRangeFrom() + " TO " + filterCriteriaList.get(i).getRangeTo() + "])");
+                            }
+                        } else if (StringUtils.isNotBlank(filterCriteriaList.get(i).getRangeFrom()) && StringUtils.isBlank(filterCriteriaList.get(i).getRangeTo())) {
+                            if (getMarcRecordUtil().isControlField(filterFieldList[0].trim())) {
+                                queryBuilder.append("(" + OleNGConstants.CONTROL_FIELD_ + filterFieldList[0].trim() + ":[" + filterCriteriaList.get(i).getRangeFrom() + " TO " + filterCriteriaList.get(i).getRangeTo() + "])");
+                            } else {
+                                queryBuilder.append("(" + OleNGConstants.MDF_ + filterFieldList[0].trim() + filterFieldList[1] + ":[" + filterCriteriaList.get(i).getRangeFrom() + " TO * ])");
+                            }
                         }
                     }
                 }

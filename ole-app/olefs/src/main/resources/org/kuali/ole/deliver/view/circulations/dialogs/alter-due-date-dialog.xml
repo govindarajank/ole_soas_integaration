@@ -86,6 +86,13 @@
         <property name="renderAddLine" value="false"/>
         <property name="layoutManager.richTable.render" value="true"/>
         <property name="layoutManager.richTable.disableTableSort" value="true" />
+        <property name="layoutManager.richTable.templateOptions">
+            <map merge="true">
+                <entry key="bPaginate" value="true"/>
+                <entry key="bFilter" value="false"/>
+                <entry key="iDisplayLength" value="100"/>
+            </map>
+        </property>
         <property name="items">
             <list>
 
@@ -97,7 +104,7 @@
 
                 <bean id="alterDueDate-callNumber" parent="Uif-DataField" p:label="Call Number" p:propertyName="itemCallNumber"/>
 
-                <bean id="alterDueDate-dueDate" parent="Loan-Uif-InputField" p:propertyName="loanDueDateToAlter" p:label="Due Date">
+                <bean id="alterDueDate-dueDate" parent="Loan-Uif-InputField" p:propertyName="loanDueDateToAlter" p:label="Due Date" p:required="true">
                     <property name="control">
                         <bean parent="Uif-DateControl" p:size="10"/>
                     </property>

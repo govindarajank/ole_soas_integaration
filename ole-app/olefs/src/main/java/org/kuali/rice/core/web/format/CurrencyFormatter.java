@@ -89,8 +89,14 @@ public class CurrencyFormatter extends Formatter {
             // actually reformat the numeric value
             NumberFormat formatter = getCurrencyInstanceUsingParseBigDecimal();
             try {
-                Number parsedNumber = formatter.parse(target);
-                value = new KualiDecimal(parsedNumber.toString());
+                if(target.startsWith("(")){
+                    target = target.substring(1,target.length()-1);
+                    Number parsedNumber = formatter.parse(target);
+                    value = new KualiDecimal("-"+parsedNumber.toString());
+                }else{
+                    Number parsedNumber = formatter.parse(target);
+                    value = new KualiDecimal(parsedNumber.toString());
+                }
             }
             catch (NumberFormatException e) {
                 throw new FormatException("parsing", RiceKeyConstants.ERROR_CURRENCY, rawString, e);

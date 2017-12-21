@@ -33,7 +33,7 @@ public class BibliographicRecordStatus
         List<KeyValue> options = new ArrayList<KeyValue>();
         Collection<OleBibliographicRecordStatus> oleBibliographicRecordStatuses = KRADServiceLocator
                 .getBusinessObjectService().findAll(OleBibliographicRecordStatus.class);
-        options.add(new ConcreteKeyValue("", ""));
+        //options.add(new ConcreteKeyValue("", ""));
         for (OleBibliographicRecordStatus type : oleBibliographicRecordStatuses) {
             if (type.isActive()) {
                 options.add(new ConcreteKeyValue(type.getBibliographicRecordStatusCode(),

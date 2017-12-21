@@ -156,7 +156,7 @@ isValidFilterCriteriaRow = function(filterCriteriaRow, index, $scope) {
 
     if(!(isFieldEmpty(filterCriteriaRow.filterFieldNameText))){
         var fieldTextName = filterCriteriaRow.filterFieldNameText;
-        var regrex = /(^\d\d\d\s+([$][a-z])+$)|(^\d\d\d+([$][a-z])+$)/;
+        var regrex = /(^\d{3}\s([$][a-z])+$)|(^\d{3}([$][a-z])+$)|(^\d{3}$)/;
         var match = fieldTextName.match(regrex);
         if(!match){
             $scope.batchProfileForm['filterFieldNameText_' + index].$dirty = true;

@@ -417,6 +417,7 @@ public abstract class ExportCallable implements Callable {
                 item.setId("wio-" + resultSet.getString("ITEM_ID"));
                 item.setContentObject(itemObj);
                 Location location = RebuildIndexUtil.getLocationDetails(resultSet.getString("LOCATION"), resultSet.getString("LOCATION_LEVEL"));
+                itemObj.setItemIdentifier( resultSet.getString("ITEM_ID"));
                 itemObj.setLocation(location);
                 CallNumber callNumber = new CallNumber();
                 callNumber.setNumber(resultSet.getString("CALL_NUMBER"));
@@ -517,12 +518,13 @@ public abstract class ExportCallable implements Callable {
                 item.setUpdatedBy(resultSet.getString("UPDATED_BY"));
                 item.setUpdatedOn(resultSet.getString("DATE_UPDATED"));
                 item.setLastUpdated(resultSet.getString("DATE_UPDATED"));
-
+                itemHashMap.put(id,item);
             }
             if (itemNoteSet.add(resultSet.getString("ITEM_NOTE_ID"))) {
                 Note note = new Note();
                 note.setValue(resultSet.getString("NOTE"));
                 note.setType(resultSet.getString("TYPE"));
+                note.setDateUpdated(resultSet.getString("DATE_UPDATED"));
                 itemObj.getNote().add(note);
             }
             if (resultSet.getString("STAT_SEARCH_CODE_ID") != null && statisticalSearchSet.add(resultSet.getString("STAT_SEARCH_CODE_ID"))) {
@@ -549,7 +551,7 @@ public abstract class ExportCallable implements Callable {
     }
 
     private String getItemQuery(int holdingsId) {
-        return "SELECT I.*,N.ITEM_NOTE_ID,N.NOTE,N.TYPE, S.STAT_SEARCH_CODE_ID," +
+        return "SELECT I.*,N.ITEM_NOTE_ID,N.NOTE,N.TYPE,N.DATE_UPDATED,S.STAT_SEARCH_CODE_ID," +
                 "D.ITEM_DONOR_ID,D.DONOR_CODE,D.DONOR_DISPLAY_NOTE,D.DONOR_NOTE,HD.HIGH_DENSITY_ROW " +
                 "FROM ole_ds_item_t I " +
                 "LEFT JOIN ole_ds_item_donor_t D ON I.item_id=D.item_id " +

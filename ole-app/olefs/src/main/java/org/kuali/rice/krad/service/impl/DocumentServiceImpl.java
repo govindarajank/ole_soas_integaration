@@ -733,12 +733,10 @@ public class DocumentServiceImpl implements DocumentService {
             }
             if (document != null && document instanceof MaintenanceDocumentBase) {
                 return postProcessDocument(documentHeaderId, workflowDocument, document);
-            }
-            else if(document != null && (document instanceof OleLineItemReceivingDocument || document instanceof LineItemReceivingDocument)) {
+            } else if(document != null && document instanceof OleLineItemReceivingDocument){
                 document.processAfterRetrieve();
                 return document;
-            }
-            else {
+            } else {
                 return document;
             }
         //    return postProcessDocument(documentHeaderId, workflowDocument, document);

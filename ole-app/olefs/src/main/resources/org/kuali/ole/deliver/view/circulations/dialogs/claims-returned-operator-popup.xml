@@ -43,11 +43,7 @@
     <bean id="claimsReturn-popupButtons" parent="Uif-HorizontalBoxSection">
         <property name="items">
             <list>
-                <bean parent="Uif-SecondaryActionButton" p:actionLabel="Ok" p:actionScript="
-                    var billForItem = jq('#claimsReturn-billForItem_control_0').is(':checked');
-                    jq.fancybox.close();
-                    submitForm('processBillForItem',{isBillForItem:billForItem},null,true,function(){
-                    });"/>
+                <bean parent="Uif-SecondaryActionButton" p:actionLabel="Ok" p:methodToCall="processBillForItem"/>
                 <bean parent="Uif-SecondaryActionButton" p:actionLabel="Cancel" p:actionScript="jq.fancybox.close();"/>
             </list>
         </property>

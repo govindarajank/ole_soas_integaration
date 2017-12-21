@@ -47,13 +47,7 @@
     <bean id="checkinClaimsReturn-buttons" parent="Uif-HorizontalBoxSection">
         <property name="items">
             <list>
-                <bean id="checkin-claimsReturnNote-ok" parent="Uif-SecondaryActionButton-Small" p:actionLabel="Ok" p:actionScript="
-                   var isChecked = false;
-                    isChecked = jq('#checkinClaimsReturn-record-Note_control_0').is(':checked');
-                    var itemFoundInLibraryVal = jq('#checkinClaimsReturn-itemFoundInLibrary_control_0').is(':checked');
-                    jq.fancybox.close();
-                    submitForm('processMissingPiece',{recordNoteForClaimChecked:isChecked, isItemFoundInLibrary:itemFoundInLibraryVal},null,true,function(){
-                    });"/>
+                <bean id="checkin-claimsReturnNote-ok" parent="Uif-SecondaryActionButton-Small" p:actionLabel="Ok" p:methodToCall="processMissingPiece"/>
                 <bean id="checkin-claimsReturnNote-cancel" parent="Uif-SecondaryActionButton-Small" p:actionLabel="Cancel" p:actionScript="jq.fancybox.close();submitForm('clearUI',null,null,null,null)"/>
             </list>
         </property>

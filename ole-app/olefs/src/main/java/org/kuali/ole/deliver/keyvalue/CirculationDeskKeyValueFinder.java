@@ -24,7 +24,7 @@ public class CirculationDeskKeyValueFinder extends KeyValuesBase {
         userMap.put("pickUpLocation", "true");
         /*  List<String> myList = new CopyOnWriteArrayList<String>()<String>();*/
         Collection<OleCirculationDesk> oleCirculationDesks = KRADServiceLocator.getBusinessObjectService().findMatching(OleCirculationDesk.class, userMap);
-        options.add(new ConcreteKeyValue("", ""));
+        //options.add(new ConcreteKeyValue("", ""));
         for (OleCirculationDesk oleCirculationDesk : oleCirculationDesks) {
 
             options.add(new ConcreteKeyValue(oleCirculationDesk.getCirculationDeskId(), oleCirculationDesk.getCirculationDeskCode()));

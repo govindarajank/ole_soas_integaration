@@ -120,15 +120,21 @@
             var dd = today.getDate();
             var mm = today.getMonth()+1;
             var yyyy = today.getFullYear();
+            var hour = today.getHours();
+            var minute = today.getMinutes();
             if(dd&lt;10){
                 dd='0'+dd;
             }
             if(mm&lt;10){
                 mm='0'+mm;
             }
-            var currentDate = mm+'/'+dd+'/'+yyyy;
+            if(minute&lt;10){
+                minute='0'+minute;
+            }
+            var currentDate = dd+'/'+mm+'/'+yyyy;
+            var currentTime = hour+':'+minute;
             jq('#checkinCustomDueDate_control').val(currentDate);
-            jq('#checkinCustomDueDateTime_control').val('');
+            jq('#checkinCustomDueDateTime_control').val(currentTime);
             validateCheckInDate();"
           p:actionLabel="Restore System Date/Time"/>
 

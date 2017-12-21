@@ -173,4 +173,5 @@ public class DroolsConstants {
     public static final String ITS_LAP_NOTICE_CONFIG = "its_lap_notice_config";
     public static final String ITS_CNF_NOTICE_CONFIG = "its_cnf_notice_config";
     public static final String ITS_IPD_NOTICE_CONFIG = "its_ipd_notice_config";
+    public static final String LOANED_BY_SAME_PATRON_LOST = "LOANED_BY_SAME_PATRON_LOST";
 }

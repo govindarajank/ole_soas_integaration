@@ -871,6 +871,9 @@ public class DocstoreSolrSearchService implements DocstoreSearchService, Docstor
                 if(searchFieldsMap.get(Bib.AUTHOR).equalsIgnoreCase(searchCondition.getSearchField().getFieldName())){
                     searchText = searchText.replaceAll("-"," ");
                 }
+                if(searchFieldsMap.get(Item.ITEM_BARCODE).equalsIgnoreCase(searchCondition.getSearchField().getFieldName())){
+                    searchText = searchText.toUpperCase();
+                }
                 searchScope = searchCondition.getSearchScope();
                 if (StringUtils.isNotEmpty(searchCondition.getOperator()) && searchCondition.getOperator().equalsIgnoreCase("NOT")) {
                     previousOperator = searchCondition.getOperator();

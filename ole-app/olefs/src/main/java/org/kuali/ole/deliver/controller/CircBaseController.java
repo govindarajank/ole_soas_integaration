@@ -181,7 +181,7 @@ public class CircBaseController extends OLEUifControllerBase{
     }
 
     public void showErrorMessageDialog(UifFormBase form, HttpServletRequest request, HttpServletResponse response) {
-        showDialog("ptrnValidationErrorMessageDialog", form, request, response);
+        showDialog("itemValidationErrorDialog", form, request, response);
     }
 
     public void showHoldErrorMessageDialog(UifFormBase form, HttpServletRequest request, HttpServletResponse response) {

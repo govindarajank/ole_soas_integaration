@@ -142,6 +142,9 @@ public class DocumentUUIDUpdateServiceImpl implements DocumentUUIDUpdateService 
         Integer rcvItmId = 0;
         Integer corItmId = 0;
         Integer itemLineNumber = 0;
+        if(fromId.contains("eHoldings")){
+            fromId = fromId.replace("eHoldings","");
+        }
 
         if(fromRecordType.equals("ITEM")) {
             fromParamMap.put("itemUUID",fromId);

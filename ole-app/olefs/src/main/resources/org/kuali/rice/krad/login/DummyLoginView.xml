@@ -45,7 +45,7 @@
                                     <list>
                                         <ref bean="DummyLoginViewHeadings"/>
                                         <bean parent="Uif-Image"
-                                              p:source="@{#ConfigProperties['krad.ole.soas.externalizable.images.url']}logo-ole.png"/>
+                                              p:source="@{#ConfigProperties['krad.ole.soas.externalizable.images.url']}logo-ole-soas.png"/>
                                         <ref bean="LoginSection"/>
                                     </list>
                                 </property>

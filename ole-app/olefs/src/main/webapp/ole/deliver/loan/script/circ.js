@@ -3,7 +3,7 @@ function openLightboxOnLoad(dialogId) {
     jQuery('.uif-dialogButtons').button();
 }
 
-
+o
 
 
 
@@ -187,15 +187,26 @@ jq(window).load(function () {
 });
 
 function validateCheckInDate() {
-    var checkInDate = new Date(jq("#checkinCustomDueDate_control").val());
+    var checkInDate = (jq("#checkinCustomDueDate_control").val());
     jq('#alertBoxSectionForCheckinCustomDueDate').attr('style', 'display:none');
     if (!jq.trim(checkInDate) == "") {
         if (jq("#checkinCustomDueDate_control").valid()) {
-            var currentDate = new Date();
+            /*var currentDate = new Date();
             currentDate.setMilliseconds(0);
             currentDate.setSeconds(0);
             currentDate.setMinutes(0);
-            currentDate.setHours(0);
+            currentDate.setHours(0);*/
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth()+1;
+            var yyyy = today.getFullYear();
+            if(dd<10) {
+                dd = '0' + dd;
+            }
+            if(mm<10) {
+                mm = '0' + mm;
+            }
+            var currentDate = dd+'/'+mm+'/'+yyyy;
             if (currentDate > checkInDate) {
                 jq('#alertBoxSectionForCheckinCustomDueDate').attr('style', 'display:inline');
             } else if (currentDate < checkInDate) {

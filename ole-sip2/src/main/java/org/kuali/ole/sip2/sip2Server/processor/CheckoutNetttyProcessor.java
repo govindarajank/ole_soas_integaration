@@ -37,7 +37,7 @@ public class CheckoutNetttyProcessor extends NettyProcessor {
     public String process(String requestData) {
         String response = "";
         OLESIP2CheckOutRequestParser sip2CheckOutRequestParser = new OLESIP2CheckOutRequestParser(requestData);
-        if(requestData.contains("|AA") && requestData.contains("|AB") && requestData.contains("|AY")) {
+        if(requestData.contains("|AA") && requestData.contains("|AB")) {
 
             requestData = createJSONForCheckoutItemRequest(sip2CheckOutRequestParser.getPatronIdentifier(), sip2CheckOutRequestParser.getItemIdentifier(), "SIP2_OPERATOR_ID");
             response = postRequest(requestData, "/checkoutItemSIP2", serverURL);
