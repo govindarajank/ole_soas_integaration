@@ -12,17 +12,13 @@ import org.kuali.rice.krad.service.KRADServiceLocator;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.sql.ResultSet;
-import java.sql.PreparedStatement;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Calendar;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by govindarajank on 5/9/17.
@@ -138,7 +134,7 @@ public class InvoiceFileRecordProcessor{
 
     public void updateParameterforNextRunTimeAgresso() {
         parameterService = (ParameterService) SpringContext.getService("parameterService");
-        ParameterKey parameterKey = ParameterKey.create(OLEConstants.APPL_ID, OLEConstants.SELECT_NMSPC, OLEConstants.SELECT_CMPNT,OLEConstants.AgressoCreateFile.LASTBATCHJOBRUNDATE);
+        ParameterKey parameterKey = ParameterKey.create(OLEConstants.APPL_ID, OLEConstants.SELECT_NMSPC, OLEConstants.SELECT_CMPNT, OLEConstants.AgressoCreateFile.LASTBATCHJOBRUNDATE);
         Parameter parameter = CoreServiceApiServiceLocator.getParameterRepositoryService().getParameter(parameterKey);
         if ( parameter != null ) {
             Parameter.Builder updatedParameter = Parameter.Builder.create(parameter);
