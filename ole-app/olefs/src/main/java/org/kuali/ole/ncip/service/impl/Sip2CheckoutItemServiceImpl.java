@@ -73,7 +73,7 @@ public class Sip2CheckoutItemServiceImpl extends CheckoutItemServiceImpl {
         facts.add(getOlePatronDocument());
         DroolsResponse droolsResponse = new DroolsResponse();
         facts.add(droolsResponse);
-        new CircUtilController().fireRules(facts, null, "lookup-user-sip2");
+        new CircUtilController().fireRules(facts, null, "general-checks");
         return droolsResponse.getErrorMessage().getErrorMessage();
     }
 }

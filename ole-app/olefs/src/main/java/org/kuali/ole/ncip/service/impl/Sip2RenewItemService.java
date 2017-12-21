@@ -22,7 +22,7 @@ public class Sip2RenewItemService extends RenewItemsService {
         facts.add(olePatronDocument);
         DroolsResponse droolsResponse = new DroolsResponse();
         facts.add(droolsResponse);
-        new CircUtilController().fireRules(facts, null, "lookup-user-sip2");
+        new CircUtilController().fireRules(facts, null, "general-checks");
         return droolsResponse;
     }
 

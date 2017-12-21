@@ -41,7 +41,7 @@ public class SimpleChartValuesFinder extends KeyValuesBase {
         Collection<Chart> chartCodes = SpringContext.getBean(ChartService.class).getAllActiveCharts();
 
         List<KeyValue> chartKeyLabels = new ArrayList<KeyValue>();
-        chartKeyLabels.add(new ConcreteKeyValue("", ""));
+        //chartKeyLabels.add(new ConcreteKeyValue("", ""));
         for ( Chart chart : chartCodes ) {
             chartKeyLabels.add(new ConcreteKeyValue(chart.getChartOfAccountsCode(), chart.getChartOfAccountsCode()));
         }

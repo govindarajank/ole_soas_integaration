@@ -25,10 +25,12 @@ public class ShelvingScheme extends KeyValuesBase {
     public List<KeyValue> getKeyValues() {
         List<KeyValue> options = new ArrayList<KeyValue>();
         Collection<OleShelvingScheme> oleShelvingSchemes = KRADServiceLocator.getBusinessObjectService().findAll(OleShelvingScheme.class);
-         options.add(new ConcreteKeyValue("", ""));
+        options.add(new ConcreteKeyValue("LCC", "Library of Congress Classification (LCC)"));
         for (OleShelvingScheme type : oleShelvingSchemes) {
             if (type.isActive()) {
-                options.add(new ConcreteKeyValue(type.getShelvingSchemeCode(), type.getShelvingSchemeName()));
+                if(!type.getShelvingSchemeCode().equalsIgnoreCase("LCC")) {
+                    options.add(new ConcreteKeyValue(type.getShelvingSchemeCode(), type.getShelvingSchemeName()));
+                }
             }
         }
         return options;

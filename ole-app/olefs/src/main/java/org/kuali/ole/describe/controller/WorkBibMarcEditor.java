@@ -246,6 +246,11 @@ public class WorkBibMarcEditor extends AbstractEditor implements
                 }
             }
 
+            if(CollectionUtils.isEmpty(workBibMarcForm.getDataFields())) {
+                workBibMarcForm.setDataFields(buildDefaultDataFields());
+            }else {
+                workBibMarcForm.getDataFields().addAll(buildDefaultDataFields());
+            }
         }
         // Add a node for this document to the left pane tree.
         addDocumentToTree(editorForm);
@@ -1622,6 +1627,39 @@ public class WorkBibMarcEditor extends AbstractEditor implements
             oleeResourceInstances.add(oleeResourceInstance);
         }
         return oleeResourceInstances;
+    }
+
+    private List<MarcEditorDataField> buildDefaultDataFields(){
+        List<MarcEditorDataField> marcEditorDataFields = new ArrayList<MarcEditorDataField>();
+        MarcEditorDataField marcEditorDataField40 = new MarcEditorDataField();
+        marcEditorDataField40.setTag("040");
+        marcEditorDataField40.setInd1("#");
+        marcEditorDataField40.setInd2("#");
+        marcEditorDataField40.setValue("|a LOA |b eng |e rda |c LOA ");
+        marcEditorDataFields.add(marcEditorDataField40);
+
+        MarcEditorDataField marcEditorDataField336 = new MarcEditorDataField();
+        marcEditorDataField336.setTag("336");
+        marcEditorDataField336.setInd1("#");
+        marcEditorDataField336.setInd2("#");
+        marcEditorDataField336.setValue("|a text |b txt |2 rdacontent ");
+        marcEditorDataFields.add(marcEditorDataField336);
+
+        MarcEditorDataField marcEditorDataField337 = new MarcEditorDataField();
+        marcEditorDataField337.setTag("337");
+        marcEditorDataField337.setInd1("#");
+        marcEditorDataField337.setInd2("#");
+        marcEditorDataField337.setValue("|a unmediated |b n |2  rdamedia ");
+        marcEditorDataFields.add(marcEditorDataField337);
+
+        MarcEditorDataField marcEditorDataField338 = new MarcEditorDataField();
+        marcEditorDataField338.setTag("338");
+        marcEditorDataField338.setInd1("#");
+        marcEditorDataField338.setInd2("#");
+        marcEditorDataField338.setValue("|a volume |b nc |2 rdacarrier");
+        marcEditorDataFields.add(marcEditorDataField338);
+
+        return marcEditorDataFields;
     }
 
 }

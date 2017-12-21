@@ -19,7 +19,7 @@ public class VuFindCheckoutItemServiceImplImpl extends NonSip2CheckoutItemServic
         facts.add(getOlePatronDocument());
         DroolsResponse droolsResponse = new DroolsResponse();
         facts.add(droolsResponse);
-        new CircUtilController().fireRules(facts, null, "lookup-user-vufind");
+        new CircUtilController().fireRules(facts, null, "general-checks");
         return droolsResponse.getErrorMessage().getErrorMessage();
     }
 }

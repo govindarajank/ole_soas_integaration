@@ -461,14 +461,14 @@
     <sequence name="OLE_DS_HOLDINGS_ACCESS_LOC_S" nextval="1"/>
     <sequence name="OLE_DS_HOLDINGS_COVERAGE_S" nextval="1"/>
     <sequence name="OLE_DS_HOLDINGS_DONOR_S" nextval="1"/>
-    <sequence name="OLE_DS_HOLDINGS_NOTE_S" nextval="1"/>
+    <sequence name="OLE_DS_HOLDINGS_NOTE_S" nextval="10000001"/>
     <sequence name="OLE_DS_ITEM_HOLDINGS_S" nextval="1"/>
-    <sequence name="OLE_DS_HOLDINGS_S" nextval="1"/>
+    <sequence name="OLE_DS_HOLDINGS_S" nextval="10000001"/>
     <sequence name="OLE_DS_HOLDINGS_STAT_SEARCH_S" nextval="1"/>
     <sequence name="OLE_DS_HOLDINGS_URI_S" nextval="1"/>
     <sequence name="OLE_DS_ITEM_DONOR_S" nextval="1"/>
-    <sequence name="OLE_DS_ITEM_NOTE_S" nextval="1"/>
-    <sequence name="OLE_DS_ITEM_S" nextval="1"/>
+    <sequence name="OLE_DS_ITEM_NOTE_S" nextval="10000001"/>
+    <sequence name="OLE_DS_ITEM_S" nextval="10000001"/>
     <sequence name="OLE_DS_ITEM_STAT_SEARCH_S" nextval="1"/>
     <sequence name="OLE_DS_ITEM_TYPE_S" nextval="1"/>
     <sequence name="OLE_DS_LOC_CHECKIN_COUNT_S" nextval="1"/>
