@@ -2664,18 +2664,21 @@ public class PurapGeneralLedgerServiceImpl implements PurapGeneralLedgerService 
      */
     protected PurchaseOrderItem getPoItem(PurchaseOrderDocument po, Integer nbr, ItemType itemType) {
         LOG.debug("getPoItem() started");
-        for (Iterator iter = po.getItems().iterator(); iter.hasNext(); ) {
-            PurchaseOrderItem element = (PurchaseOrderItem) iter.next();
-            if (itemType.isLineItemIndicator()) {
-                if (ObjectUtils.isNotNull(nbr) && ObjectUtils.isNotNull(element.getItemLineNumber()) && (nbr.compareTo(element.getItemLineNumber()) == 0)) {
-                    return element;
-                }
-            } else {
-                if (element.getItemTypeCode().equals(itemType.getItemTypeCode())) {
-                    return element;
+        if(po!=null) {
+            for (Iterator iter = po.getItems().iterator(); iter.hasNext(); ) {
+                PurchaseOrderItem element = (PurchaseOrderItem) iter.next();
+                if (itemType.isLineItemIndicator()) {
+                    if (ObjectUtils.isNotNull(nbr) && ObjectUtils.isNotNull(element.getItemLineNumber()) && (nbr.compareTo(element.getItemLineNumber()) == 0)) {
+                        return element;
+                    }
+                } else {
+                    if (element.getItemTypeCode().equals(itemType.getItemTypeCode())) {
+                        return element;
+                    }
                 }
             }
         }
+
         return null;
     }
 

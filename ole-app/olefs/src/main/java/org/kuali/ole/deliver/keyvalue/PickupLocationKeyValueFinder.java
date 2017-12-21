@@ -19,6 +19,10 @@ import java.util.*;
 public class PickupLocationKeyValueFinder extends UifKeyValuesFinderBase {
 
 
+    public boolean isAddBlankOption() {
+        return false;
+    }
+
     @Override
     public List<KeyValue> getKeyValues() {
         List<KeyValue> options = new ArrayList<KeyValue>();

@@ -44,14 +44,14 @@
 <c:set var="fullEntryMode"
        value="${KualiForm.documentActions[Constants.KUALI_ACTION_CAN_EDIT] && (empty KualiForm.editingMode['restrictFiscalEntry'])}" />
 
-	<%-- default to closed --%>
+	<%-- default to open --%>
 	<c:choose>
 		<c:when test="${empty currentTab}">
-			<c:set var="isOpen" value="false" />
+			<c:set var="isOpen" value="true" />
 			<html:hidden property="tabStates(${tabKey})" value="CLOSE" />		
 		</c:when>
 		<c:when test="${!empty currentTab}">
-			<c:set var="isOpen" value="${currentTab == 'OPEN'}" />
+			<c:set var="isOpen" value="true" />
 		</c:when>
 	</c:choose>
 

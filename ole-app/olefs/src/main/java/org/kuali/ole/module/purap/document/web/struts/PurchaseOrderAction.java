@@ -1388,6 +1388,8 @@ public class PurchaseOrderAction extends PurchasingActionBase {
         ActionForward forward = super.docHandler(mapping, form, request, response);
         PurchaseOrderForm poForm = (PurchaseOrderForm) form;
         PurchaseOrderDocument po = (PurchaseOrderDocument) poForm.getDocument();
+        OlePurchaseOrderItem olePurchaseOrderItem = (OlePurchaseOrderItem) poForm.getNewPurchasingItemLine();
+        setDefaultItemStatusAndLocation(po, olePurchaseOrderItem);
         po.processAfterRetrieve();
         ActionMessages messages = new ActionMessages();
         checkForPOWarnings(po, messages);
@@ -1936,6 +1938,24 @@ public class PurchaseOrderAction extends PurchasingActionBase {
         PurchaseOrderDocument po = (PurchaseOrderDocument) ((PurchaseOrderForm) form).getDocument();
         SpringContext.getBean(PurchaseOrderService.class).retransmitB2BPurchaseOrder(po);
         return mapping.findForward(OLEConstants.MAPPING_BASIC);
+    }
+
+    /**
+     * This method sets the default values of item status and item location for order type.
+     * @param purchaseOrderDocument
+     * @param olePurchaseOrderItem
+     */
+    protected void setDefaultItemStatusAndLocation(PurchaseOrderDocument purchaseOrderDocument, OlePurchaseOrderItem olePurchaseOrderItem) {
+        if (null != purchaseOrderDocument && purchaseOrderDocument.getPurchaseOrderTypeId().equals(BigDecimal.valueOf(1))) {
+            olePurchaseOrderItem.setItemLocation(OLEConstants.OleRequisitionItem.FIRM_FIXED_ITEM_LOCATION);
+            olePurchaseOrderItem.setItemStatus(OLEConstants.OleRequisitionItem.FIRM_FIXED_ITEM_STATUS);
+        } else if (null != purchaseOrderDocument && purchaseOrderDocument.getPurchaseOrderTypeId().equals(BigDecimal.valueOf(5))) {
+            olePurchaseOrderItem.setItemLocation(OLEConstants.OleRequisitionItem.APPROVAL_ITEM_LOCATION);
+            olePurchaseOrderItem.setItemStatus(OLEConstants.OleRequisitionItem.APPROVAL_ITEM_STATUS);
+        } else {
+            olePurchaseOrderItem.setItemLocation(OLEConstants.EMPTY_STRING);
+            olePurchaseOrderItem.setItemStatus(OLEConstants.EMPTY_STRING);
+        }
     }
 
 }

@@ -1923,27 +1923,33 @@ public class PatronBillHelperService {
         checkinForm.setItemBarcode(feeType.getItemBarcode());
         checkinForm.setCustomDueDateMap(new Date());
         checkinForm.setSelectedCirculationDesk("1");
+        ItemRecord itemRecord = ItemInfoUtil.getInstance().getItemRecordByBarcode(checkinForm.getItemBarcode());
+        if(itemRecord!=null && itemRecord.getItemStatusRecord()!=null && !itemRecord.getItemStatusRecord().getCode().equalsIgnoreCase("LOST")) {
+            return;
+        }
         checkinItemController.getCheckinUIController(checkinForm).checkin(checkinForm);
         OleCirculationDesk oleCirculationDesk = getCircDeskLocationResolver().getOleCirculationDesk(checkinForm.getSelectedCirculationDesk());
-        OleItemRecordForCirc oleItemRecordForCirc = ItemInfoUtil.getInstance().getOleItemRecordForCirc((ItemRecord) checkinForm.getDroolsExchange().getContext().get("itemRecord"), oleCirculationDesk);
-        OleItemSearch oleItemSearch = new DocstoreUtil().getOleItemSearchList(oleItemRecordForCirc.getItemUUID());
-        try {
-            OleLoanDocument loanDocument = (OleLoanDocument) checkinForm.getDroolsExchange().getContext().get("oleLoanDocument");
-            if (loanDocument!=null){
-                if (getOleDeliverRequestDocumentHelperService().getRequestByItem(loanDocument.getItemId()).size() > 0) {
-                    isRequestExists = true;
+        if(checkinForm.getDroolsExchange().getContext()!=null && checkinForm.getDroolsExchange().getContext().size()>0) {
+            OleItemRecordForCirc oleItemRecordForCirc = ItemInfoUtil.getInstance().getOleItemRecordForCirc((ItemRecord) checkinForm.getDroolsExchange().getContext().get("itemRecord"), oleCirculationDesk);
+            OleItemSearch oleItemSearch = new DocstoreUtil().getOleItemSearchList(oleItemRecordForCirc.getItemUUID());
+            try {
+                OleLoanDocument loanDocument = (OleLoanDocument) checkinForm.getDroolsExchange().getContext().get("oleLoanDocument");
+                if (loanDocument != null) {
+                    if (getOleDeliverRequestDocumentHelperService().getRequestByItem(loanDocument.getItemId()).size() > 0) {
+                        isRequestExists = true;
+                    }
+                    if (isRequestExists) {
+                        new OleDeliverRequestDocumentHelperServiceImpl().cancelPendingRequestForClaimsReturnedItem(loanDocument.getItemUuid());
+                        loanDocument.setDeliverNotices(null);
+                    }
+                    loanDocument.setItemStatus(OLEConstants.ITEM_STATUS_LOST_AND_PAID);
+                    oleItemRecordForCirc.setItemStatusToBeUpdatedTo(OLEConstants.ITEM_STATUS_LOST_AND_PAID);
+                    checkinItemController.getCheckinUIController(checkinForm).updateLoanDocument(loanDocument, oleItemSearch, (ItemRecord) checkinForm.getDroolsExchange().getContext().get("itemRecord"));
+                    checkinItemController.getCheckinUIController(checkinForm).updateItemStatusAndCircCount(oleItemRecordForCirc);
                 }
-                if(isRequestExists){
-                    new OleDeliverRequestDocumentHelperServiceImpl().cancelPendingRequestForClaimsReturnedItem(loanDocument.getItemUuid());
-                    loanDocument.setDeliverNotices(null);
-                }
-                loanDocument.setItemStatus(OLEConstants.ITEM_STATUS_LOST_AND_PAID);
-                oleItemRecordForCirc.setItemStatusToBeUpdatedTo(OLEConstants.ITEM_STATUS_LOST_AND_PAID);
-                checkinItemController.getCheckinUIController(checkinForm).updateLoanDocument(loanDocument, oleItemSearch, (ItemRecord) checkinForm.getDroolsExchange().getContext().get("itemRecord"));
-                checkinItemController.getCheckinUIController(checkinForm).updateItemStatusAndCircCount(oleItemRecordForCirc);
-            }
-        }catch (Exception e){
+            } catch (Exception e) {
 
+            }
         }
     }
 
