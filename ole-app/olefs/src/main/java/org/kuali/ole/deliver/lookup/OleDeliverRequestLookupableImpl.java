@@ -144,7 +144,21 @@ public class OleDeliverRequestLookupableImpl extends LookupableImpl {
                 oleDeliverRequestBo = displayList.get(i);
                 getDocstoreUtil().isItemAvailableInDocStore(oleDeliverRequestBo);
                 if (itemTitle != null && !itemTitle.isEmpty() && !oleDeliverRequestBo.getTitle().toUpperCase().equals(itemTitle.toUpperCase())) {
-                    // displayList.remove(i);
+                    Map<String, String> patronMap = new HashMap<String, String>();
+                    patronMap.put("entityId",oleDeliverRequestBo.getBorrowerId());
+                    entityNameBos = (List<EntityNameBo>) KRADServiceLocator.getBusinessObjectService().findMatching(EntityNameBo.class, patronMap);
+                    if (entityNameBos.size() > 0) {
+                        displayList.get(i).setFirstName(entityNameBos.get(0).getFirstName());
+                        displayList.get(i).setLastName(entityNameBos.get(0).getLastName());
+                    }
+                    if(itemTitle.equals("*")) {
+                        oleDeliverRequestBoList.add(displayList.get(i));
+                    }else{
+                        if (oleDeliverRequestBo.getTitle().contains(itemTitle)) {
+                            oleDeliverRequestBoList.add(displayList.get(i));
+                        }
+                    }
+
                 } else {
                     Map<String, String> patronMap = new HashMap<String, String>();
                     patronMap.put("entityId",oleDeliverRequestBo.getBorrowerId());

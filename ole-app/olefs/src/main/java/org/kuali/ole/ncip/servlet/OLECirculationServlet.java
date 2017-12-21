@@ -2,6 +2,7 @@ package org.kuali.ole.ncip.servlet;
 
 import org.apache.log4j.Logger;
 import org.kuali.ole.converter.OLECheckInItemConverter;
+import org.kuali.ole.converter.OLEFinePaymentConverter;
 import org.kuali.ole.converter.OLELookupUserConverter;
 import org.kuali.ole.converter.OLERenewItemConverter;
 import org.kuali.ole.ncip.bo.OLECirculationErrorMessage;
@@ -127,7 +128,7 @@ public class OLECirculationServlet extends HttpServlet {
                         }
                         break;
                     case OLENCIPConstants.RENEWITEM_SERVICE:
-                        if(parameterMap.containsKey(OLENCIPConstants.PATRON_BARCODE) &&
+                            if(parameterMap.containsKey(OLENCIPConstants.PATRON_BARCODE) &&
                                 parameterMap.containsKey(OLENCIPConstants.OPERATOR_ID) &&
                                 parameterMap.containsKey(OLENCIPConstants.ITEM_BARCODE)){
                             if(parameterMap.size()==4 || parameterMap.size()==5){
@@ -440,6 +441,44 @@ public class OLECirculationServlet extends HttpServlet {
                         }
                     }else{
                         responseString=getCirculationErrorMessage(service,OLENCIPConstants.PARAMETER_MISSING,"502",OLENCIPConstants.FINE,outputFormat);
+                    }
+                }
+                else if(service.equals(OLENCIPConstants.FINE_PAYMENT)) {
+                    if (parameterMap.containsKey(OLENCIPConstants.PATRON_BARCODE) &&
+                            parameterMap.containsKey(OLENCIPConstants.PAYMENT_TYPE) &&
+                            parameterMap.containsKey(OLENCIPConstants.AMOUNT_PAID) &&
+                            parameterMap.containsKey(OLENCIPConstants.BILL_IDS)) {
+                        if (parameterMap.size() == 9 || parameterMap.size() == 8) {
+
+                            Map finePaymentParameter = new HashMap();
+                            finePaymentParameter.put("patronBarcode", parameterMap.get(OLENCIPConstants.PATRON_BARCODE)[0]);
+                            finePaymentParameter.put("operatorId", parameterMap.get(OLENCIPConstants.OPERATOR_ID)[0]);
+                            String patronBillIds = parameterMap.get(OLENCIPConstants.BILL_IDS)[0];
+                            String[] billIdsArray = patronBillIds.split(",");
+                            List<String> billIds = Arrays.asList(billIdsArray);
+                            finePaymentParameter.put("billIds", billIds);
+                            finePaymentParameter.put("amountPaid", parameterMap.get(OLENCIPConstants.AMOUNT_PAID)[0]);
+                            finePaymentParameter.put("responseFormatType", outputFormat);
+                            finePaymentParameter.put("transcationReference", parameterMap.get(OLENCIPConstants.TRANSCATION_REFERENCE)[0]);
+                            finePaymentParameter.put("fineType", parameterMap.get(OLENCIPConstants.FINE_TYPE)[0]);
+                            finePaymentParameter.put("paymentType", parameterMap.get(OLENCIPConstants.PAYMENT_TYPE)[0]);
+                            responseString = new NonSip2FinePaymentVufindService().finePayment(finePaymentParameter);
+                            if (outputFormat.equalsIgnoreCase(OLENCIPConstants.JSON_FORMAT)) {
+                                responseString = new OLEFinePaymentConverter().generateFinePaymentJson(responseString);
+                            }
+                            if (responseString == null) {
+                                OLENCIPErrorResponse olencipErrorResponse = new OLENCIPErrorResponse();
+                                olencipErrorResponse.getErrorMap().put(OLENCIPConstants.PATRON_BARCODE, parameterMap.get(OLENCIPConstants.PATRON_BARCODE)[0]);
+                                olencipErrorResponse.getErrorMap().put(OLENCIPConstants.OPERATOR_ID, parameterMap.get(OLENCIPConstants.OPERATOR_ID)[0]);
+                                olencipErrorResponse.getErrorMap().put(OLENCIPConstants.MESSAGE, OLENCIPConstants.INVALID_INPUT);
+                                responseString = olencipErrorResponse.getErrorXml(service);
+                            }
+                        } else {
+                            responseString = getCirculationErrorMessage(service, OLENCIPConstants.INVALID_PARAMETERS, "501", OLENCIPConstants.CHECKINITEM, outputFormat);
+
+                        }
+                    } else {
+                        responseString = getCirculationErrorMessage(service, OLENCIPConstants.PARAMETER_MISSING, "502", OLENCIPConstants.CHECKINITEM, outputFormat);
                     }
                 }
                 else if(service.equals(OLENCIPConstants.HOLDS_SERVICE)){

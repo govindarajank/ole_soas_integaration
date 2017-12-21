@@ -804,7 +804,9 @@ public class OleDocstoreHelperServiceImpl extends BusinessObjectServiceHelperUti
         docstoreItemType.setCodeValue(itemTypeDescription);
         docstoreItemType.setFullValue(itemTypeDescription);
         item.setItemType(docstoreItemType);
-        item.setEnumeration(oleCopy.getEnumeration());
+        if(oleCopy.getEnumeration() != null && !oleCopy.getEnumeration().equalsIgnoreCase("null ")) {
+            item.setEnumeration(oleCopy.getEnumeration());
+        }
         if(newItem) {
             item.setCopyNumber(oleCopy.getCopyNumber());
         }

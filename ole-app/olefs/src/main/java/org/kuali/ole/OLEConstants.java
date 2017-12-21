@@ -459,6 +459,8 @@ public class OLEConstants {
     public static final String BIB_INSTANCE_ID = "instanceIdentifier";
     public static final String BIB_ITEM_ID = "itemIdentifier";
     public static final String NOTE_TYPE = "public";
+    public static final String NON_PUBLIC_NOTE_TYP = "nonPublic";
+    public static final String ACQUIRED_NOTE_TYP = "acquired";
     public static final String LOCATION_LOCATIONLEVEL_NAME = "location.locationLevel.name";
     public static final String LOCATION_LOCATIONLEVEL_LEVEL = "location.locationLevel.level";
     public static final String PERMANENT = "permanent";
@@ -654,6 +656,9 @@ public class OLEConstants {
         public static final String DESTINATION_FIELD_DONOR_NOTE = "Donor Note";
         public static final String DESTINATION_FIELD_DONOR_CODE = "Donor Code";
         public static final String PUBLIC_NOTE = "Public Note";
+        public static final String NON_PUBLIC_NOTE = "Non Public Note";
+        public static final String ACQUIRED_NOTE = "Acquired Note";
+        public static final String ACQUIRED_NOTE_DATE = "Acquired Note Date";
         public static final String SOURCE_FIELD_DATE_CREATED = "Date Created";
         public static final String LCC = "LCC";
         public static final String LOCAL_IDENTIFIER = "Local Identifier";
@@ -2196,9 +2201,9 @@ public class OLEConstants {
     public static final String COPY_NUM = "copyNumber";
     public static final String BIBUUID = "bibUuid";
     public static final String EFF_DATE_FORMAT = "MMM dd, yyyy HH:MM:SS a";
-    public static final String COURTESY_NOTICE = "Courtesy Notice";
+    public static final String COURTESY_NOTICE = "CourtesyNotice";
     public static final String HOLD_EXP_COURTESY_NOTICE = "Expired Hold  Notice";
-    public static final String OVERDUE_NOTICE = "Overdue Notice";
+    public static final String OVERDUE_NOTICE = "OverdueNotice";
     public static final String CLAIMS_RETURNED_NOTICE = "Claims Returned Notice";
     public static final String CHECKOUT_RECEIPT_NOTICE = "Checkout Receipt";
     public static final String CLAIMS_RETURNED_FOUND_NO_FEES_NOTICE = "Claims Returned Found No Fees Notice";
@@ -3125,6 +3130,9 @@ public class OLEConstants {
         public static final String NUM_0001 = "0001";
         public static final String SYMBOL_ASTERISK = "*";
         public static final String DOC_LOOKUP_SERVICE = "docLookupService";
+        public static final String INST_SAN_NUM = "INST_SAN_NUM";
+
+        public static final String BATCH_PATRON_LIST_EXPORT_DIR_PATH = "batch.patron.list.export";
     }
     public static final class OleSerialReceivingTypeLoader {
         public static final String SER_RCPT_HIS_REC_ID = "SER_RCPT_HIS_REC_ID";
@@ -3495,8 +3503,6 @@ public class OLEConstants {
     public static final String REQUEST_CANCELLED = "message.request.cancelled";
     public static final String REQUEST_EXPIRED = "message.request.expired";
     public static final String HOLD_REQUEST_EXPIRED = "message.request.hold.expired";
-
-
 
 
     public static String getParameter(String name) {
@@ -3871,6 +3877,30 @@ public class OLEConstants {
     public static final String MAIN_REC_REC_TYP = "Main";
     public static final String MESSAGE_UNSAVED_CHANGES = "message.unsaved.changes";
 
+    public static final String VUFIND = "VUFIND";
+
+    public static final class OleForgotPassword {
+        public static final String PWD_CODE_VALIDATE = "error.pwd.mismatch";
+        public static final String CUR_PWD_CODE_VALIDATE="error.current.pwd.mismatch";
+        public static final String USER_NOT_EXSIT ="error.user.not.exist";
+    }
+
+
+    public static final class OleResetPassword {
+        public static final String PWD_CODE_VALIDATE = "error.pwd.mismatch";
+        public static final String CUR_PWD_CODE_VALIDATE="error.current.pwd.mismatch";
+        public static final String USER_NOT_EXSIT ="error.user.not.exist";
+    }
+
+
+    public static final Integer DEFAULT_DELIVER_ITEM_SEARCH_RESULTS_LIMIT = 100;
+    public static final String LOST_NOTICE_CONTENT="LOST_NOTICE_CONTENT";
+
+    public static String getParameter(String applId,String namespace,String component,String paramName){
+        ParameterKey parameterKey = ParameterKey.create(applId, namespace, component, paramName);
+        Parameter parameter = CoreServiceApiServiceLocator.getParameterRepositoryService().getParameter(parameterKey);
+        return parameter!=null?parameter.getValue():null;
+    }
 
     public static final String MAX_NO_OF_THREAD_FOR_ORDER_IMPORT = "MAX_NO_OF_THREAD_FOR_ORDER_IMPORT";
     public static final String CHUNK_SIZE_FOR_ORDER_IMPORT = "CHUNK_SIZE_FOR_ORDER_IMPORT";
@@ -3899,6 +3929,8 @@ public class OLEConstants {
     public static final String PAY_APPL_CRDT = "Applied Credit";
     public static final String RECALL_DELIVERY_REQUEST="Recall/Delivery Request";
     public static final String RECALL_HOLD_REQUEST="Recall/Hold Request";
+
+    public static final String DATE_FORMAT_FOR_TIME_SEC=" HH:mm:ss";
     public static final String OVER_PAYMENT="refund.over.payment";
     public static final String ENTRR_REFUND_AMT="enter.refund.amount";
     public static final String NOTIFY_CLAIMS_RETURNED_TO_PATRON="NOTIFY_CLAIMS_RETURNED_TO_PATRON";

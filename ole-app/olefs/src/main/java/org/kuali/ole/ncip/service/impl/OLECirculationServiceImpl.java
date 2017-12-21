@@ -37,6 +37,7 @@ import org.kuali.rice.krms.api.engine.EngineResults;
 import org.kuali.rice.krms.api.engine.ResultEvent;
 
 import java.sql.*;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
@@ -351,6 +352,7 @@ public class OLECirculationServiceImpl implements OLECirculationService {
             if (oleDeliverRequestBoList != null && oleDeliverRequestBoList.size() > 0) {
                 OleDeliverRequestBo oleDeliverRequestBo = oleDeliverRequestBoList.get(0);
                 oleDeliverRequestBo.setOperatorCreateId(operator);
+                oleDeliverRequestBo.setOperatorCreateName(operator);
                 oleDeliverRequestDocumentHelperService.cancelDocument(oleDeliverRequestBo);
                 oleCancelRequest.setCode("007");
                 oleCancelRequest.setMessage(ConfigContext.getCurrentContextConfig().getProperty(OLEConstants.REQUEST_SUCCESSFULLEY_CANCELLED));
@@ -639,6 +641,13 @@ public class OLECirculationServiceImpl implements OLECirculationService {
                 oleItemFine.setAmount((feeType.getFeeAmount() != null ? feeType.getFeeAmount().bigDecimalValue() : OLEConstants.BIGDECIMAL_DEF_VALUE));
                 oleItemFine.setBalance((feeType.getBalFeeAmount() != null ? feeType.getBalFeeAmount().bigDecimalValue() : OLEConstants.BIGDECIMAL_DEF_VALUE));
                 oleItemFine.setBillDate(feeType.getBillDate().toString());
+                oleItemFine.setId(feeType.getId());
+                DateFormat dateFormat= new SimpleDateFormat("dd/MM/yyyy");
+                if(feeType.getCheckOutDate()!=null) {
+                    oleItemFine.setCheckoutDate(dateFormat.format(feeType.getCheckOutDate()));
+                }if(feeType.getDueDate()!=null) {
+                    oleItemFine.setDueDate(dateFormat.format(feeType.getDueDate()));
+                }
                 int noOfPayment = feeType.getItemLevelBillPaymentList().size();
                 oleItemFine.setNoOfPayments(new Integer(noOfPayment).toString());
                 if (feeType.getOleFeeType() != null) {

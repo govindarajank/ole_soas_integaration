@@ -20,6 +20,8 @@ import org.kuali.ole.service.OleCirculationPolicyService;
 import org.kuali.ole.service.OleCirculationPolicyServiceImpl;
 import org.kuali.ole.sys.context.SpringContext;
 import org.kuali.ole.util.DocstoreUtil;
+import org.kuali.rice.core.api.CoreApiServiceLocator;
+import org.kuali.rice.core.api.config.property.ConfigContext;
 import org.kuali.rice.core.api.exception.RiceRuntimeException;
 import org.kuali.rice.core.api.resourceloader.GlobalResourceLoader;
 import org.kuali.rice.core.api.util.xml.XmlHelper;
@@ -58,7 +60,7 @@ import java.util.Date;
  * User: ?
  * Date: 10/17/12
  * Time: 1:59 PM
- * To change this template use File | Settings | File Templates.
+ * To change this template use File | Settings | File Templates C.
  */
 @Controller
 @RequestMapping(value = "/deliverRequestMaintenance")
@@ -160,7 +162,7 @@ public class OleDeliverRequestMaintenanceDocumentController extends MaintenanceD
         MaintenanceDocument document = form.getDocument();
         OleDeliverRequestBo oleDeliverRequestBo = (OleDeliverRequestBo) document.getOldMaintainableObject().getDataObject();
         service.cancelDocument(oleDeliverRequestBo);
-
+        form.setReturnLocation(CoreApiServiceLocator.getKualiConfigurationService().getPropertyValueAsString("ole.cancelrequest.redirect.url")+"&returnLocation="+ ConfigContext.getCurrentContextConfig().getProperty("ole.fs.url.base")+"/portal.do&hideReturnLink=true&showMaintenanceLinks=true");
         return back(form, result, request, response);
     }
 
