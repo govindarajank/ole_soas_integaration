@@ -529,6 +529,7 @@ public class OlePurchaseOrderItem extends PurchaseOrderItem implements OlePurcha
         this.setNoOfCopiesReceived("");
         this.getNewSourceLine().setAccountLinePercent(new BigDecimal(0));
         this.setNoOfPartsReceived("");
+        this.setSingleCopyNumber(OLEConstants.OleRequisitionItem.DEFAULT_COPY_NUMBER);
         /*if (GlobalVariables.getUserSession() != null) {
             this.internalRequestorId = GlobalVariables.getUserSession().getPrincipalId();
             this.setRequestorFirstName(getPersonName(GlobalVariables.getUserSession().getPrincipalId()));

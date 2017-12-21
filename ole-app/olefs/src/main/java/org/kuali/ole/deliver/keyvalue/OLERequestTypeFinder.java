@@ -27,6 +27,11 @@ import java.util.*;
  */
 public class OLERequestTypeFinder extends UifKeyValuesFinderBase {
 
+
+    public boolean isAddBlankOption() {
+        return false;
+    }
+
     @Override
     public List<KeyValue> getKeyValues() {
         List<KeyValue> requestKeyLabels = new ArrayList<KeyValue>();
@@ -34,6 +39,13 @@ public class OLERequestTypeFinder extends UifKeyValuesFinderBase {
         if(oleDeliverRequestTypeCollection.size()>0){
             for(OleDeliverRequestType oleDeliverRequestType : oleDeliverRequestTypeCollection){
                requestKeyLabels.add(new ConcreteKeyValue(oleDeliverRequestType.getRequestTypeCode(),oleDeliverRequestType.getRequestTypeCode()));
+            }
+        } else {
+            //requestKeyLabels.add(new ConcreteKeyValue("", ""));
+            for (OleDeliverRequestType requestType : oleDeliverRequestTypeCollection) {
+                if (requestType.isActive()) {
+                    requestKeyLabels.add(new ConcreteKeyValue(requestType.getRequestTypeCode(), requestType.getRequestTypeName()));
+                }
             }
         }
         return requestKeyLabels;

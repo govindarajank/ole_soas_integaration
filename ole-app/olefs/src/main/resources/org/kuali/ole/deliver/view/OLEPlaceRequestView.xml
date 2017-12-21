@@ -376,12 +376,12 @@
                 <!--<bean parent="Uif-HorizontalBoxSection">
                     <property name="items">
                         <list>-->
-                            <bean id="placeRequest_deliver" parent="Uif-InputField" p:propertyName="address"
+                            <!--<bean id="placeRequest_deliver" parent="Uif-InputField" p:propertyName="address"
                                   p:label="Deliver to patron" p:render="@{address}">
                                 <property name="control">
                                     <bean parent="Uif-CheckboxControl" p:cssClasses="publicDisplaySupplementClass" p:disabled="false"/>
                                 </property>
-                            </bean>
+                            </bean>-->
                             <bean id="placeRequest-pickupLocation" parent="Uif-InputField"
                                   p:propertyName="pickUpLocationId" p:label="Pickup Location">
                                 <property name="optionsFinder">

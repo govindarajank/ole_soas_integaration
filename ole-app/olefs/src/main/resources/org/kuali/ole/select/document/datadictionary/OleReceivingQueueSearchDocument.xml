@@ -230,10 +230,19 @@
         <property name="label" value="PO Date From"/>
         <property name="shortLabel" value="Begin Date"/>
         <property name="validCharactersConstraint">
-            <bean parent="BasicDatePatternConstraint"/>
+            <bean parent="BasicDatePatternConstraint">
+                <property name="allowedFormats">
+                    <list>
+                        <value>${allowedFormats.dateFormat1}</value>
+                        <value>${allowedFormats.dateFormat2}</value>
+                        <value>${allowedFormats.dateFormat3}</value>
+                        <value>${allowedFormats.dateFormat4}</value>
+                    </list>
+                </property>
+            </bean>
         </property>
     </bean>
-  
+
     <bean id="OleReceivingQueueSearchDocument-endDate" parent="OleReceivingQueueSearchDocument-endDate-parentBean"/>
 
     <bean id="OleReceivingQueueSearchDocument-endDate-parentBean" abstract="true" parent="GenericAttributes-genericTimestamp">
@@ -241,7 +250,16 @@
         <property name="label" value="PO Date To"/>
         <property name="shortLabel" value="End Date"/>
         <property name="validCharactersConstraint">
-            <bean parent="BasicDatePatternConstraint"/>
+            <bean parent="BasicDatePatternConstraint">
+                <property name="allowedFormats">
+                    <list>
+                        <value>${allowedFormats.dateFormat1}</value>
+                        <value>${allowedFormats.dateFormat2}</value>
+                        <value>${allowedFormats.dateFormat3}</value>
+                        <value>${allowedFormats.dateFormat4}</value>
+                    </list>
+                </property>
+            </bean>
         </property>
     </bean>
 	

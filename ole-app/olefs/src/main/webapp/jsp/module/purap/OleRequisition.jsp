@@ -86,13 +86,13 @@
 </kul:documentPage>
 <script type="text/javascript">
     window.onload = function () {
-        if(document.getElementById('document.vendorName').value == '') {
-            document.getElementById('document.vendorAliasName').focus();
-        }
+        document.getElementById('document.vendorAliasName').focus();
         if (${KualiForm.document.vendorEnterKeyEvent}) {
             document.getElementById('attachExistingBibId').checked = true;
             document.getElementById('attachExistingBibId').click();
-            document.getElementById('tab-Titles-div').scrollIntoView();
+            if (document.getElementsByName('methodToCall.toggleTab.tabVendor')[0].title == 'close Vendor') {
+                document.getElementsByName('methodToCall.toggleTab.tabVendor')[0].click();
+            }
         }
         var itemCount = getItemCount() - 4;
         document.getElementById('document.item[' + itemCount + '].newSourceLine.accountNumber').focus();
@@ -101,48 +101,15 @@
     setParameterizedValues(); //To load the parameterized value at the time of page load
 
     function setParameterizedValues() {
-        document.getElementById("newPurchasingItemLine.singleCopyNumber").value = "${KualiForm.document.copyNumber}"
-        var orderTypeKeyValuePair=[];
-        var purchasetypeList="${KualiForm.document.orderTypes}".split(";");
-        for(var orderTypeCount=0;orderTypeCount<purchasetypeList.length;orderTypeCount++){
-            if(purchasetypeList[orderTypeCount]!=null&&purchasetypeList[orderTypeCount]!=''){
-                var tempOrderType=purchasetypeList[orderTypeCount].split(":");
-                orderTypeKeyValuePair.push({id:tempOrderType[0],orderType:tempOrderType[1]});
-            }
+        if (document.getElementById('document.purchaseOrderTypeId').value == 3) {
+            document.getElementById('document.recurringPaymentTypeCode').value = 'VARV';
+            document.getElementById('document.purchaseOrderBeginDate').value = '01/01/2005';
+            document.getElementById('document.purchaseOrderEndDate').value = '31/12/2040';
+        }else{
+            document.getElementById('document.recurringPaymentTypeCode').value = '';
+            document.getElementById('document.purchaseOrderBeginDate').value = '';
+            document.getElementById('document.purchaseOrderEndDate').value = '';
         }
-        var inputOrderype='';
-        for(var getIPOrdTypCnt=0;getIPOrdTypCnt<orderTypeKeyValuePair.length;getIPOrdTypCnt++){
-            if(document.getElementById('document.purchaseOrderTypeId').value==orderTypeKeyValuePair[getIPOrdTypCnt].id) {
-                inputOrderype = orderTypeKeyValuePair[getIPOrdTypCnt].orderType;
-            }
-        }
-        if (inputOrderype == "Firm, Fixed") {
-            document.getElementById("newPurchasingItemLine.itemLocation").value = "${KualiForm.document.itemLocationForFixed}";
-            document.getElementById("newPurchasingItemLine.itemStatus").value = "${KualiForm.document.itemStatusForFixed}";
-            if(document.getElementById('document.recurringPaymentTypeCode').value == null) {
-                document.getElementById('document.recurringPaymentTypeCode').value = '';
-                document.getElementById('document.purchaseOrderBeginDate').value = '';
-                document.getElementById('document.purchaseOrderEndDate').value = '';
-            }
-        } else if (inputOrderype == "Approval") {
-            document.getElementById("newPurchasingItemLine.itemLocation").value = "${KualiForm.document.itemLocationForApproval}";
-            document.getElementById("newPurchasingItemLine.itemStatus").value = "${KualiForm.document.itemStatusForApproval}";
-            if(document.getElementById('document.recurringPaymentTypeCode').value == null) {
-                document.getElementById('document.recurringPaymentTypeCode').value = '';
-                document.getElementById('document.purchaseOrderBeginDate').value = '';
-                document.getElementById('document.purchaseOrderEndDate').value = '';
-            }
-        } else if (inputOrderype != "") {
-            var poCreateDate = new Date();
-            var dd = poCreateDate.getDate();
-            var mm = poCreateDate.getMonth()+1;
-            var yyyy = poCreateDate.getFullYear();
-            poCreateDate = mm+'/'+dd+'/'+yyyy;
-            document.getElementById("newPurchasingItemLine.itemLocation").value = '';
-            document.getElementById("newPurchasingItemLine.itemStatus").value = '';
-            document.getElementById('document.recurringPaymentTypeCode').value =  "${KualiForm.document.paymentTypeCode}"
-            document.getElementById('document.purchaseOrderBeginDate').value = poCreateDate;
-            document.getElementById('document.purchaseOrderEndDate').value = '12/31/9999'
-        }
+
     }
 </script>

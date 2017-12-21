@@ -17,7 +17,6 @@
 package org.kuali.ole.select.businessobject;
 
 
-import org.kuali.ole.OLEConstants;
 import org.kuali.ole.docstore.common.document.ids.BibId;
 import org.kuali.ole.docstore.engine.service.storage.rdbms.pojo.BibInfoRecord;
 import org.kuali.ole.module.purap.PurapConstants;
@@ -30,6 +29,7 @@ import org.kuali.ole.select.bo.OLEPOClaimHistory;
 import org.kuali.ole.select.document.OLEEResourceRecordDocument;
 import org.kuali.ole.select.document.OleInvoiceDocument;
 import org.kuali.ole.select.lookup.DocData;
+import org.kuali.ole.sys.OLEConstants;
 import org.kuali.ole.sys.context.SpringContext;
 import org.kuali.rice.core.api.config.property.ConfigContext;
 import org.kuali.rice.core.api.membership.MemberType;
@@ -271,6 +271,7 @@ public class OleRequisitionItem extends RequisitionItem implements OlePurchasing
         }
         this.setNoOfCopiesReceived("");
         this.setNoOfPartsReceived("");
+        this.setSingleCopyNumber(OLEConstants.OleRequisitionItem.DEFAULT_COPY_NUMBER);
         /*if(GlobalVariables.getUserSession()!=null) {
             this.internalRequestorId=GlobalVariables.getUserSession().getPrincipalId();
             this.setRequestorFirstName(getPersonName(GlobalVariables.getUserSession().getPrincipalId()));

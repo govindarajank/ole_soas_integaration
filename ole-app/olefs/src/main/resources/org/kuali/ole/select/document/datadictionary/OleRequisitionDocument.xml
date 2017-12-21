@@ -48,7 +48,7 @@
 	
 	<bean id="RequisitionDocument-requestorPersonPhoneNumber" parent="RequisitionDocument-requestorPersonPhoneNumber-parentBean"/>
 
-    <bean id="RequisitionDocument-requestorPersonPhoneNumber-parentBean" abstract="true" parent="AttributeDefinition">
+    <bean id="RequisitionDocument-requestorPersonPhoneNumber-parentBean" abstract="true" parent="GenericAttributes-phoneNumberWithValidation">
         <property name="name" value="requestorPersonPhoneNumber"/>
         <property name="label" value="Requestor Phone"/>
         <property name="shortLabel" value="Phone Number"/>

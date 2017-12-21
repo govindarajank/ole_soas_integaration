@@ -420,6 +420,9 @@ public class OlePurchaseOrderAction extends PurchaseOrderAction {
                 }
             }
         }
+        if (GlobalVariables.getMessageMap().getErrorCount() == 0) {
+            setDefaultItemStatusAndLocation(document, (OlePurchaseOrderItem) purchasingForm.getNewPurchasingItemLine());
+        }
         return mapping.findForward(OLEConstants.MAPPING_BASIC);
     }
 
