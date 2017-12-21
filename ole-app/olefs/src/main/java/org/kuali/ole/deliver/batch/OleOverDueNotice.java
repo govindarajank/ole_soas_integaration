@@ -108,6 +108,16 @@ public class OleOverDueNotice {
 
     }
 
+    public void generatePatronList()  {
+        LOG.debug("Start of scheduled job to execute generatePatronListJob.");
+        try {
+            oleDeliverRequestDocumentHelperService = getOleDeliverRequestDocumentHelperService();
+            oleDeliverRequestDocumentHelperService.generatePatronList();
+        } catch (Exception ex) {
+            LOG.error("Exception occurred while performing deletingExpiredRequests", ex);
+        }
+    }
+
     public void generateOnHoldNotice() {
         LOG.debug("Start of scheduled job to execute generateOnHoldNotice.");
         try {

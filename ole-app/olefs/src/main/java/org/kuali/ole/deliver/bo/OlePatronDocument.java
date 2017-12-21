@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.kuali.ole.OLEConstants;
 import org.kuali.ole.deliver.api.*;
 import org.kuali.ole.deliver.service.ParameterValueResolver;
+import org.kuali.ole.deliver.util.ItemInfoUtil;
 import org.kuali.ole.docstore.engine.service.storage.rdbms.pojo.ItemRecord;
 import org.kuali.rice.kim.api.KimConstants;
 import org.kuali.rice.kim.api.identity.IdentityService;
@@ -22,12 +23,14 @@ import org.kuali.rice.kim.impl.identity.entity.EntityBo;
 import org.kuali.rice.kim.impl.identity.name.EntityNameBo;
 import org.kuali.rice.kim.impl.identity.phone.EntityPhoneBo;
 import org.kuali.rice.kim.impl.identity.type.EntityTypeContactInfoBo;
+import org.kuali.rice.krad.bo.BusinessObject;
 import org.kuali.rice.krad.bo.PersistableBusinessObject;
 import org.kuali.rice.krad.bo.PersistableBusinessObjectBase;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.service.KRADServiceLocator;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1654,7 +1657,7 @@ public class OlePatronDocument extends PersistableBusinessObjectBase implements 
     }
 
     public int getRequestedItemRecordsCount() {
-        return requestedItemRecordsCount;
+        return getOleDeliverRequestBos().size();
     }
 
     public void setRequestedItemRecordsCount(int requestedItemRecordsCount) {
@@ -1746,6 +1749,10 @@ public class OlePatronDocument extends PersistableBusinessObjectBase implements 
             businessObjectService = KRADServiceLocator.getBusinessObjectService();
         }
         return businessObjectService;
+    }
+
+    public void setBusinessObjectService(BusinessObjectService businessObjectService) {
+        this.businessObjectService = businessObjectService;
     }
 
     public boolean isLostPatron() {
@@ -2002,7 +2009,11 @@ public class OlePatronDocument extends PersistableBusinessObjectBase implements 
             OleLoanDocument oleLoanDocument = iterator.next();
             if (oleLoanDocument.getLoanDueDate() != null) {
                 Integer timeDiff = new Integer(getTimeDiff(oleLoanDocument.getLoanDueDate(), new Date()));
-                if (timeDiff > days && recallRequestExists(oleLoanDocument)) {
+                boolean recallExists = recallRequestExists(oleLoanDocument);
+                if (days!=0 && timeDiff > days && recallExists) {
+                    return true;
+                }
+                if(oleLoanDocument.getLoanDueDate().before(new Date()) && recallExists){
                     return true;
                 }
             }
@@ -2016,8 +2027,9 @@ public class OlePatronDocument extends PersistableBusinessObjectBase implements 
         List<OleDeliverRequestBo> oleDeliverRequestBos = (List<OleDeliverRequestBo>) KRADServiceLocator.getBusinessObjectService().findMatching(OleDeliverRequestBo.class, itemMap);
         for (Iterator<OleDeliverRequestBo> iterator = oleDeliverRequestBos.iterator(); iterator.hasNext(); ) {
             OleDeliverRequestBo oleDeliverRequestBo = iterator.next();
-            if(oleDeliverRequestBo.getOleDeliverRequestType().getRequestTypeCode().contains("Recall")){
+            if(oleDeliverRequestBo.getOleDeliverRequestType().getRequestTypeCode().equals("Recall/Hold Request")){
                 return true;
+
             }
         }
         return false;
@@ -2025,7 +2037,7 @@ public class OlePatronDocument extends PersistableBusinessObjectBase implements 
 
     public String getTimeDiff(Date dateOne, Date dateTwo) {
         String diff = "";
-        long timeDiff = dateTwo.getTime() - dateOne.getTime();
+        long timeDiff = dateTwo.getTime()-dateOne.getTime();
         diff = String.format("%d", TimeUnit.MILLISECONDS.toDays(timeDiff),
                 -TimeUnit.HOURS.toDays(timeDiff));
         return diff;
@@ -2089,6 +2101,15 @@ public class OlePatronDocument extends PersistableBusinessObjectBase implements 
         return overdueCount;
     }
 
+    public boolean isRequestedPatron(String barcode){
+        for(OleDeliverRequestBo oleDeliverRequestBo : oleDeliverRequestBos){
+            if(oleDeliverRequestBo.getItemId().equalsIgnoreCase(barcode)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     private List<ItemRecord> getItemRecords() {
         List<ItemRecord> itemRecords = new ArrayList<>();
         Set<String> itemIds = new HashSet<>();
@@ -2101,5 +2122,19 @@ public class OlePatronDocument extends PersistableBusinessObjectBase implements 
             itemRecords = (List<ItemRecord>) getBusinessObjectService().findMatching(ItemRecord.class, map);
         }
         return itemRecords;
+    }
+
+    public String getLoanedPatronBorrowerType(String itemBarcode){
+        String borrowerType = null;
+        if(itemBarcode!=null) {
+            ItemRecord itemRecord = ItemInfoUtil.getInstance().getItemRecordByBarcode(itemBarcode);
+            if(itemRecord!=null && itemRecord.getItemStatusRecord().getCode().equalsIgnoreCase("LOANED")) {
+                Map<String, String> olePatronMap = new HashMap<>();
+                olePatronMap.put("olePatronId", itemRecord.getCurrentBorrower());
+                OlePatronDocument oleLoanPatronDocument = getBusinessObjectService().findByPrimaryKey(OlePatronDocument.class, olePatronMap);
+                borrowerType = oleLoanPatronDocument.getBorrowerTypeCode();
+            }
+        }
+        return borrowerType;
     }
 }

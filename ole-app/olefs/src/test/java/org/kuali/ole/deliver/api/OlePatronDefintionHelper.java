@@ -61,6 +61,7 @@ public class OlePatronDefintionHelper {
     private static final String PROXY_PATRON_DOC_ID = "11";
     private static final Date PROXY_EXPIRATION_DATE =new java.sql.Date((new Timestamp(System.currentTimeMillis())).getTime());
     private static final Date PROXY_ACTIVATION_DATE =new java.sql.Date((new Timestamp(System.currentTimeMillis())).getTime());
+    private static final Timestamp NOTE_CREATED_UPDATED_DATE =new Timestamp(System.currentTimeMillis());
     private static final Long PROXY_VERSION_NUMBER = new Long(1);
     private static final OlePatronDefinition OLE_PATRON = OlePatronDefintionHelper.create();
     private static final String PROXY_OBJECT_ID = String.valueOf(UUID.randomUUID());
@@ -193,6 +194,11 @@ public class OlePatronDefintionHelper {
                     @Override
                     public String getObjectId() {
                         return NOTE_OBJECT_ID;
+                    }
+
+                    @Override
+                    public Timestamp getNoteCreatedOrUpdatedDate() {
+                        return NOTE_CREATED_UPDATED_DATE;
                     }
 
                     @Override

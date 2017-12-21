@@ -124,4 +124,11 @@ public class OLENCIPConstants {
     public static final String REQUEST_FORMAT_TYPE = "requestFormatType";
     public static final String RESPONSE_FORMAT_TYPE = "responseFormatType";
     public static final String CIRC_ITEM_BARCODES = "itemBarcodes";
+
+    public static final String FINE_PAYMENT = "finePayment";
+    public static final String PAYMENT_TYPE = "paymentType";
+    public static final String AMOUNT_PAID = "amountPaid";
+    public static final String BILL_IDS = "billIds";
+    public static final String TRANSCATION_REFERENCE = "transcationReference";
+    public static final String FINE_TYPE = "fineType";
 }

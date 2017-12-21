@@ -265,7 +265,7 @@ public class OLENCIPUtil {
         facts.add(olePatronDocument);
         DroolsResponse droolsResponse = new DroolsResponse();
         facts.add(droolsResponse);
-        new CircUtilController().fireRules(facts, null, "lookup-user-ncip");
+        new CircUtilController().fireRules(facts, null, "general-checks");
         oleStopWatch.end();
         LOG.info("Time taken for fire rules to validate patron : " + oleStopWatch.getTotalTime());
         return droolsResponse.getErrorMessage().getErrorMessage();

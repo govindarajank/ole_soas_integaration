@@ -17,8 +17,8 @@
                 <ref bean="OlePatronDocument-courtesyNotice"/>
                 <ref bean="OlePatronDocument-borrowerType"/>
                 <ref bean="OlePatronDocument-firstName"/>
-                <ref bean="OlePatronDocument-middleName"/>
                 <ref bean="OlePatronDocument-lastName"/>
+                <ref bean="OlePatronDocument-middleName"/>
                 <ref bean="OlePatronDocument-emailAddress"/>
                 <ref bean="OlePatronDocument-generalBlockNotes"/>
                 <ref bean="OlePatronDocument-activeIndicator"/>
@@ -39,7 +39,7 @@
     <bean id="OlePatronDocument-olePatronId" parent="OlePatronDocument-olePatronId-parentBean"/>
 
     <bean id="OlePatronDocument-olePatronId-parentBean" abstract="true" parent="AttributeDefinition">
-        <property name="maxLength" value="10"/>
+        <property name="maxLength" value="20"/>
         <property name="shortLabel" value="Patron Id"/>
         <property name="description" value="Patron Identifier"/>
         <property name="name" value="olePatronId"/>
@@ -146,9 +146,9 @@
         </property>
     </bean>
 
-    <bean id="OlePatronDocument-firstName" parent="OlePatronDocument-firstName-parentBean"/>
-    <bean id="OlePatronDocument-firstName-parentBean" parent="AttributeDefinition" abstract="true" p:name="firstName"
-          p:forceUppercase="false" p:label="First Name" p:shortLabel="First Name" p:maxLength="40" p:required="false">
+    <bean id="OlePatronDocument-middleName" parent="OlePatronDocument-middleName-parentBean"/>
+    <bean id="OlePatronDocument-middleName-parentBean" parent="AttributeDefinition" abstract="true" p:name="middleName"
+          p:forceUppercase="false" p:label="Student ID" p:shortLabel="Student ID" p:maxLength="20" p:required="false">
         <property name="control">
             <bean parent="TextControlDefinition" p:size="20"/>
         </property>
@@ -157,9 +157,9 @@
         </property>
     </bean>
 
-    <bean id="OlePatronDocument-middleName" parent="OlePatronDocument-middleName-parentBean"/>
-    <bean id="OlePatronDocument-middleName-parentBean" parent="AttributeDefinition" abstract="true" p:name="middleName"
-          p:forceUppercase="false" p:label="Middle Name" p:shortLabel="Middle Name" p:maxLength="20" p:required="false">
+    <bean id="OlePatronDocument-firstName" parent="OlePatronDocument-firstName-parentBean"/>
+    <bean id="OlePatronDocument-firstName-parentBean" parent="AttributeDefinition" abstract="true" p:name="firstName"
+          p:forceUppercase="false" p:label="First Name" p:shortLabel="First Name" p:maxLength="40" p:required="false">
         <property name="control">
             <bean parent="TextControlDefinition" p:size="20"/>
         </property>
@@ -250,8 +250,8 @@
                 <!--<bean id="olePatronId" parent="Uif-LookupCriteriaInputField" p:propertyName="olePatronId" p:label="Patron Id" p:enableAutoDirectInquiry="false"/>/>-->
                 <bean id="barcode" parent="Uif-LookupCriteriaInputField" p:propertyName="barcode"/>
                 <bean id="firstName" parent="Uif-LookupCriteriaInputField" p:propertyName="firstName" />
-                <bean id="middleName" parent="Uif-LookupCriteriaInputField" p:propertyName="middleName" />
                 <bean id="lastName" parent="Uif-LookupCriteriaInputField" p:propertyName="lastName" />
+                <bean id="middleName" parent="Uif-LookupCriteriaInputField" p:propertyName="middleName" />
                 <!--<bean id="borrowerType" parent="Uif-LookupCriteriaInputField" p:propertyName="borrowerType" p:enableAutoDirectInquiry="false">-->
                 <bean id="borrowerType" parent="Uif-LookupCriteriaInputField" p:propertyName="borrowerType" p:enableAutoDirectInquiry="false">
                     <property name="optionsFinder">
@@ -274,11 +274,11 @@
             <list>
                 <!--<bean id="searchResult_olePatronId" parent="Uif-LinkField" p:href="inquiry?olePatronId=@{#line.olePatronId}&amp;methodToCall=start&amp;dataObjectClassName=org.kuali.ole.deliver.bo.OlePatronDocument&amp;dialogMode=true&amp;showHome=false&amp;showHistory=true" p:target="_blank" p:linkText="@{#line.olePatronId}" p:label="Patron Id"/>-->
                 <bean id="searchResult_olePatronId" parent="Uif-DataField" p:propertyName="olePatronId" p:label="Patron Id" />
-                <bean id="searchResult_namePrefix" parent="Uif-MessageField" p:messageText="@{#line.namePrefix}" p:width="1%" p:label="Name Prefix" />
                 <bean id="searchResult_firstName" parent="Uif-DataField" p:propertyName="firstName" p:label="First Name" />
-                <bean id="searchResult_middleName" parent="Uif-MessageField" p:messageText="@{#line.middleName}" p:label="Middle Name" />
                 <bean id="searchResult_lastName" parent="Uif-DataField" p:propertyName="lastName" p:label="Last Name" p:enableAutoInquiry="false" />
-                <bean id="searchResult_nameSuffix" parent="Uif-MessageField" p:messageText="@{#line.nameSuffix}" p:width="1%" p:label="Name Suffix" />
+                <bean id="searchResult_middleName" parent="Uif-MessageField" p:messageText="@{#line.middleName}" p:label="Student ID" />
+                <bean id="searchResult_namePrefix" parent="Uif-MessageField" p:messageText="@{#line.namePrefix}" p:width="1%" p:label="PCODE1" />
+                <bean id="searchResult_nameSuffix" parent="Uif-MessageField" p:messageText="@{#line.nameSuffix}" p:width="1%" p:label="PCODE2" />
                 <bean id="searchResult_barcode" parent="Uif-MessageField" p:messageText="@{#line.barcode}" p:label="Barcode" />
                 <bean id="searchResult_expirationDate" parent="Uif-MessageField" p:messageText="@{T(org.kuali.ole.krad.OleComponentUtils).formatDate(#line.expirationDate)}" p:label="Expiration Date" />
                 <bean id="searchResult_borrowerTypeName" parent="Uif-DataField" p:propertyName="borrowerTypeName" p:label="Patron Type" p:enableAutoInquiry="false" />
@@ -521,7 +521,7 @@
                             <bean id="overviewSection_activationDate" parent="Uif-InputField" p:propertyName="activationDate" p:label="Activation Date"/>
                             <bean id="overviewSection_expirationDate" parent="Uif-InputField" p:propertyName="expirationDate" p:label="Expiration Date"/>
                             <bean id="overviewSection_source" parent="Uif-InputField" p:propertyName="oleSourceName" p:label="Source"/>
-                            <bean id="overviewSection_statisticalCategory" parent="Uif-InputField" p:propertyName="oleStatisticalCategoryName" p:label="Statistical Category"/>
+                            <!--<bean id="overviewSection_statisticalCategory" parent="Uif-InputField" p:propertyName="oleStatisticalCategoryName" p:label="Statistical Category"/>-->
                             <bean id="overviewSection_activeIndicator" parent="Uif-InputField" p:propertyName="activeIndicator" p:label="Active"/>
 
                         </list>
@@ -663,11 +663,12 @@
         <property name="items">
             <list>
                 <bean id="name_nameCode" parent="Uif-InputField" p:propertyName="name.nameCode" p:label="Name Type"/>
-                <bean id="name_nameTitle" parent="Uif-InputField" p:propertyName="name.namePrefix" p:label="Title"/>
                 <bean id="name_firstName" parent="Uif-InputField" p:propertyName="name.firstName" p:label="First Name"/>
-                <bean id="name_middleName" parent="Uif-InputField" p:propertyName="name.middleName" p:label="Middle Name"/>
                 <bean id="name_lastName" parent="Uif-InputField" p:propertyName="name.lastName" p:label="Last Name"/>
-                <bean id="name_nameSuffix" parent="Uif-InputField" p:propertyName="name.nameSuffix" p:label="Suffix"/>
+                <bean id="name_middleName" parent="Uif-InputField" p:propertyName="name.middleName" p:label="Student ID"/>
+                <bean id="name_nameTitle" parent="Uif-InputField" p:propertyName="name.namePrefix" p:label="PCODE 1"/>
+                <bean id="name_nameSuffix" parent="Uif-InputField" p:propertyName="name.nameSuffix" p:label="PCODE 2"/>
+                <bean id="overviewSection_statisticalCategory" parent="Uif-InputField" p:propertyName="oleStatisticalCategoryName" p:label="PCODE 3"/>
                 <bean id="name_defaultValue" parent="Uif-InputField" p:propertyName="name.defaultValue" p:label="Default"/>
                 <bean id="name_active" parent="Uif-InputField" p:propertyName="name.active" p:label="Active" p:defaultValue="true"/>
             </list>

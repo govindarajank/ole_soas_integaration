@@ -150,8 +150,11 @@ function getLoggedInUserName(){
 
 var convertDateFormat = function (jsonObject, key) {
     var value = jsonObject[key];
-    var dateToString2 = $.datepicker.formatDate('mm-dd-yy', value);
-    jsonObject[key] = dateToString2;
+    if (value != null) {
+        var date = new Date(value);
+        var dateToString2 = $.datepicker.formatDate('mm/dd/yy', date);
+        jsonObject[key] = dateToString2;
+    }
     return jsonObject;
 };
 
