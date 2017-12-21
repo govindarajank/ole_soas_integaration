@@ -227,7 +227,7 @@
                             </bean>
                             <bean id="DescCatalogForm" parent="Base-Uif-InputField"
                                   p:propertyName="documentForm.leaderField.descCatalogForm"
-                                  p:label="DescCat" p:defaultValue="a">
+                                  p:label="DescCat" p:defaultValue="i">
                                 <property name="control">
                                     <bean parent="Uif-DropdownControl">
                                         <property name="options">

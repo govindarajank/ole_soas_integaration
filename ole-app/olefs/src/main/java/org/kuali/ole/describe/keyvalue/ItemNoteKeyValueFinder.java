@@ -26,9 +26,11 @@ public class ItemNoteKeyValueFinder extends UifKeyValuesFinderBase {
         if(Boolean.valueOf(note)){
             options.add(new ConcreteKeyValue("nonPublic", "Non-Public"));
             options.add(new ConcreteKeyValue("public", "Public"));
+            options.add(new ConcreteKeyValue("acquired", "Acquired"));
         }else{
             options.add(new ConcreteKeyValue("public", "Public"));
             options.add(new ConcreteKeyValue("nonPublic", "Non-Public"));
+            options.add(new ConcreteKeyValue("acquired", "Acquired"));
         }
         setAddBlankOption(false);
         return options;

@@ -24,7 +24,9 @@
             <param name="ConversionPattern" value="%d [%t] %-5p %c - %m%n" />
         </layout>
     </appender>
-
+    <category name="org.kuali.ole.sip2">
+        <priority value="INFO"/>
+    </category>
     <root>
         <priority value="info"/>
         <appender-ref ref="console" />

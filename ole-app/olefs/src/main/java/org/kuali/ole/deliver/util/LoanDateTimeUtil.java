@@ -35,15 +35,15 @@ public class LoanDateTimeUtil extends ExceptionDateLoanDateTimeUtil {
 
         loanDueDate = getLoanDueDate(loanPeriod);
 
-        if (null != loanDueDate && null != oleCirculationDesk) {
-            OleCalendar activeCalendar = getActiveCalendar(loanDueDate, oleCirculationDesk.getCalendarGroupId());
-            setActiveCalendar(activeCalendar);
-
-            if (null != activeCalendar) {
-                loanDueDate = calculateDueDate(loanDueDate);
+        if(StringUtils.isNotBlank(loanPeriod) && !loanPeriod.equalsIgnoreCase("7-7H")) {
+            if (null != loanDueDate && null != oleCirculationDesk) {
+                OleCalendar activeCalendar = getActiveCalendar(loanDueDate, oleCirculationDesk.getCalendarGroupId());
+                setActiveCalendar(activeCalendar);
+                if (null != activeCalendar) {
+                    loanDueDate = calculateDueDate(loanDueDate);
+                }
             }
         }
-
         return loanDueDate;
     }
 
@@ -200,6 +200,17 @@ public class LoanDateTimeUtil extends ExceptionDateLoanDateTimeUtil {
                     loanDueDate = DateUtils.addDays(getTimeToCalculateFrom(), Integer.parseInt(amount));
                 } else if (period.equalsIgnoreCase("w")) {
                     loanDueDate = DateUtils.addWeeks(getTimeToCalculateFrom(), Integer.parseInt(amount));
+                } else if (period.contains("7H")) {
+                    Date date = new Date(System.currentTimeMillis());
+                    int hours = date.getHours();
+                    date.setMinutes(0);
+                    date.setSeconds(0);
+                    if(hours>=1 && hours<16){
+                        date.setHours(16);
+                    }else{
+                        date.setHours(23);
+                    }
+                    loanDueDate = date;
                 }
             }
         }

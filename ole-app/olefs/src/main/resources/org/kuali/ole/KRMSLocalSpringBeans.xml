@@ -675,6 +675,15 @@
         <property name="concurrent" value="false"/>
     </bean>
 
+    <bean id="generatePatronListJob"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="oleOverDueNotice"/>
+        <property name="targetMethod" value="generatePatronList"/>
+        <property name="name" value="generatePatronList"/>
+        <property name="group" value="batchJobGroup"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+
     <bean id="generateOnHoldNoticeJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="oleOverDueNotice"/>
         <property name="targetMethod" value="generateOnHoldNotice"/>

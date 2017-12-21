@@ -41,6 +41,9 @@
     <category name="org.kuali.ole.deliver">
         <priority value="INFO"/>
     </category>
+    <category name="org.kuali.ole.sip2">
+        <priority value="INFO"/>
+    </category>
     <category name="xapool">
         <priority value="ERROR"/>
     </category>

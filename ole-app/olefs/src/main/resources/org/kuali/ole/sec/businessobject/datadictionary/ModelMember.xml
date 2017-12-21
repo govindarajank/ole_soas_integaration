@@ -23,8 +23,8 @@ http://rice.kuali.org/dd http://rice.kuali.org/dd/dd.xsd">
         <ref bean="ModelMember-principalName" />
         <ref bean="ModelMember-entityId" />
         <ref bean="ModelMember-firstName" />
-        <ref bean="ModelMember-middleName" />
         <ref bean="ModelMember-lastName" />
+        <ref bean="ModelMember-middleName" />
         <ref bean="ModelMember-emailAddress" />
         <ref bean="ModelMember-employeeId" />
         <ref bean="ModelMember-roleId" />

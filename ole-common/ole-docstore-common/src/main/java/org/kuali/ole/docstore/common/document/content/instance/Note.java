@@ -43,6 +43,8 @@ public class Note {
     @XStreamAsAttribute
     protected String type;
 
+    @XmlTransient
+    protected String dateUpdated;
     /**
      * Gets the value of the value property.
      *
@@ -83,4 +85,11 @@ public class Note {
         this.type = value;
     }
 
+    public String getDateUpdated() {
+        return dateUpdated;
+    }
+
+    public void setDateUpdated(String dateUpdated) {
+        this.dateUpdated = dateUpdated;
+    }
 }
