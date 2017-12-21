@@ -26,6 +26,7 @@ public class PurapWorkflowConstants {
     public static final String HAS_ACCOUNTING_LINES = "HasAccountingLines";
     public static final String AMOUNT_REQUIRES_SEPARATION_OF_DUTIES_REVIEW_SPLIT = "AmountRequiresSeparationOfDutiesReview";
     public static final String CONTRACT_MANAGEMENT_REVIEW_REQUIRED = "RequiresContractManagementReview";
+    public static final String REQUIRES_APPROVAL_FROM_MANAGER = "RequiresDirectorApproval";
     public static final String VENDOR_IS_EMPLOYEE_OR_NON_RESIDENT_ALIEN = "VendorIsEmployeeOrNonResidentAlien";
     public static final String AWARD_REVIEW_REQUIRED = "RequiresAwardReview";
     public static final String BUDGET_REVIEW_REQUIRED = "RequiresBudgetReview";

@@ -394,6 +394,96 @@ public class PurapAccountingServiceImpl implements PurapAccountingService {
      * @param items a list of PurAp Items.
      * @return a list of summary accounts.
      */
+    protected List<SummaryAccount> generateSummaryAccounts1(List<PurApItem> items, Boolean useZeroTotals, Boolean useTaxIncluded) {
+        String methodName = "generateSummaryAccounts()";
+        List<SummaryAccount> returnList = new ArrayList<SummaryAccount>();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(methodName + " started");
+        }
+
+        List<SourceAccountingLine> sourceLines = generateAccountSummary1(items, null, ITEM_TYPES_EXCLUDED_VALUE, useZeroTotals, ALTERNATE_AMOUNT_NOT_USED, useTaxIncluded, false);
+        for (SourceAccountingLine sourceAccountingLine : sourceLines) {
+            SummaryAccount summaryAccount = new SummaryAccount();
+            summaryAccount.setAccount((SourceAccountingLine) ObjectUtils.deepCopy(sourceAccountingLine));
+            for (PurApItem item : items) {
+                List<PurApAccountingLine> itemAccounts = item.getSourceAccountingLines();
+                for (PurApAccountingLine purApAccountingLine : itemAccounts) {
+                    if (purApAccountingLine.accountStringsAreEqual(summaryAccount.getAccount())) {
+                        PurApSummaryItem summaryItem = item.getSummaryItem();
+                        // If the summaryItem is null, it means the item is not eligible to
+                        // be displayed in the Account Summary tab. If it's not null then
+                        // we'll set the estimatedEncumberanceAmount and add the item to the
+                        // summaryAccount list to be displayed in the Account Summary tab.
+                        KualiDecimal amt = KualiDecimal.ZERO;
+                        BigDecimal foreignAmt = BigDecimal.ZERO;
+                        if (ObjectUtils.isNotNull(purApAccountingLine.getAmount())) {
+                            amt = purApAccountingLine.getAmount();
+                            if(item.getExtendedPrice() != null && item instanceof OleInvoiceItem) {
+                                if( ((OleInvoiceDocument) ((OleInvoiceItem) purApAccountingLine.getPurapItem()).getInvoiceDocument()) != null && ((OleInvoiceDocument) ((OleInvoiceItem) purApAccountingLine.getPurapItem()).getInvoiceDocument()).getInvoiceCurrencyExchangeRate() != null) {
+                                    BigDecimal exchangeRate = new BigDecimal(((OleInvoiceDocument) ((OleInvoiceItem) purApAccountingLine.getPurapItem()).getInvoiceDocument()).getInvoiceCurrencyExchangeRate());
+                                    foreignAmt = purApAccountingLine.getAmount().bigDecimalValue().multiply(exchangeRate).setScale(2, BigDecimal.ROUND_HALF_UP);
+                                } else if(((OleInvoiceItem) purApAccountingLine.getPurapItem()).getExchangeRate() != null){
+                                    foreignAmt = purApAccountingLine.getAmount().bigDecimalValue().multiply(new BigDecimal(((OleInvoiceItem) purApAccountingLine.getPurapItem()).getExchangeRate())).setScale(2, BigDecimal.ROUND_HALF_UP);
+                                }
+                            }
+                        }
+                        if (summaryItem != null) {
+                            if(item instanceof OleInvoiceItem) {
+                                OleInvoiceItem oleInvoiceItem = (OleInvoiceItem) item;
+                                if (!((OleInvoiceItem) item).isDebitItem()) {
+                                    summaryItem.setEstimatedEncumberanceAmount(amt.negated());
+                                    summaryItem.setEstimatedEncumberanceForeignAmount(foreignAmt.negate().setScale(2, BigDecimal.ROUND_HALF_UP));
+                                }
+                                else {
+                                    summaryItem.setEstimatedEncumberanceAmount(amt);
+                                    summaryItem.setEstimatedEncumberanceForeignAmount(foreignAmt.setScale(2, BigDecimal.ROUND_HALF_UP));;
+                                }
+                            }
+                            else {
+                                summaryItem.setEstimatedEncumberanceAmount(amt);
+                                summaryItem.setEstimatedEncumberanceForeignAmount(foreignAmt);
+                            }
+                            summaryAccount.getItems().add(summaryItem);
+                            break;
+                        }
+                    }
+
+                }
+            }
+            returnList.add(summaryAccount);
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(methodName + " ended");
+        }
+        List<SummaryAccount> summaryAccounts = new ArrayList<>();
+        for(SummaryAccount summaryAccount : returnList) {
+            BigDecimal foreignAmount = summaryAccount.getAccount().getForeignAmount();
+            int itemCount = 0;
+            int itemSize = summaryAccount.getItems().size();
+            for(PurApSummaryItem item : summaryAccount.getItems()) {
+                if(itemSize == 1) {
+                    item.setEstimatedEncumberanceForeignAmount(foreignAmount);
+                } else {
+                    if(itemCount == itemSize-1) {
+                        item.setEstimatedEncumberanceForeignAmount(foreignAmount);
+                    }
+                    foreignAmount = foreignAmount.subtract(item.getEstimatedEncumberanceForeignAmount());
+                    ++itemCount;
+                }
+
+            }
+            summaryAccounts.add(summaryAccount);
+        }
+        return summaryAccounts;
+    }
+
+
+    /**
+     * This creates summary accounts based on a list of items.
+     *
+     * @param items a list of PurAp Items.
+     * @return a list of summary accounts.
+     */
     protected List<SummaryAccount> generateSummaryAccounts(List<PurApItem> items, Boolean useZeroTotals, Boolean useTaxIncluded) {
         String methodName = "generateSummaryAccounts()";
         List<SummaryAccount> returnList = new ArrayList<SummaryAccount>();
@@ -590,6 +680,192 @@ public class PurapAccountingServiceImpl implements PurapAccountingService {
             LOG.debug(methodName + " ended");
         }
         return returnList;
+    }
+
+    /**
+     * Generates an account summary, that is it creates a list of source accounts by rounding up the purap accounts off of the purap
+     * items.
+     *
+     * @param items                    the items to determ
+     * @param itemTypeCodes            the item types to determine whether to look at an item in combination with itemTypeCodesAreIncluded
+     * @param itemTypeCodesAreIncluded value to tell whether the itemTypeCodes parameter lists inclusion or exclusion variables
+     * @param useZeroTotals            whether to include items with a zero dollar total
+     * @param useAlternateAmount       an alternate amount used in certain cases for GL entry
+     * @return a list of source accounts
+     */
+    protected List<SourceAccountingLine> generateAccountSummary1(List<PurApItem> items, Set<String> itemTypeCodes, Boolean itemTypeCodesAreIncluded, Boolean useZeroTotals, Boolean useAlternateAmount, Boolean useTaxIncluded, Boolean taxableOnly) {
+        List<PurApItem> itemsToProcess = getProcessablePurapItems(items, itemTypeCodes, itemTypeCodesAreIncluded, useZeroTotals);
+        Map<PurApAccountingLine, KualiDecimal> accountMap = new HashMap<PurApAccountingLine, KualiDecimal>();
+        BigDecimal exchangeRate = BigDecimal.ZERO;
+        BigDecimal totalForeignAmount = BigDecimal.ZERO;
+        for (PurApItem currentItem : itemsToProcess) {
+            if (currentItem.getItemDescription() != null && currentItem.getItemDescription().equalsIgnoreCase("vat") && currentItem.getItemTypeCode()!= null && currentItem.getItemTypeCode().equalsIgnoreCase("MISC")) {
+            }
+            else {
+                if (exchangeRate == BigDecimal.ZERO && currentItem instanceof OleInvoiceItem && ((OleInvoiceItem) currentItem).getItemExchangeRate() != null) {
+                    exchangeRate = ((OleInvoiceItem) currentItem).getItemExchangeRate();
+                }
+                if (currentItem instanceof OleInvoiceItem) {
+                    OleInvoiceItem invoiceItem = (OleInvoiceItem) currentItem;
+                    if (invoiceItem.getItemForeignListPrice() != null) {
+                        totalForeignAmount = totalForeignAmount.add(invoiceItem.getItemForeignListPrice().bigDecimalValue());
+                    } else if (invoiceItem.getItemForeignUnitCost() != null) {
+                        totalForeignAmount = totalForeignAmount.add(invoiceItem.getItemForeignUnitCost().bigDecimalValue());
+                    }
+                }
+                if (PurApItemUtils.checkItemActive(currentItem)) {
+                    List<PurApAccountingLine> sourceAccountingLines = currentItem.getSourceAccountingLines();
+
+                    // skip if item is not taxable and taxable only flag has been set
+                    if (taxableOnly) {
+                        PurchasingAccountsPayableDocument document = currentItem.getPurapDocument();
+                        if (!purapService.isTaxableForSummary(document.isUseTaxIndicator(), purapService.getDeliveryState(document), currentItem)) {
+                            continue;
+                        }
+                    }
+
+                    if (!useTaxIncluded) {
+                        // if no use tax set the source accounting lines to a clone so we can update
+                        // them to be based on the non tax amount
+                        if (currentItem instanceof OleInvoiceItem) {
+                            OleInvoiceItem invoiceItem = (OleInvoiceItem) currentItem;
+                            // if(invoiceItem.getItemType().isQuantityBasedGeneralLedgerIndicator() &&  invoiceItem.getRelatedViews() != null) {
+                            // invoiceItem.setRelatedViews(null);
+                            PurApItem cloneItem = (PurApItem) ObjectUtils.deepCopy(invoiceItem);
+                            sourceAccountingLines = cloneItem.getSourceAccountingLines();
+                            updateAccountAmountsWithTotal(sourceAccountingLines, invoiceItem.getTotalRemitAmount());
+                            // }
+                      /*  else {
+                            PurApItem cloneItem = (PurApItem) ObjectUtils.deepCopy(currentItem);
+                            sourceAccountingLines = cloneItem.getSourceAccountingLines();
+                            updateAccountAmountsWithTotal(sourceAccountingLines, currentItem.getTotalRemitAmount());
+                        }*/
+                        } else {
+                            PurApItem cloneItem = (PurApItem) ObjectUtils.deepCopy(currentItem);
+                            sourceAccountingLines = cloneItem.getSourceAccountingLines();
+                            updateAccountAmountsWithTotal(sourceAccountingLines, currentItem.getTotalRemitAmount());
+                        }
+                    }
+
+                    for (PurApAccountingLine account : sourceAccountingLines) {
+
+                        // skip account if not taxable and taxable only flag is set
+                        if (taxableOnly) {
+                            PurchasingAccountsPayableDocument document = currentItem.getPurapDocument();
+                            // check if account is not taxable, if not skip this account
+                            if (!purapService.isAccountingLineTaxable(account, purapService.isDeliveryStateTaxable(purapService.getDeliveryState(document)))) {
+                                continue;
+                            }
+                        }
+
+                        KualiDecimal total = KualiDecimal.ZERO;
+                        if (account instanceof InvoiceAccount) {
+                            if (((InvoiceAccount) account).getInvoiceItem() != null) {
+                                if (((OleInvoiceItem) ((InvoiceAccount) account).getInvoiceItem()).isDebitItem()) {
+                                    if (account.getOrganizationReferenceId() != null && account.getOrganizationReferenceId().isEmpty()) {
+                                        account.setOrganizationReferenceId(null);
+                                    }
+                                    if (accountMap.containsKey(account)) {
+                                        total = accountMap.get(account);
+                                    }
+
+                                    if (useAlternateAmount) {
+                                        total = total.add(account.getAlternateAmountForGLEntryCreation());
+                                    } else {
+                                        if (ObjectUtils.isNotNull(account.getAmount())) {
+                                            total = total.add(account.getAmount());
+                                        }
+                                    }
+                                } else {
+                                    if (accountMap.containsKey(account)) {
+                                        total = accountMap.get(account);
+                                    }
+
+                                    if (useAlternateAmount) {
+                                        total = total.subtract(account.getAlternateAmountForGLEntryCreation());
+                                    } else {
+                                        if (ObjectUtils.isNotNull(account.getAmount())) {
+                                            total = total.subtract(account.getAmount());
+                                        }
+                                    }
+                                }
+                            }
+
+                        } else {
+                            // getting the total to set on the account
+                            if (accountMap.containsKey(account)) {
+                                total = accountMap.get(account);
+                            }
+
+                            if (useAlternateAmount) {
+                                total = total.add(account.getAlternateAmountForGLEntryCreation());
+                            } else {
+                                if (ObjectUtils.isNotNull(account.getAmount())) {
+                                    total = total.add(account.getAmount());
+                                }
+                            }
+                        }
+                        accountMap.put(account, total);
+                    }
+                }
+            }
+        }
+        int count = 0;
+        // convert list of PurApAccountingLine objects to SourceAccountingLineObjects
+        Iterator<PurApAccountingLine> iterator = accountMap.keySet().iterator();
+        List<SourceAccountingLine> sourceAccounts = new ArrayList<SourceAccountingLine>();
+        for (Iterator<PurApAccountingLine> iter = iterator; iter.hasNext(); ) {
+            PurApAccountingLine accountToConvert = iter.next();
+            if (accountToConvert.isEmpty()) {
+                String errorMessage = "Found an 'empty' account in summary generation " + accountToConvert.toString();
+                LOG.error("generateAccountSummary() " + errorMessage);
+                throw new RuntimeException(errorMessage);
+            }
+            if(accountToConvert instanceof InvoiceAccount) {
+                if (accountMap.size() - 1 == count) {
+                    KualiDecimal sourceLineTotal = accountMap.get(accountToConvert);
+                    SourceAccountingLine sourceLine = accountToConvert.generateSourceAccountingLine();
+                    sourceLine.setAmount(sourceLineTotal);
+                    sourceLine.setForeignAmount(totalForeignAmount);
+                    sourceAccounts.add(sourceLine);
+                } else {
+                    KualiDecimal sourceLineTotal = accountMap.get(accountToConvert);
+                    BigDecimal foreignSourceLineTotal = accountMap.get(accountToConvert).bigDecimalValue().multiply(exchangeRate).setScale(2, BigDecimal.ROUND_HALF_UP);
+                    SourceAccountingLine sourceLine = accountToConvert.generateSourceAccountingLine();
+                    sourceLine.setAmount(sourceLineTotal);
+                    totalForeignAmount = totalForeignAmount.subtract(foreignSourceLineTotal);
+                    sourceLine.setForeignAmount(foreignSourceLineTotal);
+                    sourceAccounts.add(sourceLine);
+                    ++count;
+                }
+            } else {
+                KualiDecimal sourceLineTotal = accountMap.get(accountToConvert);
+                SourceAccountingLine sourceLine = accountToConvert.generateSourceAccountingLine();
+                sourceLine.setAmount(sourceLineTotal);
+                sourceAccounts.add(sourceLine);
+            }
+        }
+
+        // sort the sourceAccounts list first by account number, then by object code, ignoring chart code
+        Collections.sort(sourceAccounts, new Comparator<SourceAccountingLine>() {
+            @Override
+            public int compare(SourceAccountingLine sal1, SourceAccountingLine sal2) {
+                int compare = 0;
+                if (sal1 != null && sal2 != null) {
+                    if (sal1.getAccountNumber() != null && sal2.getAccountNumber() != null) {
+                        compare = sal1.getAccountNumber().compareTo(sal2.getAccountNumber());
+                        if (compare == 0) {
+                            if (sal1.getFinancialObjectCode() != null && sal2.getFinancialObjectCode() != null) {
+                                compare = sal1.getFinancialObjectCode().compareTo(sal2.getFinancialObjectCode());
+                            }
+                        }
+                    }
+                }
+                return compare;
+            }
+        });
+
+        return sourceAccounts;
     }
 
     /**

@@ -3134,6 +3134,23 @@ public class OLEConstants {
 
         public static final String BATCH_PATRON_LIST_EXPORT_DIR_PATH = "batch.patron.list.export";
     }
+
+    public static final class AgressoCreateFile{
+        public static final String INTER_FACE = getParameterAgresso("INTER_FACE");
+        public static final String VOUCHER_TYPE = getParameterAgresso("VOUCHER_TYPE");
+        public static final String INVOICE_TRANS_TYPE = getParameterAgresso("INVOICE_TRANS_TYPE");
+        public static final String ITEM_TRANS_TYPE = getParameterAgresso("ITEM_TRANS_TYPE");
+        public static final String CLIENT = getParameterAgresso("CLIENT");
+        public static final String INVOICEACCOUNT = getParameterAgresso("INVOICEACCOUNT");
+        public static final String BLANK = " ";
+        public static final String TAXCODE = getParameterAgresso("TAXCODE");
+        public static final String STATUS = getParameterAgresso("STATUS");
+        public static final String APARTYPE = getParameterAgresso("APARTYPE");
+        public static final String RESPONSIBLE = getParameterAgresso("RESPONSIBLE");
+        public static final String LASTBATCHJOBRUNDATE = "LAST_RUN_DATE_AGRESSOFILE";
+        public static final String CURRENCYCODE = "GBP";
+        public static final String GBP_INVOICES_EXTERNAL_DELIVERY_DIRECTORY = getParameterAgresso("GBP_INVOICES_EXTERNAL_DELIVERY_DIRECTORY");
+    }
     public static final class OleSerialReceivingTypeLoader {
         public static final String SER_RCPT_HIS_REC_ID = "SER_RCPT_HIS_REC_ID";
         public static final String SER_RCV_REC_ID = "SER_RCV_REC_ID";
@@ -3510,6 +3527,16 @@ public class OLEConstants {
         Parameter parameter = CoreServiceApiServiceLocator.getParameterRepositoryService().getParameter(parameterKey);
         if(parameter==null){
             parameterKey = ParameterKey.create(OLEConstants.APPL_ID_OLE, OLEConstants.DLVR_NMSPC, OLEConstants.DLVR_CMPNT,name);
+            parameter = CoreServiceApiServiceLocator.getParameterRepositoryService().getParameter(parameterKey);
+        }
+        return parameter!=null?parameter.getValue():null;
+    }
+
+    public static String getParameterAgresso(String name) {
+        ParameterKey parameterKey = ParameterKey.create(OLEConstants.APPL_ID, OLEConstants.SELECT_NMSPC, OLEConstants.SELECT_CMPNT,name);
+        Parameter parameter = CoreServiceApiServiceLocator.getParameterRepositoryService().getParameter(parameterKey);
+        if(parameter==null){
+            parameterKey = ParameterKey.create(OLEConstants.APPL_ID_OLE, OLEConstants.SELECT_NMSPC, OLEConstants.SELECT_CMPNT,name);
             parameter = CoreServiceApiServiceLocator.getParameterRepositoryService().getParameter(parameterKey);
         }
         return parameter!=null?parameter.getValue():null;

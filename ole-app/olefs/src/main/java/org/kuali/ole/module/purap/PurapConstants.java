@@ -382,6 +382,7 @@ public class PurapConstants {
         public static final String NODE_CONTRACT_MANAGEMENT = "ContractManagement";
         public static final String NODE_AWAIT_NEW_UNORDERED_ITEM_REVIEW = "NewUnorderedItems";
         public static final String NODE_INTERNAL_PURCHASING_REVIEW = "ContractManagement";
+        public static final String NODE_PURCHASING_REVIEW = "DirectorApproval";
         public static final String NODE_COMMODITY_CODE_REVIEW = "Commodity";
         public static final String NODE_CONTRACTS_AND_GRANTS_REVIEW = "Award";
         public static final String NODE_BUDGET_OFFICE_REVIEW = "Budget";
@@ -395,6 +396,7 @@ public class PurapConstants {
             poAppDocStatusMap.put(NODE_ADHOC_REVIEW, PurchaseOrderStatuses.APPDOC_CANCELLED);
             poAppDocStatusMap.put(NODE_AWAIT_NEW_UNORDERED_ITEM_REVIEW, PurchaseOrderStatuses.APPDOC_DAPRVD_UNORDERED_ITEM);
             poAppDocStatusMap.put(NODE_INTERNAL_PURCHASING_REVIEW, PurchaseOrderStatuses.APPDOC_DAPRVD_PURCHASING);
+            poAppDocStatusMap.put(NODE_PURCHASING_REVIEW, PurchaseOrderStatuses.APPDOC_DAPRVD_PURCHASING);
             poAppDocStatusMap.put(NODE_COMMODITY_CODE_REVIEW, PurchaseOrderStatuses.APPDOC_DAPRVD_COMMODITY_CODE);
             poAppDocStatusMap.put(NODE_CONTRACTS_AND_GRANTS_REVIEW, PurchaseOrderStatuses.APPDOC_DAPRVD_CG_APPROVAL);
             poAppDocStatusMap.put(NODE_BUDGET_OFFICE_REVIEW, PurchaseOrderStatuses.APPDOC_DAPRVD_BUDGET);

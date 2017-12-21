@@ -2,6 +2,7 @@ package org.kuali.ole.deliver.batch;
 
 import org.apache.log4j.Logger;
 import org.kuali.ole.deliver.service.OleDeliverRequestDocumentHelperServiceImpl;
+import org.kuali.ole.module.purap.aggresoInvoice.InvoiceFileServiceImpl;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,6 +15,7 @@ public class OleOverDueNotice {
 
     private static final Logger LOG = Logger.getLogger(OleOverDueNotice.class);
     private OleDeliverRequestDocumentHelperServiceImpl oleDeliverRequestDocumentHelperService;
+    private InvoiceFileServiceImpl invoiceFileService;
     private OleShelvingLagTime oleShelvingLagTime;
 
     public OleShelvingLagTime getOleShelvingLagTime() {
@@ -36,6 +38,17 @@ public class OleOverDueNotice {
 
     public void setOleDeliverRequestDocumentHelperService(OleDeliverRequestDocumentHelperServiceImpl oleDeliverRequestDocumentHelperService) {
         this.oleDeliverRequestDocumentHelperService = oleDeliverRequestDocumentHelperService;
+    }
+
+    public InvoiceFileServiceImpl getInvoiceFileService() {
+        if(invoiceFileService == null){
+            invoiceFileService = new InvoiceFileServiceImpl();
+        }
+        return invoiceFileService;
+    }
+
+    public void setInvoiceFileService(InvoiceFileServiceImpl invoiceFileService) {
+        this.invoiceFileService = invoiceFileService;
     }
 
     public void generateNotices() {
@@ -218,6 +231,17 @@ public class OleOverDueNotice {
             oleDeliverRequestDocumentHelperService = getOleDeliverRequestDocumentHelperService();
             oleDeliverRequestDocumentHelperService.deleteRequestHistoryRecord();
 
+        } catch (Exception ex) {
+            LOG.error("Exception occurred while performing deleteReturnHistory", ex);
+        }
+
+    }
+
+    public void generateAgressoFile() {
+        LOG.debug("Start of scheduled job to execute deleteRequestHistory.");
+        try {
+            invoiceFileService= getInvoiceFileService();
+            invoiceFileService.createFile();
         } catch (Exception ex) {
             LOG.error("Exception occurred while performing deleteReturnHistory", ex);
         }

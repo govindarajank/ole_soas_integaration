@@ -1565,6 +1565,9 @@ public class PurchaseOrderDocument extends PurchasingDocumentBase implements Mul
      */
     @Override
     public boolean answerSplitNodeQuestion(String nodeName) throws UnsupportedOperationException {
+        if (nodeName.equals(PurapWorkflowConstants.REQUIRES_APPROVAL_FROM_MANAGER)) {
+            return isPOApprovalRequired();
+        }
         if (nodeName.equals(PurapWorkflowConstants.CONTRACT_MANAGEMENT_REVIEW_REQUIRED)) {
             return isContractManagementReviewRequired();
         }
@@ -1582,6 +1585,23 @@ public class PurchaseOrderDocument extends PurchasingDocumentBase implements Mul
             return isNotificationRequired();
         }
         return super.answerSplitNodeQuestion(nodeName);
+    }
+
+    protected boolean isPOApprovalRequired() {
+        boolean flag =false;
+        if(this.getTotalDollarAmount().isGreaterThan(new KualiDecimal(1000))){
+            flag = true;
+        } else {
+            for (PurApItem item : (List<PurApItem>) getItems()) {
+                if(item.getItemType().getItemTypeCode().equalsIgnoreCase(PurapConstants.ItemTypeCodes.ITEM_TYPE_ITEM_CODE)){
+                    if(item.getTotalAmount().isGreaterThan(new KualiDecimal(500))){
+                        flag =true;
+                        break;
+                    }
+                }
+            }
+        }
+        return flag;
     }
 
     protected boolean isContractManagementReviewRequired() {

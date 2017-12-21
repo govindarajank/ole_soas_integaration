@@ -29,6 +29,7 @@ import org.kuali.rice.core.api.util.type.KualiDecimal;
 import org.kuali.rice.core.framework.persistence.ojb.dao.PlatformAwareDaoBaseOjb;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -182,6 +183,14 @@ public class CreditMemoDaoOjb extends PlatformAwareDaoBaseOjb implements CreditM
             returnList.add(vcmd.getDocumentNumber());
         }
         return returnList;
+    }
+
+    public List<VendorCreditMemoDocument> getCreditMemoByCriteria(Timestamp fromDate) {
+        LOG.debug("getDocumentNumberOfCreditMemoByCriteria() started");
+        Criteria criteria = new Criteria();
+        criteria.addBetween("creditMemoDate", fromDate,new Timestamp(System.currentTimeMillis()));
+        ReportQueryByCriteria rqbc = new ReportQueryByCriteria(VendorCreditMemoDocument.class, criteria);
+        return (List<VendorCreditMemoDocument>) getPersistenceBrokerTemplate().getCollectionByQuery(rqbc);
     }
 
     @Override
