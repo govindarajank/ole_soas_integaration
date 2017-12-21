@@ -41,8 +41,8 @@
                 <bean id="principalId" parent="Uif-LookupCriteriaInputField" p:propertyName="principalId"/>
                 <bean id="entityId" parent="Uif-LookupCriteriaInputField" p:propertyName="entityId"/>
                 <bean id="firstName" parent="Uif-LookupCriteriaInputField" p:propertyName="firstName"/>
-                <bean id="middleName" parent="Uif-LookupCriteriaInputField" p:propertyName="middleName"/>
                 <bean id="lastName" parent="Uif-LookupCriteriaInputField" p:propertyName="lastName"/>
+                <bean id="middleName" parent="Uif-LookupCriteriaInputField" p:propertyName="middleName"/>
                 <bean id="emailAddress" parent="Uif-LookupCriteriaInputField" p:propertyName="emailAddress"/>
                 <bean id="phoneNumber" parent="Uif-LookupCriteriaInputField" p:propertyName="phoneNumber"/>
                 <bean id="employeeId" parent="Uif-LookupCriteriaInputField" p:propertyName="employeeId"/>
@@ -94,8 +94,8 @@
                             <bean parent="Uif-InputField" p:propertyName="principalName"/>
                             <bean parent="Uif-InputField" p:propertyName="name"/>
                             <bean parent="Uif-InputField" p:propertyName="firstName"/>
-                            <bean parent="Uif-InputField" p:propertyName="middleName"/>
                             <bean parent="Uif-InputField" p:propertyName="lastName"/>
+                            <bean parent="Uif-InputField" p:propertyName="middleName"/>
                             <bean parent="Uif-InputField" p:propertyName="entityId"/>
                             <bean parent="Uif-InputField" p:propertyName="campusCode"/>
                             <bean parent="Uif-InputField" p:propertyName="emailAddress"/>

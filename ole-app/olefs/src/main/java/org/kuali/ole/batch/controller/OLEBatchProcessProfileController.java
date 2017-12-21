@@ -583,6 +583,9 @@ public class OLEBatchProcessProfileController extends MaintenanceDocumentControl
         if ((oleBatchProcessProfileBo.getBatchProcessProfileType().equalsIgnoreCase(OLEConstants.OLEBatchProcess.BATCH_EXPORT)) && oleBatchProcessProfileFilterCriteriaBo != null && oleBatchProcessProfileFilterCriteriaBo.getFilterFieldName()!=null && oleBatchProcessProfileFilterCriteriaBo.getFilterFieldNameText()!=null) {
             if(!StringUtils.isEmpty(oleBatchProcessProfileFilterCriteriaBo.getFilterFieldName()) && !StringUtils.isEmpty(oleBatchProcessProfileFilterCriteriaBo.getFilterFieldNameText()) && !StringUtils.isEmpty(oleBatchProcessProfileFilterCriteriaBo.getFilterFieldValue())){
                 matchPointFlag1 = validateFilterCriteriaFieldValue(oleBatchProcessProfileFilterCriteriaBo.getFilterFieldName());
+                if(oleBatchProcessProfileFilterCriteriaBo.getFilterFieldName().length()>2 && !StringUtils.isNumeric(oleBatchProcessProfileFilterCriteriaBo.getFilterFieldName().substring(0,3))){
+                    matchPointFlag1 = true;
+                }
                 if (!matchPointFlag1) {
                     GlobalVariables.getMessageMap().putErrorForSectionId(OLEConstants.OLEBatchProcess.OLE_BATCH_PROFILE_FILTER_CRITERIA_SECTION_ID, OLEConstants.OLEBatchProcess.OLE_BATCH_BIB_FILTER_CRITERIA_FIELD_ERR);
                     return getUIFModelAndView(form);

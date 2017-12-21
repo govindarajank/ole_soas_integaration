@@ -115,6 +115,19 @@
         </property>
     </bean>
 
+    <bean id="OleCirculationDeskMapping-middleName" parent="OleCirculationDeskMapping-middleName-parentBean"/>
+
+    <bean id="OleCirculationDeskMapping-middleName-parentBean"
+          abstract="true" parent="AttributeDefinition">
+        <property name="name" value="middleName"/>
+        <property name="label" value="Student ID"/>
+        <property name="shortLabel" value="Student ID"/>
+        <property name="required" value="false"/>
+        <property name="control">
+            <bean parent="TextControlDefinition" p:size="30"/>
+        </property>
+    </bean>
+
     <bean id="OleCirculationDeskMapping-firstName" parent="OleCirculationDeskMapping-firstName-parentBean"/>
 
     <bean id="OleCirculationDeskMapping-firstName-parentBean"
@@ -122,18 +135,6 @@
         <property name="name" value="firstName"/>
         <property name="label" value="First Name"/>
         <property name="shortLabel" value="First Name"/>
-        <property name="required" value="false"/>
-        <property name="control">
-            <bean parent="TextControlDefinition" p:size="30"/>
-        </property>
-    </bean>
-    <bean id="OleCirculationDeskMapping-middleName" parent="OleCirculationDeskMapping-middleName-parentBean"/>
-
-    <bean id="OleCirculationDeskMapping-middleName-parentBean"
-          abstract="true" parent="AttributeDefinition">
-        <property name="name" value="middleName"/>
-        <property name="label" value="Middle Name"/>
-        <property name="shortLabel" value="Middle Name"/>
         <property name="required" value="false"/>
         <property name="control">
             <bean parent="TextControlDefinition" p:size="30"/>

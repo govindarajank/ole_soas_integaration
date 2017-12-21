@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -115,11 +116,12 @@ public abstract class NoticeMailContentFormatter {
         oleNoticeBo.setItemCallNumberPrefix(oleLoanDocument.getItemCallNumberPrefix()!=null ? oleLoanDocument.getItemCallNumberPrefix() : "");
         oleNoticeBo.setItemTypeDesc(oleLoanDocument.getItemTypeDesc() != null ? oleLoanDocument.getItemTypeDesc() : "");
         oleNoticeBo.setCopyNumber(oleLoanDocument.getItemCopyNumber() != null ? oleLoanDocument.getItemCopyNumber() : "");
-        oleNoticeBo.setDueDateString(oleLoanDocument.getLoanDueDate() != null ? (oleLoanDocument.getLoanDueDate().toString() != null ? oleLoanDocument.getLoanDueDate().toString() : "") : "");
+        oleNoticeBo.setDueDateString(oleLoanDocument.getLoanDueDate() != null ? (oleLoanDocument.getLoanDueDate().toString() != null ? new SimpleDateFormat("dd-MM-yyyy").format(oleLoanDocument.getLoanDueDate()).toString() : "") : "");
         oleNoticeBo.setItemId(oleLoanDocument.getItemId() != null ? oleLoanDocument.getItemId() : "");
         oleNoticeBo.setItemShelvingLocation((getLocationName(oleLoanDocument.getItemLocation()) != null ? getLocationName(oleLoanDocument.getItemLocation()) : ""));
         oleNoticeBo.setCheckInDate(oleLoanDocument.getCheckInDate() != null ? (StringUtils.isNotBlank(oleLoanDocument.getCheckInDate().toString()) ? oleLoanDocument.getCheckInDate().toString() : "") : "");
         oleNoticeBo.setMissingPieceNote(StringUtils.isNotBlank(oleLoanDocument.getMissingPieceNote()) ? oleLoanDocument.getMissingPieceNote() : "");
+        oleNoticeBo.setClaimsSearchCount(oleLoanDocument.getClaimsSearchCount());
         oleLoanDocument.setOleCirculationDesk(getCircDeskLocationResolver().getOleCirculationDesk(oleLoanDocument.getCirculationLocationId()));
         if (oleLoanDocument.getOleCirculationDesk() != null) {
             oleNoticeBo.setCirculationDeskName(oleLoanDocument.getOleCirculationDesk().getCirculationDeskPublicName());
@@ -254,7 +256,7 @@ public abstract class NoticeMailContentFormatter {
         oleNoticeBo.setItemInstitution(getLocationName(locationMap.get(OLEConstants.ITEM_INSTITUTION)));
         oleNoticeBo.setItemCampus(getLocationName(locationMap.get(OLEConstants.ITEM_CAMPUS)));
         oleNoticeBo.setItemCollection(getLocationName(locationMap.get(OLEConstants.ITEM_COLLECTION)));
-        oleNoticeBo.setItemLibrary(getLocationName(locationMap.get(OLEConstants.ITEM_LIBRARY)));
+        oleNoticeBo.setItemLibrary(getLocationName(locationMap.get(OLEConstants.ITEM_SHELVING)));
         oleNoticeBo.setItemLocation(getLocationName(locationMap.get(OLEConstants.ITEM_SHELVING)));
         oleNoticeBo.setItemShelvingLocation(getLocationName(locationMap.get(OLEConstants.ITEM_SHELVING)));
         return oleNoticeBo;

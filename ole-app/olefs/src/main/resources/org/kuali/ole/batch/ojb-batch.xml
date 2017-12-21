@@ -1069,6 +1069,22 @@
         <field-descriptor name="dateUpdated" column="DATE_UPDATED" jdbc-type="TIMESTAMP"/>
     </class-descriptor>
 
+    <class-descriptor class="org.kuali.ole.identityAdmin.bo.OleForgotPassword" table="krim_prncpl_t">
+        <field-descriptor name="principalId" column="PRNCPL_ID" jdbc-type="VARCHAR" primarykey="true"  index="true" ></field-descriptor>
+        <field-descriptor name="principalName" column="PRNCPL_NM"  jdbc-type="VARCHAR"></field-descriptor>
+        <field-descriptor name="principalPassword" column="PRNCPL_PSWD" jdbc-type="VARCHAR"></field-descriptor>
+        <field-descriptor name="objectId" column="OBJ_ID" jdbc-type="VARCHAR" index="true"/>
+        <field-descriptor name="versionNumber" column="VER_NBR" jdbc-type="BIGINT" locking="true"/>
+    </class-descriptor>
+
+    <class-descriptor class="org.kuali.ole.identityAdmin.bo.OleResetPassword" table="krim_prncpl_t">
+        <field-descriptor name="principalId" column="PRNCPL_ID" jdbc-type="VARCHAR" primarykey="true"  index="true" ></field-descriptor>
+        <field-descriptor name="principalName" column="PRNCPL_NM"  jdbc-type="VARCHAR"></field-descriptor>
+        <field-descriptor name="principalPassword" column="PRNCPL_PSWD" jdbc-type="VARCHAR"></field-descriptor>
+        <field-descriptor name="objectId" column="OBJ_ID" jdbc-type="VARCHAR" index="true"/>
+        <field-descriptor name="versionNumber" column="VER_NBR" jdbc-type="BIGINT" locking="true"/>
+    </class-descriptor>
+
 </descriptor-repository>
 
 

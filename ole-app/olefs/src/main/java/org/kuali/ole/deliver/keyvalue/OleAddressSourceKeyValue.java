@@ -23,7 +23,7 @@ public class OleAddressSourceKeyValue extends KeyValuesBase {
     public List getKeyValues() {
         List<KeyValue> keyValues = new ArrayList<KeyValue>();
         Collection<OleAddressSourceBo> oleAddressSourceBos = KRADServiceLocator.getBusinessObjectService().findAll(OleAddressSourceBo.class);
-        keyValues.add(new ConcreteKeyValue("", ""));
+        //keyValues.add(new ConcreteKeyValue("", ""));
         for (OleAddressSourceBo oleAddressSourceType : oleAddressSourceBos) {
             if (oleAddressSourceType.isActive()) {
                 keyValues.add(new ConcreteKeyValue(oleAddressSourceType.getOleAddressSourceId(), oleAddressSourceType.getOleAddressSourceName()));

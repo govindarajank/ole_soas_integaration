@@ -43,7 +43,12 @@ public class OLEBatchBibImportDataObjects {
             BibTree bibTree = getBibTrees().getBibTrees().get(i);
             OrderBibMarcRecord orderBibMarcRecord = orderBibMarcRecords.get(i);
             if (bibTree.getBib().getResult().equals(DocstoreDocument.ResultType.FAILURE)) {
-                orderBibMarcRecord.setFailureReason(bibTree.getBib().getMessage());
+                try{
+                orderBibMarcRecord.setFailureReason(bibTree.getBib().getMessage()+" : "+orderBibMarcRecord.getBibMarcRecord().getDataFieldForTag("907").getSubFields().get(0).getValue()+" : "
+                            +orderBibMarcRecord.getBibMarcRecord().getDataFieldForTag("245").getSubFields().get(0).getValue());
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
                 continue;
             } else {
                 BibId bibId = new BibId();

@@ -71,7 +71,7 @@ public class OLEBatchProcessOrderImportValuesFinder extends UifKeyValuesFinderBa
                 String attributeName = oleBatchProcessProfileConstantsBo.getAttributeName();
                 String oldAttributeName = oleBatchProcessProfileConstantsBo.getOldAttributeName();
                 if(!StringUtils.isBlank(attributeName)){
-                    if(oldAttributeName == null || !attributeName.equalsIgnoreCase(oldAttributeName)){
+                   // if(oldAttributeName == null || !attributeName.equalsIgnoreCase(oldAttributeName)){
                         oleBatchProcessProfileConstantsBo.setOldAttributeName(attributeName);
                         if (dataType.equalsIgnoreCase(OLEConstants.OLEBatchProcess.ORDER_IMPORT)) {
                             if(attributeName.equalsIgnoreCase(OLEConstants.OLEBatchProcess.CHART_CODE)){
@@ -316,7 +316,7 @@ public class OLEBatchProcessOrderImportValuesFinder extends UifKeyValuesFinderBa
                                 }
                             }
                         }
-                    }
+                    //}
                 }
             }
         Collections.sort(keyValues, new Comparator<KeyValue>() {
