@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.kuali.ole.deliver.bo.OleCirculationDesk;
 import org.kuali.ole.deliver.bo.OleDeliverRequestBo;
 import org.kuali.ole.deliver.util.*;
+import org.kuali.rice.core.api.util.RiceConstants;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -42,7 +43,7 @@ public class OnHoldRecieptPrintSlipUtil extends OleRecieptPrintSlipUtil {
             if(null != oleDeliverRequestBo && oleDeliverRequestBo.getHoldExpirationDate() != null) {
                 Date date = oleDeliverRequestBo.getHoldExpirationDate();
                 if (date != null) {
-                    DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+                    DateFormat df = new SimpleDateFormat(RiceConstants.SIMPLE_DATE_FORMAT_FOR_DATE);
                     String dateString = date == null ? "" : df.format(date);
                     pdfTable.addCell(getPdfFormatUtil().getPdfPCellInJustified(dateString));
                 }

@@ -144,8 +144,8 @@ public class OLESIP2Constants {
     public static final String DELETE_HOLD="delete";
     public static final String UPDATE_HOLD="updateHold";
 
-    public static final String CHECK_IN_SUCCESS="SuccessFully Checked-in";
-    public static final String RENEW_SUCCESS="Item successFully renewed";
+    public static final String CHECK_IN_SUCCESS="Successfully Checked-in";
+    public static final String RENEW_SUCCESS="Item successfully renewed";
     public static final String CHECK_OUT_SUCCESS="Successfully loaned";
     public static final String CHECK_OUT_SUCCESSFULLY="Item Successfully loaned";
     public static final String CHECK_OUT_FAILED="Item cannot be loaned : any query see help desk";

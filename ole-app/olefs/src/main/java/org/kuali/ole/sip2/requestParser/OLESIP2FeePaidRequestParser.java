@@ -36,7 +36,7 @@ public class OLESIP2FeePaidRequestParser extends OLESIP2RequestParser {
                     code = data.substring(0, 2);
                     transactionDate = data.substring(2, 20);
                     feeType = getFeeType(data.substring(20, 22));
-                    paymentType = data.substring(22, 24);
+                    paymentType = getPaymentType(data.substring(22, 24));
                     currencyType = data.substring(24, 27);
                     feeAmount = data.substring(29);
                 }
@@ -93,6 +93,20 @@ public class OLESIP2FeePaidRequestParser extends OLESIP2RequestParser {
         } else {
             // throw new InvalidSIP2ResponseValueException("Invalid fee type code! The given code \"" + code + "\" doesn't match with any fee type!");
             throw new Exception("Invalid fee type code! The given code \"" + code + "\" doesn't match with any fee type!");
+        }
+    }
+
+    public String getPaymentType(String code) throws Exception {
+        if (code.equals("00")) {
+            // return "other/unknown";
+            return "Cash";
+        } else if (code.equals("01")) {
+            return "Visa";
+        } else if (code.equals("02")) {
+            return "Card";
+        } else {
+            // throw new InvalidSIP2ResponseValueException("Invalid fee type code! The given code \"" + code + "\" doesn't match with any fee type!");
+            throw new Exception("Invalid fee type code! The given code \"" + code + "\" doesn't match with any transaction type!");
         }
     }
 

@@ -25,7 +25,7 @@
 
     <!--OleGenericDialogs-->
     <bean id="operatorOverrideMessageDialog" parent="errorMessageDialog">
-        <property name="promptText" value="The current operator doesn't have the permissions to loan. Please ask a supervisor!"/>
+        <property name="promptText" value=""/>
         <property name="availableResponses">
             <list>
                 <!--Empty-->
@@ -33,7 +33,7 @@
         </property>
         <property name="items">
             <list merge="true">
-                <ref bean="overrideUserSection"/>
+                <!--<ref bean="overrideUserSection"/>-->
                 <ref bean="overrideBtnLayoutSection"/>
             </list>
         </property>
@@ -55,7 +55,7 @@
     <bean id="overrideBtnLayoutSection" parent="Uif-HorizontalBoxSection">
         <property name="items">
             <list>
-                <bean id="loginBtn" parent="Uif-SecondaryActionButton" p:actionLabel="Login" p:style="width:50px"
+                <bean id="loginBtn" parent="Uif-SecondaryActionButton" p:actionLabel="Proceed" p:style="width:80px"
                        p:actionScript="
                       var value = jq('#patronOverrideLogin_control').val();
                       jq.fancybox.close();
@@ -63,8 +63,8 @@
                       function (){jq('#checkoutItem_control').focus();}
                       );"
                     />
-                <bean id="closeBtn" parent="Uif-SecondaryActionButton" p:actionLabel="Close"
-                      p:style="width:120px"
+                <bean id="closeBtn" parent="Uif-SecondaryActionButton" p:actionLabel="Do Not Proceed"
+                      p:style="width:130px"
                       p:methodToCall="resetItemForNextTrans" p:ajaxSubmit="true" p:successCallback="jq.fancybox.close();jq('#checkoutItem_control').focus();"/>
             </list>
         </property>

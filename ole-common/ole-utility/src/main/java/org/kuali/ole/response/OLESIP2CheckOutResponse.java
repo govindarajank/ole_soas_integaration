@@ -9,6 +9,8 @@ import org.kuali.ole.common.OLESIP2Util;
 import org.kuali.ole.constants.OLESIP2Constants;
 import org.kuali.ole.request.OLESIP2CheckOutRequestParser;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 /**
  * Created by gayathria on 27/8/14.
  */
@@ -49,7 +51,18 @@ public class OLESIP2CheckOutResponse extends OLESIP2Response {
         checkOutResponseBuilder.append(oleCheckOutItem.getTitleIdentifier() != null ? oleCheckOutItem.getTitleIdentifier().replaceAll(OLESIP2Constants.NON_ROMAN_REGEX, "") : "");
         checkOutResponseBuilder.append(OLESIP2Constants.SPLIT+
                 OLESIP2Constants.DUE_DATE_CODE);
-        checkOutResponseBuilder.append(oleCheckOutItem.getDueDate() != null ? oleCheckOutItem.getDueDate() : "");
+        if(oleCheckOutItem.getDueDate() != null) {
+
+            SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat dateFormat2 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            try {
+                checkOutResponseBuilder.append(dateFormat2.format(dateFormat1.parse(oleCheckOutItem.getDueDate())));
+            }catch (ParseException e) {
+                LOG.error(e.getMessage(), e);
+            }
+        }else{
+            checkOutResponseBuilder.append("");
+        }
         if (OLESIP2Util.getDefaultCurrency() != null) {
             checkOutResponseBuilder.append(OLESIP2Constants.SPLIT+
                     OLESIP2Constants.CURRENCY_TYPE_CODE);
@@ -63,14 +76,14 @@ public class OLESIP2CheckOutResponse extends OLESIP2Response {
         checkOutResponseBuilder.append(StringUtils.isNotBlank(oleCheckOutItem.getItemType()) ? oleCheckOutItem.getItemType() : "");*/
         if (oleCheckOutItem.code.equalsIgnoreCase("030") || oleCheckOutItem.getMessage().equalsIgnoreCase(OLESIP2Constants.CHECK_OUT_SUCCESS)) {
             checkOutResponseBuilder.append(OLESIP2Constants.SPLIT+
-                    OLESIP2Constants.SCREEN_MSG_CODE+ OLESIP2Constants.CHECK_OUT_SUCCESSFULLY);
+                    OLESIP2Constants.SCREEN_MSG_CODE+ oleCheckOutItem.getMessage().replaceAll("<br/>", "")+ OLESIP2Constants.CHECK_OUT_SUCCESSFULLY);
             checkOutResponseBuilder.append(OLESIP2Constants.SPLIT+
-                    OLESIP2Constants.PRINT_LINE_CODE + oleCheckOutItem.getMessage().replaceAll("<br/>", ""));
+                    OLESIP2Constants.PRINT_LINE_CODE + oleCheckOutItem.getMessage().replaceAll("<br/>", "")+ OLESIP2Constants.CHECK_OUT_SUCCESSFULLY);
         } else {
             checkOutResponseBuilder.append(OLESIP2Constants.SPLIT+
                     OLESIP2Constants.SCREEN_MSG_CODE+ OLESIP2Constants.CHECK_OUT_FAILED);
             checkOutResponseBuilder.append(OLESIP2Constants.SPLIT+
-                    OLESIP2Constants.PRINT_LINE_CODE + oleCheckOutItem.getMessage().replaceAll("<br/>", ""));
+                    OLESIP2Constants.PRINT_LINE_CODE + OLESIP2Constants.CHECK_OUT_FAILED);
         }
         if (StringUtils.isNotBlank(sip2CheckOutRequestParser.getSequenceNum())) {
             checkOutResponseBuilder.append(OLESIP2Constants.SPLIT+
@@ -88,7 +101,7 @@ public class OLESIP2CheckOutResponse extends OLESIP2Response {
 
         StringBuilder checkOutResponseBuilder = new StringBuilder();
         checkOutResponseBuilder.append(code);
-        if ((oleRenewItem.getCode()!=null && oleRenewItem.getCode().equalsIgnoreCase("030")) || oleRenewItem.getMessage().equalsIgnoreCase(OLESIP2Constants.RENEW_SUCCESS)) {
+        if ((oleRenewItem.getCode()!=null && oleRenewItem.getCode().equalsIgnoreCase("030")) || oleRenewItem.isSuccess()|| oleRenewItem.getMessage().equalsIgnoreCase(OLESIP2Constants.RENEW_SUCCESS)) {
             checkOutResponseBuilder.append(OLESIP2Util.bool2Int(true));
             checkOutResponseBuilder.append(OLESIP2Util.bool2Char(false));
             checkOutResponseBuilder.append("U");
@@ -113,7 +126,17 @@ public class OLESIP2CheckOutResponse extends OLESIP2Response {
         checkOutResponseBuilder.append(oleRenewItem.getTitleIdentifier() != null ? oleRenewItem.getTitleIdentifier().replaceAll(OLESIP2Constants.NON_ROMAN_REGEX, "") : "");
         checkOutResponseBuilder.append(OLESIP2Constants.SPLIT+
                 OLESIP2Constants.DUE_DATE_CODE);
-        checkOutResponseBuilder.append(oleRenewItem.getNewDueDate() != null ? oleRenewItem.getNewDueDate() : "");
+        if(oleRenewItem.getNewDueDate() != null) {
+            SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat dateFormat2 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            try {
+                checkOutResponseBuilder.append(dateFormat2.format(dateFormat1.parse(oleRenewItem.getNewDueDate())));
+            }catch (ParseException e) {
+                LOG.error(e.getMessage(), e);
+            }
+        }else{
+            checkOutResponseBuilder.append("");
+        }
         if (OLESIP2Util.getDefaultCurrency() != null) {
             checkOutResponseBuilder.append(OLESIP2Constants.SPLIT+
                     OLESIP2Constants.CURRENCY_TYPE_CODE);
@@ -125,16 +148,16 @@ public class OLESIP2CheckOutResponse extends OLESIP2Response {
        /* checkOutResponseBuilder.append(OLESIP2Constants.SPLIT+
                 OLESIP2Constants.MEDIA_TYPE_CODE);
         checkOutResponseBuilder.append(StringUtils.isNotBlank(oleRenewItem.getItemType()) ? oleRenewItem.getItemType() : "");*/
-        if ((oleRenewItem.getCode()!=null && oleRenewItem.getCode().equalsIgnoreCase("030")) || oleRenewItem.getMessage().equalsIgnoreCase(OLESIP2Constants.RENEW_SUCCESS)) {
+        if ((oleRenewItem.getCode()!=null && oleRenewItem.getCode().equalsIgnoreCase("030")) || oleRenewItem.isSuccess() || oleRenewItem.getMessage().equalsIgnoreCase(OLESIP2Constants.RENEW_SUCCESS)) {
             checkOutResponseBuilder.append(OLESIP2Constants.SPLIT+
-                    OLESIP2Constants.SCREEN_MSG_CODE+ OLESIP2Constants.CHECK_OUT_SUCCESSFULLY);
+                    OLESIP2Constants.SCREEN_MSG_CODE+oleRenewItem.getMessage().replaceAll("<br/>", "")+ OLESIP2Constants.CHECK_OUT_SUCCESSFULLY);
             checkOutResponseBuilder.append(OLESIP2Constants.SPLIT+
-                    OLESIP2Constants.PRINT_LINE_CODE + oleRenewItem.getMessage().replaceAll("<br/>", ""));
+                    OLESIP2Constants.PRINT_LINE_CODE + oleRenewItem.getMessage().replaceAll("<br/>", "")+ OLESIP2Constants.CHECK_OUT_SUCCESSFULLY);
         } else {
             checkOutResponseBuilder.append(OLESIP2Constants.SPLIT+
-                    OLESIP2Constants.SCREEN_MSG_CODE+ OLESIP2Constants.CHECK_OUT_FAILED);
+                    OLESIP2Constants.SCREEN_MSG_CODE+ oleRenewItem.getMessage().replaceAll("<br/>", "")+ OLESIP2Constants.CHECK_OUT_FAILED);
             checkOutResponseBuilder.append(OLESIP2Constants.SPLIT+
-                    OLESIP2Constants.PRINT_LINE_CODE + oleRenewItem.getMessage().replaceAll("<br/>", ""));
+                    OLESIP2Constants.PRINT_LINE_CODE + oleRenewItem.getMessage().replaceAll("<br/>", "")+ OLESIP2Constants.CHECK_OUT_FAILED);
         }
         if (StringUtils.isNotBlank(sip2CheckOutRequestParser.getSequenceNum())) {
             checkOutResponseBuilder.append(OLESIP2Constants.SPLIT+

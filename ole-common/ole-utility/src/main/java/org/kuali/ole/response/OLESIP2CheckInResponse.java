@@ -75,10 +75,17 @@ public class OLESIP2CheckInResponse extends OLESIP2Response {
         if (StringUtils.isNotBlank(oleCheckInItem.getMessage())) {
             oleCheckInBuilder.append(OLESIP2Constants.SPLIT+
                     OLESIP2Constants.SCREEN_MSG_CODE);
-            oleCheckInBuilder.append(oleCheckInItem.getMessage().replaceAll("<br/>", ""));
-            oleCheckInBuilder.append(OLESIP2Constants.SPLIT+
+
+            String screenMessage = "";
+            if(oleCheckInItem.getMessage().contains("Requests exists for this item") || oleCheckInItem.getMessage().contains("Item is marked as lost and/or replacement fee has been billed")){
+                screenMessage = oleCheckInItem.getMessage().replaceAll("<br/>", "") + " Can't Check-in, Please see desk ";
+            }else{
+                screenMessage = oleCheckInItem.getMessage().replaceAll("<br/>", "");
+            }
+            oleCheckInBuilder.append(screenMessage);
+            oleCheckInBuilder.append(OLESIP2Constants.SPLIT +
                     OLESIP2Constants.PRINT_LINE_CODE);
-            oleCheckInBuilder.append(oleCheckInItem.getMessage().replaceAll("<br/>", ""));
+            oleCheckInBuilder.append(screenMessage);
         }
 
         if (StringUtils.isNotBlank(sip2CheckInRequestParser.getSequenceNum())) {

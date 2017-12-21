@@ -42,7 +42,7 @@ public class OleTransmissionServiceImpl implements OleTransmissionService {
             channel.connect();
             ChannelSftp sftpChannel = (ChannelSftp) channel;
             String remoteDir = vendorDetail.getVendorName().toString();
-            try {
+            /*try {
                 sftpChannel.cd(ORDER_RECORDS);
             } catch (SftpException e) {
                 sftpChannel.mkdir(ORDER_RECORDS);
@@ -59,7 +59,7 @@ public class OleTransmissionServiceImpl implements OleTransmissionService {
             } catch (SftpException e) {
                 sftpChannel.mkdir(remoteDir);
                 sftpChannel.cd(remoteDir);
-            }
+            }*/
             sftpChannel.put(new FileInputStream(fileLocation), preferredFileName);
             sftpChannel.exit();
         } catch (Exception e) {
@@ -100,9 +100,9 @@ public class OleTransmissionServiceImpl implements OleTransmissionService {
                 LOG.debug("FileName====================================>" + preferredFileName);
             }
 
-            String remoteDir = vendorDetail.getVendorAliases().toString();
+            /*String remoteDir = vendorDetail.getVendorAliases().toString();
             ftpClient.mkd(remoteDir);
-            ftpClient.cwd(remoteDir);
+            ftpClient.cwd(remoteDir);*/
             inputStream = new FileInputStream(fileLocation);
             ftpClient.storeFile(preferredFileName, inputStream);
 

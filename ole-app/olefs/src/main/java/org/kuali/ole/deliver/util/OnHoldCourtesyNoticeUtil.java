@@ -248,8 +248,11 @@ public class OnHoldCourtesyNoticeUtil {
 
     public void sendOnHoldNotice(OleDeliverRequestBo oleDeliverRequestBo){
         Map<String,String> fieldLabelMap  = new HashMap<>();
-        fieldLabelMap.put("noticeTitle","OnHoldNotice");
-        fieldLabelMap.put("noticeBody"," The following requested item(s) is ready for pick-up and will be held until the expiration date at the location shown below.");
+        fieldLabelMap.put("noticeTitle",getParameterResolverInstance().getParameter(OLEConstants.APPL_ID, OLEConstants
+                .DLVR_NMSPC, OLEConstants.DLVR_CMPNT, OLEParameterConstants
+                .ONHOLD_TITLE));
+        fieldLabelMap.put("noticeBody",getParameterResolverInstance().getParameter(OLEConstants.APPL_ID, OLEConstants
+                .DLVR_NMSPC, OLEConstants.DLVR_CMPNT, OLEParameterConstants.ONHOLD_BODY));
         String mailContent = generateRequestMailContentForPatron(oleDeliverRequestBo,fieldLabelMap);
         sendMail(oleDeliverRequestBo,mailContent);
     }
