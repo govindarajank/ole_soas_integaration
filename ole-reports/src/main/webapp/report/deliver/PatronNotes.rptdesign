@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.4.1.v201408290142 Build &lt;4.4.1.v20140916-1320></property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">11</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">11</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">11</property>
+        </structure>
+    </list-property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="layoutPreference">auto layout</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="Active Patron" id="13">
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">Y</value>
+            </simple-property-list>
+            <list-property name="selectionList">
+                <structure>
+                    <property name="value">Y</property>
+                    <property name="label">Yes</property>
+                </structure>
+                <structure>
+                    <property name="value">N</property>
+                    <property name="label">No</property>
+                </structure>
+            </list-property>
+            <property name="paramType">simple</property>
+            <property name="controlType">radio-button</property>
+            <property name="fixedOrder">true</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="Note Type" id="14">
+            <property name="valueType">dynamic</property>
+            <property name="dataSetName">PatronNoteTypes</property>
+            <expression name="valueExpr" type="javascript">dataSetRow["OLE_PTRN_NTE_TYPE_CD"]</expression>
+            <expression name="labelExpr" type="javascript">dataSetRow["OLE_PTRN_NTE_TYPE_CD"]</expression>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">SIP</value>
+                <value type="constant">USER</value>
+                <value type="constant">STAFF</value>
+                <value type="constant">CHECKIN</value>
+                <value type="constant">BLOCK</value>
+                <value type="constant">GENERAL</value>
+            </simple-property-list>
+            <list-property name="selectionList"/>
+            <property name="paramType">multi-value</property>
+            <property name="controlType">list-box</property>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">true</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="Patron Barcode" id="15">
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant"></value>
+            </simple-property-list>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <method name="getDefaultValueList"><![CDATA[params["Patron Barcode"].value=null;]]></method>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="Note Text" id="16">
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant"></value>
+            </simple-property-list>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <method name="getDefaultValueList"><![CDATA[params["Note Text"].value=null;]]></method>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="NoteCreatedFromDate" id="61">
+            <text-property name="promptText">Note Created From Date</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="NoteCreatedToDate" id="62">
+            <text-property name="promptText">Note Created To Date</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">date</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Patron Notes" id="10">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://localhost/ole</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">cm9vdA==</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="PatronNotes" id="11">
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">OLE_PTRN_ID</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">OLE_PTRN_ID</text-property>
+                    <text-property name="heading">OLE_PTRN_ID</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">concat(nm.last_nm,' ',nm.first_nm)</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">concat(nm.last_nm,' ',nm.first_nm)</text-property>
+                    <text-property name="heading">concat(nm.last_nm,' ',nm.first_nm)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">BARCODE</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">BARCODE</text-property>
+                    <text-property name="heading">BARCODE</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">DLVR_BORR_TYP_NM</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">DLVR_BORR_TYP_NM</text-property>
+                    <text-property name="heading">DLVR_BORR_TYP_NM</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">OLE_PTRN_NTE_TXT</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">OLE_PTRN_NTE_TXT</text-property>
+                    <text-property name="heading">OLE_PTRN_NTE_TXT</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">NTE_CRT_OR_UPDT_DATE</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">NTE_CRT_OR_UPDT_DATE</text-property>
+                    <text-property name="heading">NTE_CRT_OR_UPDT_DATE</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">OLE_PTRN_ID</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">concat(nm.last_nm,' ',nm.first_nm)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">BARCODE</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">DLVR_BORR_TYP_NM</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">OLE_PTRN_NTE_TXT</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">NTE_CRT_OR_UPDT_DATE</property>
+                        <property name="dataType">date-time</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <method name="beforeOpen"><![CDATA[this.queryText=this.queryText+ " and p.actv_ind = '"+ params["Active Patron"].value+"'";
+this.queryText=this.queryText+ " and nt.ole_ptrn_nte_type_cd in ('"+params["Note Type"].value.join("','")+"')";
+
+if(params["Patron Barcode"].value !=null)
+	this.queryText=this.queryText+ " and p.BARCODE = '"+ params["Patron Barcode"].value+"'";
+
+if(params["Note Text"].value !=null)
+	this.queryText=this.queryText+ " and n.ole_ptrn_nte_txt like '%"+ params["Note Text"].value +"%'";
+	
+if(params["NoteCreatedFromDate"].value != null &amp;&amp; params["NoteCreatedToDate"].value != null){
+	this.queryText=this.queryText+ " and n.nte_crt_or_updt_date between '"+ params["NoteCreatedFromDate"].value +"' and '"+ params["NoteCreatedToDate"].value + "'";
+}else if(params["NoteCreatedFromDate"].value != null &amp;&amp; params["NoteCreatedToDate"].value == null){
+	this.queryText=this.queryText+ " and n.nte_crt_or_updt_date between '"+ params["NoteCreatedFromDate"].value +"' and now()";
+}else if(params["NoteCreatedFromDate"].value == null &amp;&amp; params["NoteCreatedToDate"].value != null){
+	this.queryText=this.queryText+ " and n.nte_crt_or_updt_date <= '"+ params["NoteCreatedToDate"].value +"'";	
+}else{
+	this.queryText=this.queryText + "";
+}
+
+this.queryText = this.queryText + "order by n.nte_crt_or_updt_date asc";
+
+	
+]]></method>
+            <property name="dataSource">Patron Notes</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">OLE_PTRN_ID</property>
+                    <property name="nativeName">OLE_PTRN_ID</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">concat(nm.last_nm,' ',nm.first_nm)</property>
+                    <property name="nativeName">concat(nm.last_nm,' ',nm.first_nm)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">BARCODE</property>
+                    <property name="nativeName">BARCODE</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">DLVR_BORR_TYP_NM</property>
+                    <property name="nativeName">DLVR_BORR_TYP_NM</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">OLE_PTRN_NTE_TXT</property>
+                    <property name="nativeName">OLE_PTRN_NTE_TXT</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">NTE_CRT_OR_UPDT_DATE</property>
+                    <property name="nativeName">NTE_CRT_OR_UPDT_DATE</property>
+                    <property name="dataType">date-time</property>
+                    <property name="nativeDataType">93</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select
+    p.OLE_PTRN_ID,
+    concat(nm.last_nm,' ',nm.first_nm),
+    p.BARCODE,
+    b.DLVR_BORR_TYP_NM,
+    n.OLE_PTRN_NTE_TXT,
+    n.NTE_CRT_OR_UPDT_DATE
+from 
+    ole_ptrn_nte_t n,
+    ole_ptrn_nte_typ_t nt,
+    ole_ptrn_t p,
+    krim_entity_nm_t nm,
+    ole_dlvr_borr_typ_t b
+where
+    p.OLE_PTRN_ID=n.OLE_PTRN_ID
+    and
+    nm.entity_id=p.OLE_PTRN_ID
+    and
+    nt.ole_ptrn_nte_typ_id=n.ole_ptrn_nte_typ_id
+    and
+    b.dlvr_borr_typ_id=p.borr_typ
+]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="PatronNoteTypes" id="12">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">OLE_PTRN_NTE_TYPE_CD</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">ole_ptrn_nte_type_cd</text-property>
+                    <text-property name="heading">ole_ptrn_nte_type_cd</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">OLE_PTRN_NTE_TYPE_CD</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Patron Notes</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">OLE_PTRN_NTE_TYPE_CD</property>
+                    <property name="nativeName">OLE_PTRN_NTE_TYPE_CD</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select 
+	ole_ptrn_nte_type_cd
+from 
+	ole_ptrn_nte_typ_t
+order by
+	ole_ptrn_nte_typ_id
+desc]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>OLE_PTRN_NTE_TYPE_CD</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>8</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>ole_ptrn_nte_type_cd</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>ole_ptrn_nte_type_cd</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="report" id="4">
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">10pt</property>
+        </style>
+        <style name="crosstab-cell" id="5">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="crosstab" id="6">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="NewStyle" id="54">
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">thin</property>
+        </style>
+        <style name="NewStyle1" id="56">
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">thin</property>
+        </style>
+        <style name="NewStyle2" id="57">
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">thin</property>
+        </style>
+        <style name="NewStyle3" id="58">
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">thin</property>
+        </style>
+        <style name="NewStyle4" id="59">
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">thin</property>
+        </style>
+        <style name="NewStyle5" id="60">
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">thin</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <label id="7"/>
+        <label id="8">
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">center</property>
+            <text-property name="text">Patron Notes</text-property>
+        </label>
+        <label id="9"/>
+        <table id="17">
+            <property name="style">NewStyle</property>
+            <property name="dataSet">PatronNotes</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">OLE_PTRN_ID</property>
+                    <text-property name="displayName">OLE_PTRN_ID</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["OLE_PTRN_ID"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">concat(nm.last_nm,' ',nm.first_nm)</property>
+                    <text-property name="displayName">concat(nm.last_nm,' ',nm.first_nm)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["concat(nm.last_nm,' ',nm.first_nm)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">BARCODE</property>
+                    <text-property name="displayName">BARCODE</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["BARCODE"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">DLVR_BORR_TYP_NM</property>
+                    <text-property name="displayName">DLVR_BORR_TYP_NM</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["DLVR_BORR_TYP_NM"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">OLE_PTRN_NTE_TXT</property>
+                    <text-property name="displayName">OLE_PTRN_NTE_TXT</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["OLE_PTRN_NTE_TXT"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">PatronId</property>
+                    <text-property name="displayName">PatronId</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["OLE_PTRN_ID"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">PatronName</property>
+                    <text-property name="displayName">PatronName</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["concat(nm.last_nm,' ',nm.first_nm)"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">PatronBarcode</property>
+                    <text-property name="displayName">PatronBarcode</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["BARCODE"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">PatronType</property>
+                    <text-property name="displayName">PatronType</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["DLVR_BORR_TYP_NM"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">PatronNotes</property>
+                    <text-property name="displayName">PatronNotes</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["OLE_PTRN_NTE_TXT"]</expression>
+                    <property name="dataType">string</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">NoteCreatedDate</property>
+                    <text-property name="displayName">Note Created Date</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["NTE_CRT_OR_UPDT_DATE"]</expression>
+                    <property name="dataType">date-time</property>
+                    <property name="allowExport">true</property>
+                </structure>
+            </list-property>
+            <column id="36">
+                <property name="style">NewStyle1</property>
+            </column>
+            <column id="37">
+                <property name="style">NewStyle2</property>
+            </column>
+            <column id="38">
+                <property name="style">NewStyle3</property>
+            </column>
+            <column id="39">
+                <property name="style">NewStyle4</property>
+            </column>
+            <column id="40">
+                <property name="style">NewStyle5</property>
+            </column>
+            <column id="65">
+                <property name="style">NewStyle5</property>
+            </column>
+            <header>
+                <row id="18">
+                    <cell id="19">
+                        <label id="41">
+                            <text-property name="text">Patron ID</text-property>
+                        </label>
+                    </cell>
+                    <cell id="20">
+                        <label id="42">
+                            <text-property name="text">Patron Name</text-property>
+                        </label>
+                    </cell>
+                    <cell id="21">
+                        <label id="43">
+                            <text-property name="text">Patron Barcode</text-property>
+                        </label>
+                    </cell>
+                    <cell id="22">
+                        <label id="47">
+                            <text-property name="text">Patron Type</text-property>
+                        </label>
+                    </cell>
+                    <cell id="23">
+                        <label id="48">
+                            <text-property name="text">Notes</text-property>
+                        </label>
+                    </cell>
+                    <cell id="63">
+                        <label id="66">
+                            <text-property name="text">Note Created/Updated Date</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="24">
+                    <cell id="25">
+                        <data id="49">
+                            <property name="resultSetColumn">PatronId</property>
+                        </data>
+                    </cell>
+                    <cell id="26">
+                        <data id="50">
+                            <property name="resultSetColumn">PatronName</property>
+                        </data>
+                    </cell>
+                    <cell id="27">
+                        <data id="51">
+                            <property name="resultSetColumn">PatronBarcode</property>
+                        </data>
+                    </cell>
+                    <cell id="28">
+                        <data id="52">
+                            <property name="resultSetColumn">PatronType</property>
+                        </data>
+                    </cell>
+                    <cell id="29">
+                        <data id="53">
+                            <property name="resultSetColumn">PatronNotes</property>
+                        </data>
+                    </cell>
+                    <cell id="64">
+                        <data id="67">
+                            <property name="resultSetColumn">NoteCreatedDate</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+        </table>
+    </body>
+</report>

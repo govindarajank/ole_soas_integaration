@@ -229,7 +229,7 @@ from
 OLE_LOCN_LEVEL_T OLL,
 OLE_LOCN_T OL
 where
-OLL.LEVEL_CD = 'COLLECTION'
+OLL.LEVEL_CD = 'SHELVING'
 and
 OL.LEVEL_ID = OLL.LEVEL_ID]]></xml-property>
         </oda-data-set>

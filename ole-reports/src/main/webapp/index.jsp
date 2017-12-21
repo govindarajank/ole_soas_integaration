@@ -22,14 +22,38 @@
         .center {
             margin-left: auto;
             margin-right: auto;
-            width: 95%;
+            width: 80%;
+            top:120px;
+        }
+        .middle{
+            position:absolute;
+            right:900px;
+            top:120px;
+        }
+        .Fines{
+            position:absolute;
+            right: 400px;
+            top:120px;
         }
         p {
             font-size: 125%;
         }
+        h2{
+            font-size:250%;
+        }
         h5 {
             font-size: 200%;
         }
+        li{
+            font-size: 150%;
+        }
+
+        #statistics{
+            top:150px;
+            position:absolute;
+            width:200px;
+        }
+
     </style>
 
 </head>
@@ -59,53 +83,55 @@
 <div id="iframe_portlet_container_div">
     <br/>
     <div class="center">
-
-        <%   if (request != null && request.getRequestURL() != null && request.getRequestURL().toString().contains("reports.staging.oleproject.org")) {%>
+        <%   if (request != null && request.getRequestURL() != null && request.getRequestURL().toString().contains("reports.staging.ole.kuali.org")) {%>
         <p>Note: The reports data source is pointing to the staging environment at the moment.</p>
         <% } %>
-
-        <ul>
-            <h5>Deliver</h5>
+        <ul class="first">
+            <h5><u>Requests</u></h5>
             <ul>
-                <%--<li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/itemTypeDropDown.rptdesign"%>" target="_blank">Item Type Drop Down</a></li>
-
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/Hold.rptdesign"%>" target="_blank">Hold Slip</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/InTransit.rptdesign"%>" target="_blank">In Transit Slip</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/InTransitOnHold.rptdesign"%>" target="_blank">In Transit On Hold Slip</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/ListItemsReport.rptdesign"%>" target="_blank">List Items Report</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/HoldPickList.rptdesign"%>" target="_blank">Hold Pick List</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/PickListsForPageRequests.rptdesign"%>" target="_blank">Pick Lists For Page Requests</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/MissingItems.rptdesign"%>" target="_blank">Items Marked Missing That Need Searched For Staff</a></li>
-
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/ShelfList.rptdesign"%>" target="_blank">Shelf List</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/PatronChargedItems.rptdesign"%>" target="_blank">Patron Charged Items</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/ClaimsReturnedItems.rptdesign"%>" target="_blank">Items Marked Claims Returned For Staff</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/AvailableHoldPickupNoticeForCustomer.rptdesign"%>" target="_blank">Available Hold Pickup Notice For Customer</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/HoldsThatWereReadyToBePickedUpForStaff.rptdesign"%>" target="_blank">Holds That Were Trapped Since Report Last Ran And Need To Be Checked To Make Sure They Are On The Hold Shelf Ready To Be PickedUp For Staff</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/RecallNoticeForCustomer.rptdesign"%>" target="_blank">Recall Notice For Customer</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/BillNoticeForCustomer.rptdesign"%>" target="_blank">Bill Notice For Customer</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/MissingOrLostItems.rptdesign"%>" target="_blank">Missing/Lost Items</a></li>
-
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/HoldsPassedPickupPeriod.rptdesign"%>" target="_blank">Holds That Have Passed The Pickup Period And Need Removed From The Hold Shelf For Staff</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/OverdueItems.rptdesign"%>" target="_blank">Overdue Item Report</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/ExpiredPatronRecordsWithLoans.rptdesign"%>" target="_blank">Expired Patron Records With Loans</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/HoldsThatHaveBeenExpiredOrClosedButWereUnfilledForStaff.rptdesign"%>" target="_blank">Holds That Have Been Expired/Closed But Were Unfilled For Staff</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/CourtesyNotices.rptdesign"%>" target="_blank">Courtesy Notices</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/OverdueRecallNoticeForCustomer.rptdesign"%>" target="_blank">Overdue Recall Notice For Customer</a></li>--%>
-
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/OutstandingHolds.rptdesign"%>" target="_blank">Outstanding Holds</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/CashTransactions.rptdesign"%>" target="_blank">Cash Transactions</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/LostOrMissingItems.rptdesign"%>" target="_blank">Lost/Missing Items</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/ItemTypeStatistics.rptdesign"%>" target="_blank">Item Type Statistics</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/CollectionStatistics.rptdesign"%>" target="_blank">Collection Statistics</a></li>
-                <%--<li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/LostItems.rptdesign"%>" target="_blank">Lost Items</a></li>--%>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/GeneralStatistics.rptdesign"%>" target="_blank">General Statistics</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/StandardLoanBooks.rptdesign"%>" target="_blank">Standard Loan Books</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/ExpiredOnHolds.rptdesign"%>" target="_blank">Expired On-Holds</a></li>
-                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/MissingInTransit.rptdesign"%>" target="_blank">Missing In Transit</a></li>
-
+                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/CancelledOnHolds.rptdesign"%>" target="_blank">Cancelled On Holds</a></li>
+                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/Holds.rptdesign"%>" target="_blank">Requests List</a></li>
+                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/ItemMostlyRequested.rptdesign"%>" target="_blank">Item Requested Most</a></li>
+                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/RequestedOverdueItems.rptdesign"%>" target="_blank">Requested Item Overdue</a></li>
             </ul>
         </ul>
+        <ul class="first">
+            <div class ="Fines">
+
+                <h5><u>Fines</u></h5>
+                <ul>
+                    <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/CashTransactions.rptdesign"%>" target="_blank">Cash Transactions</a></li>
+                    <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/VufindLogs.rptdesign"%>" target="_blank">Vufind Fines</a></li>
+                </ul>
+
+            </div>
+        </ul>
+    </div>
+    <div class="middle">
+        <ul class="first">
+            <h5><u>History</u></h5>
+            <ul>
+                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/PatronList.rptdesign"%>" target="_blank">Patron List</a></li>
+                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/PatronNotes.rptdesign"%>" target="_blank">Patron Notes</a></li>
+                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/FastAdd.rptdesign"%>" target="_blank">FastAdd</a></li>
+                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/ItemCirculationRecord.rptdesign"%>" target="_blank">Item Circulation History</a></li>
+                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/CirculationHistoryItems.rptdesign"%>" target="_blank">Circulation History List</a></li>
+                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/PatronCirculationHistory.rptdesign"%>" target="_blank">Patron Circulation History</a></li>
+                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/ClaimsReturn.rptdesign"%>" target="_blank">Claims Returned</a></li>
+                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/LostOrMissingItems.rptdesign"%>" target="_blank">Lost/Missing Items</a></li>
+                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/GeneralStatistics.rptdesign"%>" target="_blank">General Statistics</a></li>
+            </ul>
+        </ul>
+        <%--<ul id="statistics">
+            <h5><u>Statistics</u></h5>
+            <ul>
+                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/ItemTypeStatistics.rptdesign"%>" target="_blank">Item Type Statistics</a></li>
+                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/CollectionStatistics.rptdesign"%>" target="_blank">Collection Statistics</a></li>
+
+                <li><a href="<%= request.getContextPath() + "/frameset?__report=deliver/StandardLoanBooks.rptdesign"%>" target="_blank">Standard Loan Books</a></li>
+            </ul>
+        </ul>--%>
+
     </div>
     <br/><br/><br/><br/>
 </div>
