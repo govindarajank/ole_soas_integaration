@@ -86,7 +86,7 @@ public class OleItemSearchLookupableImpl extends OleLookupableImpl {
         String publisher = searchCriteria.get("publisher") != null ? searchCriteria.get("publisher") : "";
         String callNumber = searchCriteria.get("callNumber") != null ? searchCriteria.get("callNumber") : "";
         String itemType = searchCriteria.get("itemType") != null ? searchCriteria.get("itemType") : "";
-        String itemBarCode = searchCriteria.get("itemBarCode") != null ? searchCriteria.get("itemBarCode") : "";
+        String itemBarCode = ((searchCriteria.get("itemBarCode") != null ? searchCriteria.get("itemBarCode") : "").toUpperCase());
         String itemUUID = searchCriteria.get("itemUUID") != null ? searchCriteria.get("itemUUID") : "";
         String pageDisplay = searchCriteria.get("pageDisplay") != null ? searchCriteria.get("pageDisplay") : "";
         String page_Size = searchCriteria.get("pageSize") != null ? searchCriteria.get("pageSize") : "";
@@ -142,7 +142,7 @@ public class OleItemSearchLookupableImpl extends OleLookupableImpl {
                     item_search_Params.getSearchConditions().add(item_search_Params.buildSearchCondition("AND", item_search_Params.buildSearchField(DocType.ITEM.getCode(), Bib.PUBLISHER, publisher), "AND"));
                 }
                 if (!itemType.isEmpty()) {
-                    item_search_Params.getSearchConditions().add(item_search_Params.buildSearchCondition("AND", item_search_Params.buildSearchField(DocType.ITEM.getCode(), "TemporaryItemTypeCodeValue_search", itemType), "AND"));
+                    item_search_Params.getSearchConditions().add(item_search_Params.buildSearchCondition("AND", item_search_Params.buildSearchField(DocType.ITEM.getCode(), Item.ITEM_TYPE, itemType), "AND"));
                     item_search_Params.getSearchConditions().add(item_search_Params.buildSearchCondition("AND", item_search_Params.buildSearchField(DocType.ITEM.getCode(), "ItemTypeCodeValue_search", itemType), "OR"));
                 }
                 if (!itemBarCode.isEmpty()) {

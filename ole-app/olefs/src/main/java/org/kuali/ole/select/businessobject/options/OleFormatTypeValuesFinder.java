@@ -33,10 +33,12 @@ public class OleFormatTypeValuesFinder extends KeyValuesBase {
         KeyValuesService boService = SpringContext.getBean(KeyValuesService.class);
         Collection codes = boService.findAll(OleFormatType.class);
         List labels = new ArrayList();
-        labels.add(new ConcreteKeyValue("", ""));
+        labels.add(new ConcreteKeyValue("3", "Book"));
         for (Iterator iter = codes.iterator(); iter.hasNext(); ) {
             OleFormatType formatType = (OleFormatType) iter.next();
-            labels.add(new ConcreteKeyValue(formatType.getFormatTypeId().toString(), formatType.getFormatTypeName()));
+            if(!formatType.getFormatTypeName().equalsIgnoreCase("Book")) {
+                labels.add(new ConcreteKeyValue(formatType.getFormatTypeId().toString(), formatType.getFormatTypeName()));
+            }
         }
         return labels;
     }

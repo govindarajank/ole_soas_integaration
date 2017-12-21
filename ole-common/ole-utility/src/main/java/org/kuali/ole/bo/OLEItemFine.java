@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 public class OLEItemFine {
 
     private String patronBillId;
+    private String id;
     private String itemId;
     private String catalogueId;
     private BigDecimal amount;
@@ -25,7 +26,25 @@ public class OLEItemFine {
     private String paymentMethod;
     private String title;
     private String author;
-   // private List<FeeType> feeType;
+    private String checkoutDate;
+    private String dueDate;
+
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public String getCheckoutDate() {
+       return checkoutDate;
+    }
+
+    public void setCheckoutDate(String checkoutDate) {
+        this.checkoutDate = checkoutDate;
+    }
+    // private List<FeeType> feeType;
 
 
     public String getPatronBillId() {
@@ -146,5 +165,13 @@ public class OLEItemFine {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

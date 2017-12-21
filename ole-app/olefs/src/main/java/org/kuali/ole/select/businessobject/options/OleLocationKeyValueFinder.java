@@ -19,6 +19,7 @@ import org.kuali.ole.select.service.OleUrlResolver;
 import org.kuali.ole.service.impl.OleLocationWebServiceImpl;
 import org.kuali.rice.core.api.config.property.ConfigContext;
 import org.kuali.rice.core.api.util.ConcreteKeyValue;
+import org.kuali.rice.core.api.util.KeyValue;
 import org.kuali.rice.krad.keyvalues.KeyValuesBase;
 
 import java.util.ArrayList;
@@ -41,10 +42,13 @@ public class OleLocationKeyValueFinder extends KeyValuesBase {
         LOG.debug("Inside getKeyValues of OleLocationKeyValueFinder");
         OleLocationWebServiceImpl oleLocationWebService = new OleLocationWebServiceImpl();
         List labels = new ArrayList();
+        labels.add(new ConcreteKeyValue("MAIN", "MAIN"));
         List locations = oleLocationWebService.getItemLocation();
         for (Iterator iter = locations.iterator(); iter.hasNext(); ) {
             String location = (String) iter.next();
-            labels.add(new ConcreteKeyValue(location, location));
+            if(!location.equalsIgnoreCase("MAIN")){
+                labels.add(new ConcreteKeyValue(location, location));
+            }
         }
         return labels;
     }

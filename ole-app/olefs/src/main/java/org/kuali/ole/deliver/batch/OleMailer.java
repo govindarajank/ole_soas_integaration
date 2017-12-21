@@ -151,7 +151,7 @@ public class OleMailer extends MailerImpl {
         } else if (port == null || (port != null && port.trim().isEmpty())) {
             port = properties.getProperty(PORT_PROPERTY);
         }
-        if ((userName != null && !userName.trim().isEmpty()) || (password != null && !password.trim().isEmpty())) {
+        if ((userName != null && !userName.trim().isEmpty()) && (password != null && !password.trim().isEmpty())) {
             userName = userName;
             password = password;
         } else if ((userName == null || (userName != null && userName.trim().isEmpty())) || ((password == null || (password != null && password.trim().isEmpty())))) {

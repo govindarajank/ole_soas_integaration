@@ -33,8 +33,8 @@
   <param name="app.context.name" override="false">ole-local</param>
   <param name="header.text" override="false">${project.name} ::</param>
   <param name="production.environment.code" override="false">prd</param>
-  <param name="ole.locale" override="false">en_US</param>
-  <param name="ole.locale.properties.folder" override="false">us</param>
+  <param name="ole.locale" override="false">en_GB</param>
+  <param name="ole.locale.properties.folder" override="false">gb</param>
 
   <!--Rice Urls -->
   <param name="rice.server.url">${application.url}</param>
@@ -81,7 +81,7 @@
 
     <param name="oleRequisitionWebService.url">${ole.fs.url.base}/remoting/oleRequisitionWebService</param>
 
-    <param name="license.document.initiator">fred</param>
+    <param name="license.document.initiator">soas-lis</param>
     <param name="license.document.status">LN</param>
     <param name="homeDirectory">${project.home}</param>
 
@@ -233,7 +233,7 @@
   <!-- Scheduler properties -->
   <param name="use.quartz.scheduling" override="false">true</param>
   <param name="use.quartz.jdbc.jobstore" override="false">false</param>
-  <param name="batch.schedule.cron.expression" override="true">00 00 23 ? * *</param>
+  <param name="batch.schedule.cron.expression" override="false">00 30 21 ? * *</param>
   <param name="batch.quartz.thread.pool.size" override="false">8</param>
   <param name="batch.quartz.trigger.check.interval" override="false">30000</param>
 
@@ -477,8 +477,8 @@
     <param name="ole.fs.docstore.services.tab.url">${ole.docstore.url.base}?tab=services</param>
 
     <!--Config for SIP2-->
-    <param name="sip2.port">21711</param>
-    <param name="sip2.startOnLoad">false</param>
+    <param name="sip2.port">5550</param>
+    <param name="sip2.startOnLoad">true</param>
     <param name="sip2.url">${application.url}</param>
     
     <!-- This parameter is used to set solr max page size for the batch job 'updateStatusIntoAvailableAfterReShelvingJob' -->
@@ -486,7 +486,7 @@
 
   <!--Drools rule file directory-->
   <param name="rules.directory">${project.home}/rules</param>
-  <param name="rules.source.directory">org/kuali/ole/rules/demo</param>
+  <!--<param name="rules.source.directory">org/kuali/ole/rules/soas</param>-->
 
 
     <!-- Gokb url-->

@@ -1,5 +1,6 @@
 package org.kuali.ole.deliver.bo;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.kuali.ole.OLEConstants;
@@ -190,10 +191,14 @@ public class OleLoanDocument extends PersistableBusinessObjectBase implements Co
     private Timestamp damagedItemDate;
     private Timestamp missingPieceItemDate;
     private List<FeeType> feeType;
+    private OleLoanDocumentDaoOjb oleLoanDocumentDaoOjb;
     private List<OleDeliverRequestBo> holdRequestForPatron = new ArrayList<>();
     private String sentNoticesUrl;
     private ItemFineRate itemFineRate = new ItemFineRate();
     private boolean overrideCheckInTime;
+    private String itemTypeId;
+    private String tempItemTypeId;
+    private String itemsLocation;
     private String  itemLostNote;
     private String  itemReplaceNote;
     private boolean isManualBill = false;
@@ -204,6 +209,33 @@ public class OleLoanDocument extends PersistableBusinessObjectBase implements Co
     private String fineBillNumber;
     private Double fineAmount;
     private Timestamp fineItemDue;
+
+
+
+
+    public String getItemTypeId() {
+        return itemTypeId;
+    }
+
+    public void setItemTypeId(String itemTypeId) {
+        this.itemTypeId = itemTypeId;
+    }
+
+    public String getTempItemTypeId() {
+        return tempItemTypeId;
+    }
+
+    public void setTempItemTypeId(String tempItemTypeId) {
+        this.tempItemTypeId = tempItemTypeId;
+    }
+
+    public String getItemsLocation() {
+        return itemsLocation;
+    }
+
+    public void setItemsLocation(String itemsLocation) {
+        this.itemsLocation = itemsLocation;
+    }
 
     public Date getDummyPastDueDate() {
         return dummyPastDueDate;
@@ -2103,7 +2135,7 @@ public class OleLoanDocument extends PersistableBusinessObjectBase implements Co
         Timestamp pastLoanDueDate = getLoanDueDate();
         Date newLoanDueDate = getPastDueDate();
         if (pastLoanDueDate != null) {
-            return (new Date(pastLoanDueDate.getTime()).compareTo(newLoanDueDate) == 0 ? true : false);
+            return (DateUtils.isSameDay(newLoanDueDate,new Date(pastLoanDueDate.getTime())));
         } else {
             throw new Exception("No Fixed Due Date found for the renewal policy");
         }
@@ -2260,7 +2292,14 @@ public class OleLoanDocument extends PersistableBusinessObjectBase implements Co
     }
 
     public OleLoanDocumentDaoOjb getOleLoanDocumentDaoOjb() {
-        return (OleLoanDocumentDaoOjb) SpringContext.getBean("oleLoanDao");
+        if(oleLoanDocumentDaoOjb == null){
+            oleLoanDocumentDaoOjb = (OleLoanDocumentDaoOjb) SpringContext.getBean("oleLoanDao");
+        }
+        return oleLoanDocumentDaoOjb;
+    }
+
+    public void setOleLoanDocumentDaoOjb(OleLoanDocumentDaoOjb oleLoanDocumentDaoOjb) {
+        this.oleLoanDocumentDaoOjb = oleLoanDocumentDaoOjb;
     }
 
     @Override

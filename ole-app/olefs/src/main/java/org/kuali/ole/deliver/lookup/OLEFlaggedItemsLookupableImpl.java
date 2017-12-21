@@ -89,7 +89,7 @@ public class OLEFlaggedItemsLookupableImpl extends LookupableImpl {
         searchParams.getSearchResultFields().add(searchParams.buildSearchResultField("item", "itembarcode"));
         searchParams.getSearchResultFields().add(searchParams.buildSearchResultField("item", "bibIdentifier"));
         searchParams.getSearchResultFields().add(searchParams.buildSearchResultField("item", "id"));
-        searchParams.getSearchResultFields().add(searchParams.buildSearchResultField("holdings", "CallNumber_display"));
+        searchParams.getSearchResultFields().add(searchParams.buildSearchResultField("item", "CallNumber_display"));
         searchParams.getSearchResultFields().add(searchParams.buildSearchResultField("item", "CopyNumber_display"));
         searchParams.getSearchResultFields().add(searchParams.buildSearchResultField("item", "MissingPieceFlag_display"));
         searchParams.getSearchResultFields().add(searchParams.buildSearchResultField("item", "ClaimsReturnedFlag_display"));
@@ -97,7 +97,7 @@ public class OLEFlaggedItemsLookupableImpl extends LookupableImpl {
         searchParams.getSearchResultFields().add(searchParams.buildSearchResultField("item", "MissingPieceFlagNote_display"));
         searchParams.getSearchResultFields().add(searchParams.buildSearchResultField("item", "DamagedItemNote_display"));
         searchParams.getSearchResultFields().add(searchParams.buildSearchResultField("item", "ClaimsReturnedNote_display"));
-        searchParams.getSearchResultFields().add(searchParams.buildSearchResultField("holdings", "CallNumber_display"));
+       // searchParams.getSearchResultFields().add(searchParams.buildSearchResultField("holdings", "CallNumber_display"));
         searchParams.getSearchResultFields().add(searchParams.buildSearchResultField("item", "Location_display"));
         searchParams.getSearchResultFields().add(searchParams.buildSearchResultField("holdings", "Location_display"));
        // LOG.info("Flagged Item Records Size isNull"+ (searchResponse.getSearchResults()==null?"true":"false"));
