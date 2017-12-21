@@ -20,7 +20,7 @@ public class VuFindRenewItemService extends NonSip2RenewItemService{
         facts.add(olePatronDocument);
         DroolsResponse droolsResponse = new DroolsResponse();
         facts.add(droolsResponse);
-        new CircUtilController().fireRules(facts, null, "lookup-user-vufind");
+        new CircUtilController().fireRules(facts, null, "general-checks");
         return droolsResponse;
     }
 }

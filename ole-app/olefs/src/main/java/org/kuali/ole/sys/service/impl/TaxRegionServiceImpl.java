@@ -68,9 +68,11 @@ public class TaxRegionServiceImpl implements TaxRegionService {
 
         if ( StringUtils.isNotBlank(postalCode) ) {
             PostalCode postalCodeObj = postalCodeService.getPostalCode( OLEConstants.COUNTRY_CODE_UNITED_STATES, postalCode );
-        useTaxRegions.addAll(getPostalCodeTaxRegions(postalCodeObj.getCode(), postalCodeObj.getCountryCode(), true));
-        useTaxRegions.addAll(getStateTaxRegions(postalCodeObj.getStateCode(), postalCodeObj.getCountryCode(), true));
-        useTaxRegions.addAll(getCountyTaxRegions(postalCodeObj.getCountyCode(), postalCodeObj.getStateCode(), postalCodeObj.getCountryCode(), true));
+            if(postalCodeObj!=null){
+                useTaxRegions.addAll(getPostalCodeTaxRegions(postalCodeObj.getCode(), postalCodeObj.getCountryCode(), true));
+                useTaxRegions.addAll(getStateTaxRegions(postalCodeObj.getStateCode(), postalCodeObj.getCountryCode(), true));
+                useTaxRegions.addAll(getCountyTaxRegions(postalCodeObj.getCountyCode(), postalCodeObj.getStateCode(), postalCodeObj.getCountryCode(), true));
+            }
         }
         return useTaxRegions;
     }

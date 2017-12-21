@@ -119,7 +119,7 @@
                 <ref bean="LeaderStructureFields"/>
                 <bean id="LeaderTextInputField" parent="Base-Uif-InputField" p:label="Leader"
                       p:propertyName="documentForm.leader"
-                      p:defaultValue="#####nam#a22######a#4500">
+                      p:defaultValue="#####nam#a22######i#4500">
                     <property name="control">
                         <bean parent="Uif-TextControl" p:size="35">
                         </bean>

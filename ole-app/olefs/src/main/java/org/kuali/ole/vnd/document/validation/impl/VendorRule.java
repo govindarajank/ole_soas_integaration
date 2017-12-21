@@ -1130,7 +1130,7 @@ public class VendorRule extends MaintenanceDocumentRuleBase {
 
     boolean checkPhoneNumber(VendorPhoneNumber vendorPhoneNumber){
         boolean valid = true;
-        String phoneNumber = vendorPhoneNumber.getVendorPhoneNumber();
+        /*String phoneNumber = vendorPhoneNumber.getVendorPhoneNumber();
         boolean foriegnVendor=false;
         if (newVendor.getVendorHeader() != null) {
             if (newVendor.getVendorHeader().getVendorForeignIndicator() != null) {
@@ -1149,7 +1149,7 @@ public class VendorRule extends MaintenanceDocumentRuleBase {
                 GlobalVariables.getMessageMap().putError(VendorPropertyConstants.VENDOR_PHONE_NUMBER, VendorKeyConstants.ERROR_PHONE_NUMBER);
                 valid &= false;
             }
-        }
+        }*/
         return valid;
     }
 

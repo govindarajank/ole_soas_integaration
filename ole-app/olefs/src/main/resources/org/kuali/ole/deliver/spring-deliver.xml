@@ -73,6 +73,11 @@
                 <value>classpath:org/kuali/ole/ingest/uif</value>
                 <value>classpath:org/kuali/ole/ingest/view</value>
 
+                <value>classpath:org/kuali/ole/identityAdmin/datadictionary</value>
+                <value>classpath:org/kuali/ole/identityAdmin/document</value>
+                <value>classpath:org/kuali/ole/identityAdmin/bo</value>
+                <value>classpath:org/kuali/ole/identityAdmin/rule</value>
+
             </list>
         </property>
         <property name="databaseRepositoryFilePaths">
