@@ -219,7 +219,7 @@
 	<bean id="VendorDetail-vendorDunsNumber-parentBean" abstract="true"
 		parent="AttributeDefinition">
 		<property name="name" value="vendorDunsNumber" />
-		<property name="label" value="DUNS Number" />
+		<property name="label" value="University Supplier ID" />
 		<property name="shortLabel" value="DUNS #" />
 		<property name="maxLength" value="9" />
 		<property name="validationPattern">

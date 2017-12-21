@@ -421,7 +421,7 @@
             <routePaths>
                 <routePath>
                     <start name="AdHoc" nextNode="RequiresContractManagementReview" nextAppDocStatus="Awaiting Purchasing Approval" />
-                    <split name="RequiresContractManagementReview" nextNode="Commodity">
+                    <split name="RequiresContractManagementReview" nextNode="RequiresDirectorApproval">
                         <branch name="True">
                             <role name="ContractManagement" nextNode="JoinRequiresContractManagementReview" nextAppDocStatus="Awaiting Commodity Code Approval" />
                         </branch>
@@ -429,6 +429,15 @@
                             <simple name="NoOpRequiresContractManagementReview" nextNode="JoinRequiresContractManagementReview"/>
                         </branch>
                         <join name="JoinRequiresContractManagementReview" />
+                    </split>
+                    <split name="RequiresDirectorApproval" nextNode="Commodity" nextAppDocStatus="Awaiting Purchasing Approval" >
+                        <branch name="True">
+                            <role name="DirectorApproval" nextNode="JoinDirectorApproval" nextAppDocStatus="Awaiting Purchasing Approval" />
+                        </branch>
+                        <branch name="False">
+                            <simple name="NoOpDirectorApproval" nextNode="JoinDirectorApproval"/>
+                        </branch>
+                        <join name="JoinDirectorApproval" />
                     </split>
                     <role name="Commodity" nextNode="RequiresAwardReview" nextAppDocStatus="Awaiting C and G Approval" />
                     <split name="RequiresAwardReview" nextNode="RequiresBudgetReview">
@@ -486,6 +495,25 @@
                 </role>
                 <join name="JoinRequiresContractManagementReview" />
                 <simple name="NoOpRequiresContractManagementReview">
+                    <type>
+                        org.kuali.rice.kew.engine.node.NoOpNode
+                    </type>
+                </simple>
+                <split name="RequiresDirectorApproval">
+                    <type>
+                        org.kuali.ole.sys.document.workflow.SimpleBooleanSplitNode
+                    </type>
+                </split>
+                <role name="DirectorApproval">
+                    <qualifierResolverClass>
+                        org.kuali.rice.kns.workflow.attribute.DataDictionaryQualifierResolver
+                    </qualifierResolverClass>
+                    <activationType>
+                        P
+                    </activationType>
+                </role>
+                <join name="JoinDirectorApproval" />
+                <simple name="NoOpDirectorApproval">
                     <type>
                         org.kuali.rice.kew.engine.node.NoOpNode
                     </type>

@@ -50,6 +50,11 @@ public class OleVendorRule extends VendorRule {
                 putFieldError(VendorPropertyConstants.VENDOR_OWNERSHIP_CODE,VendorKeyConstants.OWNERSHIP_TYPE_CODE_REQUIRED);
                 valid &= false;
             }
+            if(vendorDetail.getVendorDunsNumber() == null || vendorDetail.getVendorDunsNumber().equals("")){
+                putFieldError(VendorPropertyConstants.VENDOR_DUNS_NUMBER,VendorKeyConstants.VENDOR_UNIVERSITY_SUPPLIER_ID_REQUIRED);
+                valid &= false;
+            }
+
         }
         int activePreferredCount = 0;
         for (VendorTransmissionFormatDetail vendorTransmissionFormatDetail : vendorTransmissionFormatDetailList) {

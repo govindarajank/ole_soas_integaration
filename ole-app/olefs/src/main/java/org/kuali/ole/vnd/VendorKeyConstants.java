@@ -47,6 +47,7 @@ public class VendorKeyConstants {
     public static final String CONFIRM_VENDOR_CHANGE_TO_PARENT = "message.vendorMaint.confirm.change.to.parent";
     public static final String CURRENCY_TYPE_REQUIRED = "error.currency.type.required";
     public static final String OWNERSHIP_TYPE_CODE_REQUIRED = "error.ownership.type.code.required";
+    public static final String VENDOR_UNIVERSITY_SUPPLIER_ID_REQUIRED = "error.university.supplier.id.required";
     public static final String PAYMENT_METHOD_ID_REQUIRED = "error.payment.method.id.required";
     public static final String VENDOR_TYPE_CODE_REQUIRED = "error.vendor.type.code.required";
 
