@@ -258,7 +258,7 @@ public class InstanceEditorFormDataHandler {
         Location location = new Location();
         LocationLevel locationLevel = new LocationLevel();
 
-        String holdingsLocationName = (oleHolding.getLocation() != null ? oleHolding.getLocation().getLocationLevel().getName() : "");
+        String holdingsLocationName = (oleHolding.getLocation() != null ? oleHolding.getLocation().getLocationLevel() != null ? oleHolding.getLocation().getLocationLevel().getName() : "" : "");
         if (StringUtils.isNotEmpty(holdingsLocationName)) {
             locationLevel = createLocationLevel(holdingsLocationName, locationLevel);
             location.setLocationLevel(locationLevel);
@@ -290,7 +290,7 @@ public class InstanceEditorFormDataHandler {
         Location itemLocation = new Location();
         LocationLevel itemLocationLevel = new LocationLevel();
 
-        String itemsLocationName = (oleItem.getLocation() != null ? oleItem.getLocation().getLocationLevel().getName() : "");
+        String itemsLocationName = (oleItem.getLocation() != null && oleItem.getLocation().getLocationLevel()!=null ? oleItem.getLocation().getLocationLevel().getName() : "");
         if(StringUtils.isNotEmpty(itemsLocationName)) {
             if (!itemsLocationName.equalsIgnoreCase("")) {
                 itemLocationLevel = createLocationLevel(itemsLocationName, itemLocationLevel);

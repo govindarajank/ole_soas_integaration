@@ -188,17 +188,6 @@
 
                   </TR>
                   <#break>
-              <#case "Fine Item Due Date">
-                  <TR>
-                      <TD>${oleNoticeContentConfigurationBo.getFieldLabel("Fine Item Due Date")} :</TD>
-                      <#if oleNoticeBo.fineItemDueDate ??  >
-                          <TD>${oleNoticeBo.fineItemDueDate}</TD>
-                      <#else>
-                          <TD></TD>
-                      </#if>
-
-                  </TR>
-                  <#break>
           </#switch>
         </#list>
     </#if>

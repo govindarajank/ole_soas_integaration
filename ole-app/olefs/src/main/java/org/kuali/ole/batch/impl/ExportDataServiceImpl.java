@@ -13,6 +13,7 @@ import org.kuali.ole.docstore.common.document.HoldingsTree;
 import org.kuali.ole.docstore.common.document.content.bib.marc.BibMarcRecord;
 import org.kuali.ole.docstore.common.document.content.bib.marc.BibMarcRecords;
 import org.kuali.ole.docstore.common.document.content.bib.marc.DataField;
+import org.kuali.ole.docstore.common.document.content.bib.marc.SubField;
 import org.kuali.ole.docstore.common.document.content.bib.marc.xstream.BibMarcRecordProcessor;
 import org.kuali.ole.docstore.common.search.SearchResult;
 import org.kuali.ole.docstore.common.search.SearchResultField;
@@ -109,6 +110,17 @@ public class ExportDataServiceImpl implements ExportDataService {
                                     } catch (Exception ex) {
                                         LOG.error("Marc record delete Error for Bib record id::" + bibMarcRecord.getRecordId(), ex);
                                         buildError(errBuilder, ERR_BIB, bibMarcRecord.getRecordId(), ERR_CAUSE, ex.getMessage(), " ::At:: ", "deleteFieldsSubfields", TIME_STAMP, new Date().toString());
+                                    }
+                                }
+                                for(DataField dataField : bibMarcRecord.getDataFields()){
+                                    for(SubField subfield : dataField.getSubFields()){
+                                        if((""+subfield.getCode()).equalsIgnoreCase("\u001F")){
+                                            subfield.setCode("a");
+                                        }if((""+subfield.getValue()).contains("\u001A")){
+                                            subfield.setValue(subfield.getValue().replace("\u001A",""));
+                                        }if((""+subfield.getValue()).contains("\u0000")){
+                                            subfield.setValue(subfield.getValue().replace("\u0000",""));
+                                        }
                                     }
                                 }
                                 bibRecords.add(bibMarcRecord);

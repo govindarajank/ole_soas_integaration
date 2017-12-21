@@ -78,6 +78,9 @@ public class FineDateTimeUtil {
                         long numberOfWorkingDays = calculateWorkingDays(deskId, dueDate, checkInDate);
                         fineAmt = numberOfWorkingDays * fineRate;
                     }
+                } else if (fineMode.equalsIgnoreCase("3-H")) {
+                    long numberOfDues = calculateNumberPerDay(dueDate, checkInDate);
+                    fineAmt = numberOfDues * fineRate;
                 }
             }
         }
@@ -93,6 +96,24 @@ public class FineDateTimeUtil {
             numberOfWorkingHrs++;
         }
         return numberOfWorkingHrs;
+    }
+
+    private long calculateNumberPerDay(Date dueDate, Date checkInDate) {
+        long numberOfDues = 0;
+        Date checkInDateTimeTemp = new Date();
+        checkInDateTimeTemp.setHours(16);
+        if(checkInDate.getHours() >16){
+            checkInDateTimeTemp.setHours(23);
+        }
+        checkInDateTimeTemp.setMinutes(dueDate.getMinutes());
+        checkInDateTimeTemp.setSeconds(dueDate.getSeconds());
+        long diff = checkInDateTimeTemp.getTime() - dueDate.getTime();
+        long diffHours = diff / (60 * 60 * 1000);
+        numberOfDues = diffHours / 12;
+        if(diffHours % 12 !=0){
+            numberOfDues++;
+        }
+        return numberOfDues;
     }
 
     private long calculateTotalDays(Date dueDate, Date checkInDate) {

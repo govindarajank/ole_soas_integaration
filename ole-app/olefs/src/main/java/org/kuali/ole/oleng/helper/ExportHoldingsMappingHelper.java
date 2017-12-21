@@ -31,6 +31,7 @@ import static org.kuali.ole.OLEConstants.OLEBatchProcess.lineSeparator;
  */
 public class ExportHoldingsMappingHelper {
     private List<DataField> dataFieldList = new ArrayList<>();
+    private List<DataField> dataFieldItemList = new ArrayList<>();
     private String location3, location4, callNumber, callNumberType;
     private StringBuilder errBuilder;
     private ItemOlemlRecordProcessor itemOlemlRecordProcessor = new ItemOlemlRecordProcessor();
@@ -57,7 +58,10 @@ public class ExportHoldingsMappingHelper {
                             || mappingOptionsBo.getField().equalsIgnoreCase(DESTINATION_FIELD_DONOR_NOTE)
                             || mappingOptionsBo.getField().equalsIgnoreCase(DESTINATION_FIELD_DONOR_CODE)) {
                         dataFieldsDonorMap.put(key, mappingOptionsBo.getField());
-                    } else if(mappingOptionsBo.getField().equalsIgnoreCase(OLEConstants.OLEBatchProcess.PUBLIC_NOTE)){
+                    } else if(mappingOptionsBo.getField().equalsIgnoreCase(OLEConstants.OLEBatchProcess.PUBLIC_NOTE)
+                            || mappingOptionsBo.getField().equalsIgnoreCase(OLEConstants.OLEBatchProcess.ACQUIRED_NOTE)
+                            || mappingOptionsBo.getField().equalsIgnoreCase(OLEConstants.OLEBatchProcess.NON_PUBLIC_NOTE)
+                            || mappingOptionsBo.getField().equalsIgnoreCase(OLEConstants.OLEBatchProcess.ACQUIRED_NOTE_DATE)){
                         dataFieldsItemNoteMap.put(key, mappingOptionsBo.getField());
                     } else{
                         dataFieldsItemsMap.put(key, mappingOptionsBo.getField());
@@ -93,10 +97,7 @@ public class ExportHoldingsMappingHelper {
                         } else {
                             item = (Item) itemDoc.getContentObject();
                         }
-                        List<DataField> dataFieldsItemList = generateSubFieldsForItem(holdingsTree.getHoldings(), item, dataFieldsItemsMap, dataFieldsDonorMap, new ArrayList<DataField>(), dataFieldsItemNoteMap);
-                        if (!CollectionUtils.isEmpty(dataFieldsItemList))
-                            dataFieldList.addAll(dataFieldsItemList);
-                        dataFieldsItemList.clear();
+                        generateSubFieldsForItem(holdingsTree.getHoldings(), item, dataFieldsItemsMap, dataFieldsDonorMap, dataFieldsItemNoteMap);
                     }
                 }
             }
@@ -243,7 +244,7 @@ public class ExportHoldingsMappingHelper {
         return dataField;
     }
 
-    protected List<DataField> generateSubFieldsForItem(Holdings holdingsDocument, Item item, Map<String, String> dataFieldsItemsMap, Map<String, String> dataFieldsDonorMap, List<DataField> dataFieldItemList, Map<String, String> dataFieldsItemNoteMap) throws Exception {
+    protected List<DataField> generateSubFieldsForItem(Holdings holdingsDocument, Item item, Map<String, String> dataFieldsItemsMap, Map<String, String> dataFieldsDonorMap, Map<String, String> dataFieldsItemNoteMap) throws Exception {
         OleHoldings holdings = null;
         //List<DataField> donorFieldList = new ArrayList<>();
         try {
@@ -255,11 +256,11 @@ public class ExportHoldingsMappingHelper {
             for (Map.Entry<String, String> entry : dataFieldsItemsMap.entrySet()) {
                 DataField dataField;
                 if (entry.getValue().equalsIgnoreCase(OLEConstants.OLEBatchProcess.LOCAL_IDENTIFIER)) {
-                    dataField = checkDataField(dataFieldList, StringUtils.trim(entry.getKey()).substring(0, 3));
+                    dataField = checkDataField(dataFieldItemList, StringUtils.trim(entry.getKey()).substring(0, 3));
                     if (dataField == null) {
                         dataField = getDataField(entry);
                         generateItemLocalIdentifier(item, getCode(entry.getKey()), dataField);
-                        if (!dataField.getSubfields().isEmpty()) dataFieldList.add(dataField);
+                        if (!dataField.getSubfields().isEmpty()) dataFieldItemList.add(dataField);
                     } else {
                         generateItemLocalIdentifier(item, getCode(entry.getKey()), dataField);
                     }
@@ -507,77 +508,112 @@ public class ExportHoldingsMappingHelper {
                 //dataFieldItemList.addAll(donorFieldList);
                 generateDonorFields(item, dataFieldsDonorMap);
             }
+
+            if(!CollectionUtils.isEmpty(dataFieldItemList)){
+                dataFieldList.addAll(dataFieldItemList);
+                dataFieldItemList.clear();
+            }
+
         } catch (Exception ex) {
             LOG.error("Error while mapping item data ::" + item.getItemIdentifier(), ex);
             buildError(ERR_INSTANCE, item.getItemIdentifier(), ERR_CAUSE, ex.getMessage(), TIME_STAMP, new Date().toString());
             throw ex;
         }
-        return dataFieldItemList;
+        return dataFieldList;
     }
 
     private void generateItemNoteFields(Item item,Map<String, String> dataFieldsItemNoteMap){
-        List<DataField> itemPublicNoteList = new ArrayList<>();
+
         if (!CollectionUtils.isEmpty(item.getNote())) {
             for(Note note : item.getNote()){
-                if(note.getType() != null && note.getType().equalsIgnoreCase(OLEConstants.NOTE_TYPE)){
-                    for (Map.Entry<String, String> entry : dataFieldsItemNoteMap.entrySet()) {
-                        DataField dataField;
-                        if (entry.getValue().equalsIgnoreCase(OLEConstants.OLEBatchProcess.PUBLIC_NOTE)) {
-                            dataField = checkDataField(itemPublicNoteList, StringUtils.trim(entry.getKey()).substring(0, 3));
-                            if (dataField == null) {
-                                dataField = getDataField(entry);
-                                generateItemPublicNote(item, note, getCode(entry.getKey()), dataField);
-                                if (!dataField.getSubfields().isEmpty()) itemPublicNoteList.add(dataField);
-                            } else {
-                                generateItemPublicNote(item, note, getCode(entry.getKey()), dataField);
+                if(StringUtils.isNotEmpty(note.getType())){
+                    if(note.getType() != null && note.getType().equalsIgnoreCase(OLEConstants.NOTE_TYPE)){
+                        for (Map.Entry<String, String> entry : dataFieldsItemNoteMap.entrySet()) {
+                            DataField dataField;
+                            if (entry.getValue().equalsIgnoreCase(OLEConstants.OLEBatchProcess.PUBLIC_NOTE)) {
+                                dataField = checkDataField(dataFieldItemList, StringUtils.trim(entry.getKey()).substring(0, 3));
+                                if (dataField == null) {
+                                    dataField = getDataField(entry);
+                                    generateItemPublicNote(item, note, getCode(entry.getKey()), dataField);
+                                    if (!dataField.getSubfields().isEmpty()) dataFieldItemList.add(dataField);
+                                } else {
+                                    generateItemPublicNote(item, note, getCode(entry.getKey()), dataField);
+                                }
+                                checkForNoteCreatedDateField(dataFieldsItemNoteMap,item,note);
+                            }
+                        }
+                    }else if(note.getType().equalsIgnoreCase(OLEConstants.ACQUIRED_NOTE_TYP)){
+                        for (Map.Entry<String, String> entry : dataFieldsItemNoteMap.entrySet()) {
+                            DataField dataField;
+                            if (entry.getValue().equalsIgnoreCase(OLEConstants.OLEBatchProcess.ACQUIRED_NOTE)) {
+                                dataField = checkDataField(dataFieldItemList, StringUtils.trim(entry.getKey()).substring(0, 3));
+                                if (dataField == null) {
+                                    dataField = getDataField(entry);
+                                    generateItemPublicNote(item, note, getCode(entry.getKey()), dataField);
+                                    if (!dataField.getSubfields().isEmpty()) dataFieldItemList.add(dataField);
+                                } else {
+                                    generateItemPublicNote(item, note, getCode(entry.getKey()), dataField);
+                                }
+                                checkForNoteCreatedDateField(dataFieldsItemNoteMap,item,note);
+                            }
+                        }
+                    }else if(note.getType().equalsIgnoreCase(OLEConstants.NON_PUBLIC_NOTE_TYP)){
+                        for (Map.Entry<String, String> entry : dataFieldsItemNoteMap.entrySet()) {
+                            DataField dataField;
+                            if (entry.getValue().equalsIgnoreCase(OLEConstants.OLEBatchProcess.NON_PUBLIC_NOTE)) {
+                                dataField = checkDataField(dataFieldItemList, StringUtils.trim(entry.getKey()).substring(0, 3));
+                                if (dataField == null) {
+                                    dataField = getDataField(entry);
+                                    generateItemPublicNote(item, note, getCode(entry.getKey()), dataField);
+                                    if (!dataField.getSubfields().isEmpty()) dataFieldItemList.add(dataField);
+                                } else {
+                                    generateItemPublicNote(item, note, getCode(entry.getKey()), dataField);
+                                }
+                                checkForNoteCreatedDateField(dataFieldsItemNoteMap,item,note);
                             }
                         }
                     }
                 }
             }
         }
-        dataFieldList.addAll(itemPublicNoteList);
-        itemPublicNoteList.clear();
+
     }
 
-    private void generateDonorFields(Item item, Map<String, String> dataFieldsDonorMap) {
-        List<DataField> donorFieldList = new ArrayList<>();
+    private void generateDonorFields(Item item, Map<String, String> dataFieldsDonorMap) {;
         try {
             if (!CollectionUtils.isEmpty(item.getDonorInfo())) {
                 for (DonorInfo donorInfo : item.getDonorInfo()) {
                     for (Map.Entry<String, String> entry : dataFieldsDonorMap.entrySet()) {
                         DataField dataField;
                         if (entry.getValue().equalsIgnoreCase(OLEConstants.OLEBatchProcess.DESTINATION_FIELD_DONOR_PUBLIC_DISPLAY)) {
-                            dataField = checkDataField(donorFieldList, StringUtils.trim(entry.getKey()).substring(0, 3));
+                            dataField = checkDataField(dataFieldItemList, StringUtils.trim(entry.getKey()).substring(0, 3));
                             if (dataField == null) {
                                 dataField = getDataField(entry);
                                 generateDonorPublicDisplay(item, donorInfo, getCode(entry.getKey()), dataField);
-                                if (!dataField.getSubfields().isEmpty()) donorFieldList.add(dataField);
+                                if (!dataField.getSubfields().isEmpty()) dataFieldItemList.add(dataField);
                             } else {
                                 generateDonorPublicDisplay(item, donorInfo, getCode(entry.getKey()), dataField);
                             }
                         } else if (entry.getValue().equalsIgnoreCase(OLEConstants.OLEBatchProcess.DESTINATION_FIELD_DONOR_NOTE)) {
-                            dataField = checkDataField(donorFieldList, StringUtils.trim(entry.getKey()).substring(0, 3));
+                            dataField = checkDataField(dataFieldItemList, StringUtils.trim(entry.getKey()).substring(0, 3));
                             if (dataField == null) {
                                 dataField = getDataField(entry);
                                 generateDonorNote(item, donorInfo, getCode(entry.getKey()), dataField);
-                                if (!dataField.getSubfields().isEmpty()) donorFieldList.add(dataField);
+                                if (!dataField.getSubfields().isEmpty()) dataFieldItemList.add(dataField);
                             } else {
                                 generateDonorNote(item, donorInfo, getCode(entry.getKey()), dataField);
                             }
                         } else if (entry.getValue().equalsIgnoreCase(OLEConstants.OLEBatchProcess.DESTINATION_FIELD_DONOR_CODE)) {
-                            dataField = checkDataField(donorFieldList, StringUtils.trim(entry.getKey()).substring(0, 3));
+                            dataField = checkDataField(dataFieldItemList, StringUtils.trim(entry.getKey()).substring(0, 3));
                             if (dataField == null) {
                                 dataField = getDataField(entry);
                                 generateDonorCode(item, donorInfo, getCode(entry.getKey()), dataField);
-                                if (!dataField.getSubfields().isEmpty()) donorFieldList.add(dataField);
+                                if (!dataField.getSubfields().isEmpty()) dataFieldItemList.add(dataField);
                             } else {
                                 generateDonorCode(item, donorInfo, getCode(entry.getKey()), dataField);
                             }
                         }
                     }
-                    dataFieldList.addAll(donorFieldList);
-                    donorFieldList.clear();
                 }
             }
         } catch (Exception ex) {
@@ -1349,6 +1385,45 @@ public class ExportHoldingsMappingHelper {
         key.append("$");
         key.append(mappingOptionsBo.getSubField());
         return  key.toString();
+    }
+
+    private void checkForNoteCreatedDateField(Map<String,String> dataFieldsItemNoteMap ,Item item , Note note){
+
+        if(!CollectionUtils.isEmpty(dataFieldsItemNoteMap)){
+            DataField dataField;
+            if(note != null){
+                if(dataFieldsItemNoteMap.containsValue(OLEConstants.OLEBatchProcess.ACQUIRED_NOTE_DATE)){
+                    for(Map.Entry<String,String> mapEntry : dataFieldsItemNoteMap.entrySet()){
+                        if(mapEntry.getValue().equalsIgnoreCase(OLEConstants.OLEBatchProcess.ACQUIRED_NOTE_DATE)){
+                            dataField = checkDataField(dataFieldItemList, StringUtils.trim(mapEntry.getKey()).substring(0, 3));
+                            if (dataField == null) {
+                                dataField = getDataField(mapEntry);
+                                generateItemNoteCreatedDate(item, note, getCode(mapEntry.getKey()), dataField);
+                                if (!dataField.getSubfields().isEmpty()) dataFieldItemList.add(dataField);
+                            } else {
+                                generateItemNoteCreatedDate(item, note, getCode(mapEntry.getKey()), dataField);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    private void generateItemNoteCreatedDate(Item item, Note note,char code, DataField dataField){
+        try {
+            if (null != note && note.getDateUpdated()!=null && !note.getDateUpdated().isEmpty()) {
+                Subfield subField = new SubfieldImpl();
+                subField.setCode(code);
+                subField.setData(note.getDateUpdated());
+                dataField.addSubfield(subField);
+            }
+        } catch (Exception ex) {
+            logError(item, ex, "generateItemNoteCreatedDate()");
+        }
     }
 
 }

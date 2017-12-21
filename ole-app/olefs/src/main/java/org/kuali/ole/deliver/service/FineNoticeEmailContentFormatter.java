@@ -18,7 +18,7 @@ public class FineNoticeEmailContentFormatter extends NoticeMailContentFormatter 
         if(oleLoanDocument.getFineAmount() != null) {
             BigDecimal feeamount = new BigDecimal(oleLoanDocument.getFineAmount());
             feeamount = feeamount.setScale(2,BigDecimal.ROUND_HALF_UP);
-            oleNoticeBo.setFeeAmount("$" + feeamount.toString());
+            oleNoticeBo.setFeeAmount(feeamount.toString());
         }
         oleNoticeBo.setFineItemDueDate(oleLoanDocument.getFineItemDue().toString());
     }

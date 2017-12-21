@@ -77,7 +77,7 @@ public class ExportDao extends PlatformAwareDaoBaseJdbc {
                 }
             }else{
                 if (CollectionUtils.isNotEmpty(filterCriteriaList)) {
-                    if (filterCriteriaList.get(0).getFieldName().equalsIgnoreCase("Bib Local Id From File")) {
+                    if (StringUtils.isNotBlank(filterCriteriaList.get(0).getFieldName()) && filterCriteriaList.get(0).getFieldName().equalsIgnoreCase("Bib Local Id From File")) {
                         bibIds = Arrays.asList(query.split(","));
                         totalCount = bibIds.size();
                     } else{
@@ -104,15 +104,8 @@ public class ExportDao extends PlatformAwareDaoBaseJdbc {
                 }
             }
             LOG.info("Total Bibs for export >>> " + totalCount);
-            if (CollectionUtils.isNotEmpty(filterCriteriaList)) {
-                if (!filterCriteriaList.get(0).getFieldName().equalsIgnoreCase("Bib Local Id From File")) {
-                    batchProcessTxObject.getBatchJobDetails().setTotalRecords(String.valueOf(totalCount));
-                    oleNGBatchExportResponse.setTotalNumberOfRecords((int) totalCount);
-                }
-            }else{
-                batchProcessTxObject.getBatchJobDetails().setTotalRecords(String.valueOf(totalCount));
-                oleNGBatchExportResponse.setTotalNumberOfRecords((int) totalCount);
-            }
+            batchProcessTxObject.getBatchJobDetails().setTotalRecords(String.valueOf(totalCount));
+            oleNGBatchExportResponse.setTotalNumberOfRecords((int) totalCount);
             batchExportHandler.updateBatchJob(batchProcessTxObject.getBatchJobDetails());
 
             if(isIncremental) {
@@ -130,7 +123,7 @@ public class ExportDao extends PlatformAwareDaoBaseJdbc {
             } else if(!batchProcessTxObject.getBatchProcessProfile().getExportScope().equalsIgnoreCase(OleNGConstants.FULL_EXCEPT_STAFF_ONLY) &&
                     !batchProcessTxObject.getBatchProcessProfile().getExportScope().equalsIgnoreCase(OleNGConstants.FULL_EXPORT)){
                 if (CollectionUtils.isNotEmpty(filterCriteriaList)) {
-                    if (filterCriteriaList.get(0).getFieldName().equalsIgnoreCase("Bib Local Id From File")) {
+                    if (StringUtils.isNotBlank(filterCriteriaList.get(0).getFieldName()) && filterCriteriaList.get(0).getFieldName().equalsIgnoreCase("Bib Local Id From File")) {
                         List<List<String>> partition = Lists.partition(bibIds, chunkSize);
                         for (Iterator<List<String>> iterator = partition.iterator(); iterator.hasNext(); ) {
                             List<String> bibIdLists = iterator.next();

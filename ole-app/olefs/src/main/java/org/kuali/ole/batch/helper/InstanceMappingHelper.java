@@ -49,7 +49,7 @@ public class InstanceMappingHelper {
             Map<String, String> dataFieldsDonorMap = new HashMap<>();
             List<OLEBatchProcessProfileDataMappingOptionsBo> mappingOptionsBoList = profile.getOleBatchProcessProfileMappingOptionsList().get(0).getOleBatchProcessProfileDataMappingOptionsBoList();
             for (OLEBatchProcessProfileDataMappingOptionsBo mappingOptionsBo : mappingOptionsBoList) {
-                if (mappingOptionsBo.getDataType().equalsIgnoreCase(BATCH_PROCESS_PROFILE_DATATYPE_HOLDINGS)) {
+                if (mappingOptionsBo.getDataType().equalsIgnoreCase(OLEConstants.OLEBatchProcess.BATCH_PROCESS_PROFILE_DATATYPE_HOLDINGS)) {
                     dataFieldsHoldingsMap.put(mappingOptionsBo.getDestinationField(), mappingOptionsBo.getSourceField());
                 } else if (mappingOptionsBo.getDataType().equalsIgnoreCase(OLEConstants.OLEBatchProcess.BATCH_PROCESS_PROFILE_DATATYPE_ITEM)) {
                     if (mappingOptionsBo.getSourceField().equalsIgnoreCase(DESTINATION_FIELD_DONOR_PUBLIC_DISPLAY)
@@ -258,8 +258,8 @@ public class InstanceMappingHelper {
                 }else if (entry.getValue().equalsIgnoreCase(OLEConstants.OLEBatchProcess.DESTINATION_FIELD_CALL_NUMBER)) {
                     dataField = checkDataField(dataFieldItemList, StringUtils.trim(entry.getKey()).substring(0, 3));
                     if (item.getCallNumber() == null) continue;
-                    if (callNumber != null && StringUtils.isNotEmpty(item.getCallNumber().getNumber()) && item.getCallNumber().getNumber().equals(callNumber))
-                        continue;
+                    /*if (callNumber != null && StringUtils.isNotEmpty(item.getCallNumber().getNumber()) && item.getCallNumber().getNumber().equals(callNumber))
+                        continue;*/
                     if (dataField == null) {
                         dataField = getDataField(entry);
                         generateCallNumber(item, getCode(entry.getKey()), dataField);
