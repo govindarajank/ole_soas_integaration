@@ -3,7 +3,7 @@ function openLightboxOnLoad(dialogId) {
     jQuery('.uif-dialogButtons').button();
 }
 
-o
+
 
 
 
