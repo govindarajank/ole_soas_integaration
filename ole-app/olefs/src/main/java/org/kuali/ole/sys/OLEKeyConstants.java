@@ -1138,6 +1138,7 @@ public class OLEKeyConstants {
     public static final String ERROR_INV_OFF_ACC_LINE_NOT_FOUND = "error.offset.account.line.not.found";
     public static final String ERROR_NO_FOREIGN_INVOICE_AMOUNT = "error.no.foreign.invoice.amount";
     public static final String ERROR_ENTER_VALID_EXCHANGE_RATE = "error.valid.exchange.rate";
+    public static final String ERROR_ITEM_FORMAT = "error.valid.item.formate";
     public static final String ERROR_EXCHANGE_RATE_EMPTY = "error.exchange.rate.empty";
     public static final String ERROR_VALID_FOREIGN_INVOICE_AMOUNT = "error.valid.foreign.invoice.amount";
     public static final String ERROR_NO_MATCHING_PO_VND_NM = "error.no.matching.po.vnd.name";

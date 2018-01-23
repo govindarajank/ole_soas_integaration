@@ -394,14 +394,14 @@ public class PurapAccountingServiceImpl implements PurapAccountingService {
      * @param items a list of PurAp Items.
      * @return a list of summary accounts.
      */
-    protected List<SummaryAccount> generateSummaryAccounts1(List<PurApItem> items, Boolean useZeroTotals, Boolean useTaxIncluded) {
+    protected List<SummaryAccount> generateSummaryAccounts1(List<PurApItem> items, Boolean useZeroTotals, Boolean useTaxIncluded, boolean isCheckForeignVendor) {
         String methodName = "generateSummaryAccounts()";
         List<SummaryAccount> returnList = new ArrayList<SummaryAccount>();
         if (LOG.isDebugEnabled()) {
             LOG.debug(methodName + " started");
         }
 
-        List<SourceAccountingLine> sourceLines = generateAccountSummary1(items, null, ITEM_TYPES_EXCLUDED_VALUE, useZeroTotals, ALTERNATE_AMOUNT_NOT_USED, useTaxIncluded, false);
+        List<SourceAccountingLine> sourceLines = generateAccountSummary1(items, null, ITEM_TYPES_EXCLUDED_VALUE, useZeroTotals, ALTERNATE_AMOUNT_NOT_USED, useTaxIncluded, false, isCheckForeignVendor);
         for (SourceAccountingLine sourceAccountingLine : sourceLines) {
             SummaryAccount summaryAccount = new SummaryAccount();
             summaryAccount.setAccount((SourceAccountingLine) ObjectUtils.deepCopy(sourceAccountingLine));
@@ -693,13 +693,13 @@ public class PurapAccountingServiceImpl implements PurapAccountingService {
      * @param useAlternateAmount       an alternate amount used in certain cases for GL entry
      * @return a list of source accounts
      */
-    protected List<SourceAccountingLine> generateAccountSummary1(List<PurApItem> items, Set<String> itemTypeCodes, Boolean itemTypeCodesAreIncluded, Boolean useZeroTotals, Boolean useAlternateAmount, Boolean useTaxIncluded, Boolean taxableOnly) {
+    protected List<SourceAccountingLine> generateAccountSummary1(List<PurApItem> items, Set<String> itemTypeCodes, Boolean itemTypeCodesAreIncluded, Boolean useZeroTotals, Boolean useAlternateAmount, Boolean useTaxIncluded, Boolean taxableOnly, boolean isCheckForeignVendor) {
         List<PurApItem> itemsToProcess = getProcessablePurapItems(items, itemTypeCodes, itemTypeCodesAreIncluded, useZeroTotals);
         Map<PurApAccountingLine, KualiDecimal> accountMap = new HashMap<PurApAccountingLine, KualiDecimal>();
         BigDecimal exchangeRate = BigDecimal.ZERO;
         BigDecimal totalForeignAmount = BigDecimal.ZERO;
         for (PurApItem currentItem : itemsToProcess) {
-            if (currentItem.getItemDescription() != null && currentItem.getItemDescription().equalsIgnoreCase("vat") && currentItem.getItemTypeCode()!= null && currentItem.getItemTypeCode().equalsIgnoreCase("MISC")) {
+            if (currentItem.getItemDescription() != null && currentItem.getItemDescription().equalsIgnoreCase("vat") && currentItem.getItemTypeCode()!= null && currentItem.getItemTypeCode().equalsIgnoreCase("MISC") && isCheckForeignVendor) {
             }
             else {
                 if (exchangeRate == BigDecimal.ZERO && currentItem instanceof OleInvoiceItem && ((OleInvoiceItem) currentItem).getItemExchangeRate() != null) {
