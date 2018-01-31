@@ -174,11 +174,6 @@ public class InvoiceFileServiceImpl extends PurapAccountingServiceImpl {
                                                     itemCostCentre = getItemCostCentre(oleInvoiceItem.getFormatType().getFormatTypeName());
                                                     if (StringUtils.isNotBlank(itemCostCentre)) {
                                                         if (itemCostCentre.equalsIgnoreCase("4025") || itemCostCentre.equalsIgnoreCase("4026")) {
-                                                            if (itemCostCentre.equalsIgnoreCase("4025") && isCheckForeignVendor) {
-                                                                itemTaxcode = "Z";
-                                                            } else if(isCheckForeignVendor){
-                                                                itemTaxcode = "SP";
-                                                            }
                                                         } else {
                                                             addFileInfo = false;
                                                         }
