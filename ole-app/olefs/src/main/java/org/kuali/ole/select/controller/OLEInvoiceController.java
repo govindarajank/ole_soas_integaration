@@ -246,6 +246,45 @@ public class OLEInvoiceController extends TransactionalDocumentControllerBase {
                 }
             }
             if (invoiceDocument.isAddImmediately()){
+                List<String> itemFormatName = new ArrayList<>();
+                boolean isItemFormatSame = true;
+                if(!oleInvoiceForm.isSubscriptionFlag()){
+                    if(CollectionUtils.isNotEmpty(invoiceDocument.getPurchaseOrderDocuments()) && invoiceDocument.getPurchaseOrderDocuments().size() > 0){
+                        for(OlePurchaseOrderDocument olePurchaseOrderDocument : invoiceDocument.getPurchaseOrderDocuments()){
+                            if(olePurchaseOrderDocument.getOrderType() != null && olePurchaseOrderDocument.getOrderType().getPurchaseOrderType().equalsIgnoreCase("Subscription")){
+                                oleInvoiceForm.setSubscriptionFlag(true);
+                                break;
+                            }
+                        }
+                    }
+                }
+                if(CollectionUtils.isNotEmpty(invoiceDocument.getPurchaseOrderDocuments()) && !oleInvoiceForm.isSubscriptionFlag()) {
+                    for(OlePurchaseOrderDocument olePurchaseOrderDocument : invoiceDocument.getPurchaseOrderDocuments()) {
+                        for (OlePurchaseOrderItem olePurchaseOrderItem : (List<OlePurchaseOrderItem>) olePurchaseOrderDocument.getItems()) {
+                            if (olePurchaseOrderItem.getItemType().getItemTypeCode().equalsIgnoreCase("ITEM")) {
+                                itemFormatName.add(getItemCostCentre(olePurchaseOrderItem.getFormatTypeName().getFormatTypeName()));
+                            }
+                        }
+                    }
+                }
+                if (CollectionUtils.isNotEmpty(invoiceDocument.getItems()) && invoiceDocument.getItems().size() > 4 && !oleInvoiceForm.isSubscriptionFlag()) {
+                    for (OleInvoiceItem oleInvoiceItem : (List<OleInvoiceItem>) invoiceDocument.getItems()) {
+                        if (oleInvoiceItem.getItemType().getItemTypeCode().equalsIgnoreCase("ITEM")) {
+                            Map <String,String> formatMap = new HashMap<>();
+                            formatMap.put("formatTypeId",oleInvoiceItem.getFormatTypeId().toString());
+                            OleFormatType oleFormatType = getBusinessObjectService().findByPrimaryKey(OleFormatType.class,formatMap);
+                            itemFormatName.add(getItemCostCentre(oleFormatType.getFormatTypeName()));
+                            break;
+                        }
+                    }
+                }
+                if(itemFormatName.contains("4025") && itemFormatName.contains("4026")){
+                    isItemFormatSame = false;
+                }
+                if(!isItemFormatSame){
+                    GlobalVariables.getMessageMap().putError(OleSelectConstant.PO_ITEM_SECTION_ID, OLEKeyConstants.ERROR_ITEM_FORMAT);
+                    return getUIFModelAndView(oleInvoiceForm);
+                }
                 getInvoiceService().populateInvoiceItems(invoiceDocument, invoiceDocument.getPurchaseOrderDocuments());
                 try {
                     calculate(oleInvoiceForm, result, request, response);
@@ -1816,6 +1855,44 @@ public class OLEInvoiceController extends TransactionalDocumentControllerBase {
         OLEInvoiceForm oleInvoiceForm = (OLEInvoiceForm) uifForm;
         OleInvoiceDocument oleInvoiceDocument = (OleInvoiceDocument) oleInvoiceForm.getDocument();
         oleInvoiceDocument.setCurrentItemsFlag(true);
+        List<String> itemFormatName = new ArrayList<>();
+        boolean isFormatSame = true;
+        if(!oleInvoiceForm.isSubscriptionFlag()){
+            if(CollectionUtils.isNotEmpty(oleInvoiceDocument.getPurchaseOrderDocuments()) && oleInvoiceDocument.getPurchaseOrderDocuments().size() > 0){
+                for(OlePurchaseOrderDocument olePurchaseOrderDocument : oleInvoiceDocument.getPurchaseOrderDocuments()){
+                    if(olePurchaseOrderDocument.getOrderType() != null && olePurchaseOrderDocument.getOrderType().getPurchaseOrderType().equalsIgnoreCase("Subscription")){
+                        oleInvoiceForm.setSubscriptionFlag(true);
+                        break;
+                    }
+                }
+            }
+        }
+        if (CollectionUtils.isNotEmpty(oleInvoiceDocument.getItems()) && oleInvoiceDocument.getItems().size() > 4 && !oleInvoiceForm.isSubscriptionFlag()) {
+            for (OleInvoiceItem oleInvoiceItem : (List<OleInvoiceItem>) oleInvoiceDocument.getItems()) {
+                if (oleInvoiceItem.getItemType().getItemTypeCode().equalsIgnoreCase("ITEM")) {
+                    Map <String,String> formatMap = new HashMap<>();
+                    formatMap.put("formatTypeId",oleInvoiceItem.getFormatTypeId().toString());
+                    OleFormatType oleFormatType = getBusinessObjectService().findByPrimaryKey(OleFormatType.class,formatMap);
+                    itemFormatName.add(getItemCostCentre(oleFormatType.getFormatTypeName()));
+                }
+            }
+        }
+        if(CollectionUtils.isNotEmpty(oleInvoiceDocument.getPurchaseOrderDocuments())) {
+            for(OlePurchaseOrderDocument olePurchaseOrderDocument : oleInvoiceDocument.getPurchaseOrderDocuments()) {
+                for (OlePurchaseOrderItem olePurchaseOrderItem : (List<OlePurchaseOrderItem>) olePurchaseOrderDocument.getItems()) {
+                    if (olePurchaseOrderItem.getItemType().getItemTypeCode().equalsIgnoreCase("ITEM")) {
+                        itemFormatName.add(getItemCostCentre(olePurchaseOrderItem.getFormatTypeName().getFormatTypeName()));
+                    }
+                }
+            }
+        }
+        if(itemFormatName.contains("4025") && itemFormatName.contains("4026")){
+            isFormatSame = false;
+        }
+        if(!isFormatSame){
+            GlobalVariables.getMessageMap().putError(OleSelectConstant.PO_ITEM_SECTION_ID, OLEKeyConstants.ERROR_ITEM_FORMAT);
+            return getUIFModelAndView(oleInvoiceForm);
+        }
         if(oleInvoiceDocument.getPaymentMethodIdentifier().equals("")){
             GlobalVariables.getMessageMap().putError(OleSelectConstant.PROCESS_ITEM_SECTION_ID, OLEKeyConstants.ERROR_NO_PAYMENT_MTHD);
             return getUIFModelAndView(oleInvoiceForm);
@@ -1866,6 +1943,21 @@ public class OLEInvoiceController extends TransactionalDocumentControllerBase {
         vendor.setVendorName(oleInvoiceDocument.getVendorName());
         oleInvoiceDocument.setPoId("");
         return getUIFModelAndView(oleInvoiceForm);
+    }
+
+    private String getItemCostCentre(String formatType) {
+        StringBuilder sb = new StringBuilder();
+        String itemCostCentre = "";
+        if (formatType != null) {
+            for (int i = 0; i < formatType.length(); i++) {
+                final char c = formatType.charAt(i);
+                if (c > 47 && c < 58) {
+                    sb.append(c);
+                }
+            }
+            itemCostCentre = sb.toString();
+        }
+        return itemCostCentre;
     }
 
     private void processInvoiceItems(OleInvoiceDocument oleInvoiceDocument) {

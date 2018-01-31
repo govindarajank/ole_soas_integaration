@@ -735,8 +735,13 @@ public class OleLineItemReceivingAction extends LineItemReceivingAction {
             oleCopy =  item.getCopyList().get(0);
             oleCopy.setReceiptStatus(OLEConstants.OleLineItemReceiving.RECEIVED_STATUS);
         }else {
-            for(OleCopy oleCopy1 : item.getCopyList()) {
-                oleCopy1.setReceiptStatus(OLEConstants.OleLineItemReceiving.RECEIVED_STATUS);
+            if(indexes.length ==2){
+             oleCopy = item.getCopyList().get(Integer.parseInt(indexes[1]));
+             oleCopy.setReceiptStatus(OLEConstants.OleLineItemReceiving.RECEIVED_STATUS);
+            }else {
+                for (OleCopy oleCopy1 : item.getCopyList()) {
+                    oleCopy1.setReceiptStatus(OLEConstants.OleLineItemReceiving.RECEIVED_STATUS);
+                }
             }
         }
         LOG.debug("Selected Copy is Received");

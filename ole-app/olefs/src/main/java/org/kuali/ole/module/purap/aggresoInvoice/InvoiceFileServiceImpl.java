@@ -8,6 +8,7 @@ import org.kuali.ole.DocumentUniqueIDPrefix;
 import org.kuali.ole.OLEConstants;
 import org.kuali.ole.coa.businessobject.Account;
 import org.kuali.ole.module.purap.businessobject.PurApSummaryItem;
+import org.kuali.ole.module.purap.businessobject.PurchaseOrderItem;
 import org.kuali.ole.module.purap.document.VendorCreditMemoDocument;
 import org.kuali.ole.module.purap.document.dataaccess.impl.CreditMemoDaoOjb;
 import org.kuali.ole.module.purap.service.impl.PurapAccountingServiceImpl;
@@ -16,6 +17,7 @@ import org.kuali.ole.select.businessobject.OleFormatType;
 import org.kuali.ole.select.businessobject.OleInvoiceItem;
 import org.kuali.ole.select.businessobject.OlePurchaseOrderItem;
 import org.kuali.ole.select.document.OleInvoiceDocument;
+import org.kuali.ole.select.document.OlePurchaseOrderDocument;
 import org.kuali.ole.sys.context.SpringContext;
 import org.kuali.rice.core.api.config.property.ConfigContext;
 import org.kuali.rice.core.api.util.type.KualiDecimal;
@@ -89,129 +91,135 @@ public class InvoiceFileServiceImpl extends PurapAccountingServiceImpl {
             map.put("documentNumber", invoiceDocumentIds);
             List<OleInvoiceDocument> documents = (List<OleInvoiceDocument>) KRADServiceLocator.getBusinessObjectService().findMatching(OleInvoiceDocument.class, map);
             if (CollectionUtils.isNotEmpty(documents) && documents.size() > 0) {
+                String voucherType = "";
                 boolean addFileInfo = true;
                 boolean addErrFile = true;
                 for (OleInvoiceDocument document : documents) {
-                    voucherNumber++;
-                    invoiceContent = "";
-                    itemDescription = "";
-                    BigDecimal invoiceTotalAmt = BigDecimal.ZERO;
-                    BigDecimal lineItemTotalAmt = BigDecimal.ZERO;
-                    if (!document.getVendorDetail().getVendorAliasesAsString().contains("pm21") && !document.getInvoiceNumber().equalsIgnoreCase("barclaycard")) {
-                        currency = document.getOleCurrencyType().getCurrencyAlphaCode();
-                        extInvoiceReference = document.getInvoiceNumber();
-                        aparId = document.getVendorDetail().getVendorDunsNumber();
+                    if(!isSubscriptionPOExists(document)) {
+                        boolean isCheckForeignVendor = true;
+                        voucherNumber++;
+                        invoiceContent = "";
+                        itemDescription = "";
+                        BigDecimal invoiceTotalAmt = BigDecimal.ZERO;
+                        BigDecimal lineItemTotalAmt = BigDecimal.ZERO;
+                        if (!document.getVendorDetail().getVendorAliasesAsString().contains("pm21") && !document.getInvoiceNumber().equalsIgnoreCase("barclaycard")) {
+                            currency = document.getOleCurrencyType().getCurrencyAlphaCode();
+                            extInvoiceReference = document.getInvoiceNumber();
+                            aparId = document.getVendorDetail().getVendorDunsNumber();
 
-                        if (isForeignCurrency(currency)) {
-                            if (document.getForeignVendorInvoiceAmount() != null) {
-                                invoiceAmount = "-" + document.getForeignVendorInvoiceAmount().multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_DOWN);
-                                invoiceTotalAmt = document.getForeignVendorInvoiceAmount();
-                            }
-                        } else {
-                            if (document.getVendorInvoiceAmount() != null) {
-                                invoiceAmount = "-" + new BigDecimal(document.getVendorInvoiceAmount().multiply(new KualiDecimal(100)).toString()).setScale(0, BigDecimal.ROUND_DOWN);
-                                invoiceTotalAmt = new BigDecimal(document.getVendorInvoiceAmount().toString());
-                            }
-                        }
-                        if (document.getInvoiceDate() != null) {
-                            voucherDate = df.format(document.getInvoiceDate());
-                        }
-                        if (document.getInvoicePayDate() != null) {
-                            invoiceDueDate = df.format(document.getInvoicePayDate());
-                        }
-                        invoiceContent = getFileContent(batchId, OLEConstants.AgressoCreateFile.INTER_FACE, OLEConstants.AgressoCreateFile.VOUCHER_TYPE, OLEConstants.AgressoCreateFile.INVOICE_TRANS_TYPE, OLEConstants.AgressoCreateFile.CLIENT, OLEConstants.AgressoCreateFile.INVOICEACCOUNT,
-                                OLEConstants.AgressoCreateFile.BLANK, OLEConstants.AgressoCreateFile.BLANK, OLEConstants.AgressoCreateFile.TAXCODE, (currency != null ? currency : ""), (invoiceAmount != null ? invoiceAmount : ""), (invoiceAmount != null ? invoiceAmount : ""),
-                                (invoiceDescription != null ? invoiceDescription : ""),
-                                (voucherDate != null ? voucherDate : ""),  String.format ("%015d", voucherNumber),
-                                (extInvoiceReference != null ? extInvoiceReference : ""),
-                                (invoiceDueDate != null ? invoiceDueDate : ""),
-                                OLEConstants.AgressoCreateFile.STATUS, OLEConstants.AgressoCreateFile.APARTYPE, (aparId != null ? aparId : "10000"),
-                                OLEConstants.AgressoCreateFile.RESPONSIBLE) + "\n";
-
-                        if (isForeignCurrency(currency)) {
-                            tmpFileToWriteForeignVendor.append(invoiceContent);
-                        } else {
-                            tmpFileToWriteLocalVendor.append(invoiceContent);
-                        }
-                        List<SummaryAccount> summaryAccounts = generateSummaryAccounts1(document.getItems(), ZERO_TOTALS_RETURNED_VALUE, USE_TAX_INCLUDED);
-                        if (CollectionUtils.isNotEmpty(summaryAccounts) && summaryAccounts.size() > 0) {
-                            for (SummaryAccount summaryAccount : summaryAccounts) {
-                                itemLineContent = "";
-                                String itemTaxcode ="0";
-                                itemDescription = document.getDocumentNumber() + ";";
-                                if (summaryAccount != null && summaryAccount.getAccount() != null) {
-                                    dim_4 = accountMap.get(summaryAccount.getAccount().getAccountNumber());
-                                    if (isForeignCurrency(currency)) {
-                                        if (summaryAccount.getAccount().getForeignAmount() != null) {
-                                            itemAmount = ""+summaryAccount.getAccount().getForeignAmount().multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_DOWN);
-                                            lineItemTotalAmt = lineItemTotalAmt.add(summaryAccount.getAccount().getForeignAmount());
-                                        }
+                            if (isForeignCurrency(currency)) {
+                                if (document.getForeignVendorInvoiceAmount() != null) {
+                                    invoiceAmount = "-" + document.getForeignVendorInvoiceAmount().multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_DOWN);
+                                    invoiceTotalAmt = document.getForeignVendorInvoiceAmount();
+                                    voucherType = OLEConstants.AgressoCreateFile.FOREIGN_VOUCHER_TYPE;
+                                }
+                            } else {
+                                if (document.getVendorInvoiceAmount() != null) {
+                                    invoiceAmount = "-" + new BigDecimal(document.getVendorInvoiceAmount().multiply(new KualiDecimal(100)).toString()).setScale(0, BigDecimal.ROUND_DOWN);
+                                    invoiceTotalAmt = new BigDecimal(document.getVendorInvoiceAmount().toString());
+                                    if(document.getVendorDetail().getVendorHeader().getVendorForeignIndicator()){
+                                        isCheckForeignVendor =false;
+                                        voucherType = OLEConstants.AgressoCreateFile.FOREIGN_VOUCHER_TYPE;
                                     } else {
-                                        if (summaryAccount.getAccount().getAmount() != null) {
-                                            itemAmount = ""+new BigDecimal(summaryAccount.getAccount().getAmount().multiply(new KualiDecimal(100)).toString()).setScale(0, BigDecimal.ROUND_DOWN);
-                                            lineItemTotalAmt = lineItemTotalAmt.add(new BigDecimal(summaryAccount.getAccount().getAmount().toString()));
-                                        }
+                                        voucherType = OLEConstants.AgressoCreateFile.LOCAL_VOUCHER_TYPE;
                                     }
-                                    for (PurApSummaryItem purApSummaryItem : summaryAccount.getItems()) {
-                                        if (purApSummaryItem.getItemTypeCode().equalsIgnoreCase(OLEConstants.ITEM)) {
-                                            int purApSummaryItemItemIdentifier = purApSummaryItem.getItemIdentifier();
-                                            invoiceIdMap.put("itemIdentifier", purApSummaryItemItemIdentifier);
-                                            OleInvoiceItem oleInvoiceItem = (OleInvoiceItem) KRADServiceLocator.getBusinessObjectService().findByPrimaryKey(OleInvoiceItem.class, invoiceIdMap);
-                                            if (oleInvoiceItem != null) {
-                                                itemDescription = itemDescription + "PO" + oleInvoiceItem.getPurchaseOrderIdentifier() + ";BIB" + DocumentUniqueIDPrefix.getDocumentId(oleInvoiceItem.getItemTitleId()) + ";";
-                                                itemCostCentre = getItemCostCentre(oleInvoiceItem.getFormatType().getFormatTypeName());
-                                                if (StringUtils.isNotBlank(itemCostCentre)) {
-                                                    if (itemCostCentre.equalsIgnoreCase("4025") || itemCostCentre.equalsIgnoreCase("4026")) {
-                                                        if(itemCostCentre.equalsIgnoreCase("4025")){
-                                                            itemTaxcode ="Z";
+                                }
+                            }
+                            if (document.getInvoiceDate() != null) {
+                                voucherDate = df.format(document.getInvoiceDate());
+                            }
+                            if (document.getInvoicePayDate() != null) {
+                                invoiceDueDate = df.format(document.getInvoicePayDate());
+                            }
+                            invoiceContent = getFileContent(batchId, OLEConstants.AgressoCreateFile.INTER_FACE, voucherType, OLEConstants.AgressoCreateFile.INVOICE_TRANS_TYPE, OLEConstants.AgressoCreateFile.CLIENT, OLEConstants.AgressoCreateFile.INVOICEACCOUNT,
+                                    OLEConstants.AgressoCreateFile.BLANK, OLEConstants.AgressoCreateFile.BLANK, OLEConstants.AgressoCreateFile.TAXCODE, (currency != null ? currency : ""), (invoiceAmount != null ? invoiceAmount : ""), (invoiceAmount != null ? invoiceAmount : ""),
+                                    (invoiceDescription != null ? invoiceDescription : ""),
+                                    (voucherDate != null ? voucherDate : ""), String.format("%015d", voucherNumber),
+                                    (extInvoiceReference != null ? extInvoiceReference : ""),
+                                    (invoiceDueDate != null ? invoiceDueDate : ""),
+                                    OLEConstants.AgressoCreateFile.STATUS, OLEConstants.AgressoCreateFile.APARTYPE, (aparId != null ? aparId : "10000"),
+                                    OLEConstants.AgressoCreateFile.RESPONSIBLE) + "\n";
+
+                            if (isForeignCurrency(currency)) {
+                                tmpFileToWriteForeignVendor.append(invoiceContent);
+                            } else {
+                                tmpFileToWriteLocalVendor.append(invoiceContent);
+                            }
+                            List<SummaryAccount> summaryAccounts = generateSummaryAccounts1(document.getItems(), ZERO_TOTALS_RETURNED_VALUE, USE_TAX_INCLUDED, isCheckForeignVendor);
+                            if (CollectionUtils.isNotEmpty(summaryAccounts) && summaryAccounts.size() > 0) {
+                                for (SummaryAccount summaryAccount : summaryAccounts) {
+                                    itemLineContent = "";
+                                    String itemTaxcode = "0";
+                                    itemDescription = document.getDocumentNumber() + ";";
+                                    if (summaryAccount != null && summaryAccount.getAccount() != null) {
+                                        dim_4 = accountMap.get(summaryAccount.getAccount().getAccountNumber());
+                                        if (isForeignCurrency(currency)) {
+                                            if (summaryAccount.getAccount().getForeignAmount() != null) {
+                                                itemAmount = "" + summaryAccount.getAccount().getForeignAmount().multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_DOWN);
+                                                lineItemTotalAmt = lineItemTotalAmt.add(summaryAccount.getAccount().getForeignAmount());
+                                            }
+                                        } else {
+                                            if (summaryAccount.getAccount().getAmount() != null) {
+                                                itemAmount = "" + new BigDecimal(summaryAccount.getAccount().getAmount().multiply(new KualiDecimal(100)).toString()).setScale(0, BigDecimal.ROUND_DOWN);
+                                                lineItemTotalAmt = lineItemTotalAmt.add(new BigDecimal(summaryAccount.getAccount().getAmount().toString()));
+                                            }
+                                        }
+                                        for (PurApSummaryItem purApSummaryItem : summaryAccount.getItems()) {
+                                            if (purApSummaryItem.getItemTypeCode().equalsIgnoreCase(OLEConstants.ITEM)) {
+                                                int purApSummaryItemItemIdentifier = purApSummaryItem.getItemIdentifier();
+                                                invoiceIdMap.put("itemIdentifier", purApSummaryItemItemIdentifier);
+                                                OleInvoiceItem oleInvoiceItem = (OleInvoiceItem) KRADServiceLocator.getBusinessObjectService().findByPrimaryKey(OleInvoiceItem.class, invoiceIdMap);
+                                                if (oleInvoiceItem != null) {
+                                                    itemDescription = itemDescription + "PO" + oleInvoiceItem.getPurchaseOrderIdentifier() + ";BIB" + DocumentUniqueIDPrefix.getDocumentId(oleInvoiceItem.getItemTitleId()) + ";";
+                                                    itemCostCentre = getItemCostCentre(oleInvoiceItem.getFormatType().getFormatTypeName());
+                                                    if (StringUtils.isNotBlank(itemCostCentre)) {
+                                                        if (itemCostCentre.equalsIgnoreCase("4025") || itemCostCentre.equalsIgnoreCase("4026")) {
                                                         } else {
-                                                            itemTaxcode ="SP";
+                                                            addFileInfo = false;
                                                         }
                                                     } else {
                                                         addFileInfo = false;
                                                     }
-                                                } else {
-                                                    addFileInfo = false;
                                                 }
                                             }
                                         }
-                                    }
-                                    itemLineContent = getFileContent(batchId, OLEConstants.AgressoCreateFile.INTER_FACE, OLEConstants.AgressoCreateFile.VOUCHER_TYPE, OLEConstants.AgressoCreateFile.ITEM_TRANS_TYPE,
-                                            OLEConstants.AgressoCreateFile.CLIENT, itemCostCentre != null ? itemCostCentre : "", OLEConstants.AgressoCreateFile.BLANK,
-                                            dim_4 != null ? dim_4 : "",
-                                            itemTaxcode, currency, itemAmount != null ? itemAmount : "0",
-                                            itemAmount != null ? itemAmount : "0",
-                                            itemDescription != null ? itemDescription : "",
-                                            voucherDate, String.format ("%015d", voucherNumber), extInvoiceReference, invoiceDueDate, OLEConstants.AgressoCreateFile.STATUS, OLEConstants.AgressoCreateFile.APARTYPE,
-                                            (aparId != null ? aparId : "10000"), OLEConstants.AgressoCreateFile.RESPONSIBLE) + "\n";
+                                        itemLineContent = getFileContent(batchId, OLEConstants.AgressoCreateFile.INTER_FACE, voucherType, OLEConstants.AgressoCreateFile.ITEM_TRANS_TYPE,
+                                                OLEConstants.AgressoCreateFile.CLIENT, itemCostCentre != null ? itemCostCentre : "", OLEConstants.AgressoCreateFile.BLANK,
+                                                dim_4 != null ? dim_4 : "",
+                                                itemTaxcode, currency, itemAmount != null ? itemAmount : "0",
+                                                itemAmount != null ? itemAmount : "0",
+                                                itemDescription != null ? itemDescription : "",
+                                                voucherDate, String.format("%015d", voucherNumber), extInvoiceReference, invoiceDueDate, OLEConstants.AgressoCreateFile.STATUS, OLEConstants.AgressoCreateFile.APARTYPE,
+                                                (aparId != null ? aparId : "10000"), OLEConstants.AgressoCreateFile.RESPONSIBLE) + "\n";
 
 
-                                    if (isForeignCurrency(currency)) {
-                                        tmpFileToWriteForeignVendor.append(itemLineContent);
-                                    } else {
-                                        tmpFileToWriteLocalVendor.append(itemLineContent);
+                                        if (isForeignCurrency(currency)) {
+                                            tmpFileToWriteForeignVendor.append(itemLineContent);
+                                        } else {
+                                            tmpFileToWriteLocalVendor.append(itemLineContent);
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    if (addFileInfo) {
-                        fileToWriteForeignVendor.append(tmpFileToWriteForeignVendor);
-                        fileToWriteLocalVendor.append(tmpFileToWriteLocalVendor);
-                        tmpFileToWriteForeignVendor.setLength(0);
-                        tmpFileToWriteLocalVendor.setLength(0);
-                    } else if(!addErrFile){
-                        fileToWriterrorText.append(tmpFileToWriteForeignVendor);
-                        fileToWriterrorText.append(tmpFileToWriteLocalVendor);
-                        tmpFileToWriteForeignVendor.setLength(0);
-                        tmpFileToWriteLocalVendor.setLength(0);
-                        addFileInfo = true;
-                        addErrFile = true;
-                    } else{
-                        tmpFileToWriteForeignVendor.setLength(0);
-                        tmpFileToWriteLocalVendor.setLength(0);
-                        addFileInfo = true;
-                        addErrFile = true;
+                        if (addFileInfo) {
+                            fileToWriteForeignVendor.append(tmpFileToWriteForeignVendor);
+                            fileToWriteLocalVendor.append(tmpFileToWriteLocalVendor);
+                            tmpFileToWriteForeignVendor.setLength(0);
+                            tmpFileToWriteLocalVendor.setLength(0);
+                        } else if (!addErrFile) {
+                            fileToWriterrorText.append(tmpFileToWriteForeignVendor);
+                            fileToWriterrorText.append(tmpFileToWriteLocalVendor);
+                            tmpFileToWriteForeignVendor.setLength(0);
+                            tmpFileToWriteLocalVendor.setLength(0);
+                            addFileInfo = true;
+                            addErrFile = true;
+                        } else {
+                            tmpFileToWriteForeignVendor.setLength(0);
+                            tmpFileToWriteLocalVendor.setLength(0);
+                            addFileInfo = true;
+                            addErrFile = true;
+                        }
                     }
                 }
             }
@@ -258,20 +266,20 @@ public class InvoiceFileServiceImpl extends PurapAccountingServiceImpl {
                         if(!description.contains("BARCLAYCARD")) {
                             if (costCentre.equalsIgnoreCase("4025") || costCentre.equalsIgnoreCase("4026")) {
                                 if (isForeignCurrency(currencyAlphaCode)) {
-                                    fileToWriteForeignVendor.append(getFileContent(batchId, OLEConstants.AgressoCreateFile.INTER_FACE, OLEConstants.AgressoCreateFile.VOUCHER_TYPE, OLEConstants.AgressoCreateFile.INVOICE_TRANS_TYPE,
+                                    fileToWriteForeignVendor.append(getFileContent(batchId, OLEConstants.AgressoCreateFile.INTER_FACE, OLEConstants.AgressoCreateFile.FOREIGN_VOUCHER_TYPE, OLEConstants.AgressoCreateFile.INVOICE_TRANS_TYPE,
                                             OLEConstants.AgressoCreateFile.CLIENT, OLEConstants.AgressoCreateFile.INVOICEACCOUNT, OLEConstants.AgressoCreateFile.BLANK, OLEConstants.AgressoCreateFile.BLANK, OLEConstants.AgressoCreateFile.TAXCODE, currencyAlphaCode, (creditmemoAmt != null ? creditmemoAmt : ""),
                                             (creditmemoAmt != null ? creditmemoAmt : ""), OLEConstants.AgressoCreateFile.BLANK, voucherDate, String.format ("%015d", voucherNumber), creditMemoNumber, voucherDate,
                                             voucherDate, OLEConstants.AgressoCreateFile.APARTYPE, (aparId != null ? aparId : "10000"), OLEConstants.AgressoCreateFile.RESPONSIBLE) + "\n");
-                                    fileToWriteForeignVendor.append(getFileContent(batchId, OLEConstants.AgressoCreateFile.INTER_FACE, OLEConstants.AgressoCreateFile.VOUCHER_TYPE, OLEConstants.AgressoCreateFile.ITEM_TRANS_TYPE,
+                                    fileToWriteForeignVendor.append(getFileContent(batchId, OLEConstants.AgressoCreateFile.INTER_FACE, OLEConstants.AgressoCreateFile.FOREIGN_VOUCHER_TYPE, OLEConstants.AgressoCreateFile.ITEM_TRANS_TYPE,
                                             OLEConstants.AgressoCreateFile.CLIENT, costCentre, OLEConstants.AgressoCreateFile.BLANK, account, OLEConstants.AgressoCreateFile.TAXCODE, currencyAlphaCode, (creditmemoAmt != null ? "-" + creditmemoAmt : ""),
                                             (creditmemoAmt != null ? "-" + creditmemoAmt : ""), description, voucherDate, String.format ("%015d", voucherNumber), creditMemoNumber, voucherDate,
                                             voucherDate, OLEConstants.AgressoCreateFile.APARTYPE, (aparId != null ? aparId : "10000"), OLEConstants.AgressoCreateFile.RESPONSIBLE) + "\n");
                                 } else {
-                                    fileToWriteLocalVendor.append(getFileContent(batchId, OLEConstants.AgressoCreateFile.INTER_FACE, OLEConstants.AgressoCreateFile.VOUCHER_TYPE, OLEConstants.AgressoCreateFile.INVOICE_TRANS_TYPE,
+                                    fileToWriteLocalVendor.append(getFileContent(batchId, OLEConstants.AgressoCreateFile.INTER_FACE, OLEConstants.AgressoCreateFile.LOCAL_VOUCHER_TYPE, OLEConstants.AgressoCreateFile.INVOICE_TRANS_TYPE,
                                             OLEConstants.AgressoCreateFile.CLIENT, OLEConstants.AgressoCreateFile.INVOICEACCOUNT, OLEConstants.AgressoCreateFile.BLANK, OLEConstants.AgressoCreateFile.BLANK, OLEConstants.AgressoCreateFile.TAXCODE, currencyAlphaCode, (creditmemoAmt != null ? creditmemoAmt : ""),
                                             (creditmemoAmt != null ? creditmemoAmt : ""), OLEConstants.AgressoCreateFile.BLANK, voucherDate, String.format ("%015d", voucherNumber), creditMemoNumber, voucherDate,
                                             OLEConstants.AgressoCreateFile.STATUS, OLEConstants.AgressoCreateFile.APARTYPE, (aparId != null ? aparId : "10000"), OLEConstants.AgressoCreateFile.RESPONSIBLE) + "\n");
-                                    fileToWriteLocalVendor.append(getFileContent(batchId, OLEConstants.AgressoCreateFile.INTER_FACE, OLEConstants.AgressoCreateFile.VOUCHER_TYPE, OLEConstants.AgressoCreateFile.ITEM_TRANS_TYPE,
+                                    fileToWriteLocalVendor.append(getFileContent(batchId, OLEConstants.AgressoCreateFile.INTER_FACE, OLEConstants.AgressoCreateFile.LOCAL_VOUCHER_TYPE, OLEConstants.AgressoCreateFile.ITEM_TRANS_TYPE,
                                             OLEConstants.AgressoCreateFile.CLIENT, costCentre, OLEConstants.AgressoCreateFile.BLANK, account, OLEConstants.AgressoCreateFile.TAXCODE, currencyAlphaCode, (creditmemoAmt != null ? "-" + creditmemoAmt : ""),
                                             (creditmemoAmt != null ? "-" + creditmemoAmt : ""), description, voucherDate, String.format ("%015d", voucherNumber), creditMemoNumber, voucherDate,
                                             OLEConstants.AgressoCreateFile.STATUS, OLEConstants.AgressoCreateFile.APARTYPE, (aparId != null ? aparId : "10000"), OLEConstants.AgressoCreateFile.RESPONSIBLE) + "\n");
@@ -420,6 +428,38 @@ public class InvoiceFileServiceImpl extends PurapAccountingServiceImpl {
         if (currencyCode != null) {
             if (!currencyCode.equalsIgnoreCase(OLEConstants.AgressoCreateFile.CURRENCYCODE)) {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isSubscriptionPOExists(OleInvoiceDocument oleInvoiceDocument){
+        if(CollectionUtils.isNotEmpty(oleInvoiceDocument.getPurchaseOrderDocuments()) && oleInvoiceDocument.getPurchaseOrderDocuments().size() > 0){
+            for(OlePurchaseOrderDocument olePurchaseOrderDocument : oleInvoiceDocument.getPurchaseOrderDocuments()){
+                if(olePurchaseOrderDocument.getOrderType() != null){
+                    if(olePurchaseOrderDocument.getOrderType().getPurchaseOrderType().equalsIgnoreCase("Subscription")){
+                        return true;
+                    }
+                }
+            }
+        }else{
+            if(CollectionUtils.isNotEmpty(oleInvoiceDocument.getItems()) && oleInvoiceDocument.getItems().size() > 0){
+                Map poMap = new HashMap();
+                for(OleInvoiceItem oleInvoiceItem : (List<OleInvoiceItem>)oleInvoiceDocument.getItems()){
+                    if (oleInvoiceItem.getItemTypeCode().equalsIgnoreCase("ITEM")) {
+                        if(oleInvoiceItem.getPurchaseOrderIdentifier() != null){
+                            poMap.put("purapDocumentIdentifier",oleInvoiceItem.getPurchaseOrderIdentifier());
+                            List<OlePurchaseOrderDocument> olePurchaseOrderDocuments = (List<OlePurchaseOrderDocument>)KRADServiceLocator.getBusinessObjectService().findMatching(OlePurchaseOrderDocument.class,poMap);
+                            if(CollectionUtils.isNotEmpty(olePurchaseOrderDocuments) && olePurchaseOrderDocuments.size() > 0){
+                                for(OlePurchaseOrderDocument olePurchaseOrderDocument : olePurchaseOrderDocuments){
+                                    if(olePurchaseOrderDocument.getOrderType() != null && olePurchaseOrderDocument.getOrderType().getPurchaseOrderType().equalsIgnoreCase("Subscription")){
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
         return false;

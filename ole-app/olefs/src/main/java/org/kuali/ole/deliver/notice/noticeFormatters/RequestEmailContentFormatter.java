@@ -119,6 +119,7 @@ public abstract class RequestEmailContentFormatter {
         oleNoticeBo.setItemId(oleDeliverRequestBo.getItemId() != null ? oleDeliverRequestBo.getItemId() : "");
         String locationName = getLocationName(oleDeliverRequestBo.getShelvingLocation());
         oleNoticeBo.setItemShelvingLocation((locationName != null ? locationName : ""));
+        oleNoticeBo.setItemLibrary((locationName != null ? locationName : ""));
     }
 
     private void setCirculationDeskInfo(OleNoticeBo oleNoticeBo, OleDeliverRequestBo oleDeliverRequestBo) {

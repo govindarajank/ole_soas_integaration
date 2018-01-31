@@ -38,6 +38,7 @@ public class OLEInvoiceForm extends TransactionalDocumentFormBase {
     private boolean showSelectedRowDetails;
     private boolean successFlag;
     private boolean blanketApproveSuccessFlag;
+	private boolean subscriptionFlag;
 
     public String getSubscriptionDateValidationFlag() {
         return subscriptionDateValidationFlag;
@@ -61,6 +62,14 @@ public class OLEInvoiceForm extends TransactionalDocumentFormBase {
     public String getSubscriptionValidationMessage() {
         return subscriptionValidationMessage;
     }
+
+	public boolean isSubscriptionFlag() {
+		return subscriptionFlag;
+	}
+
+	public void setSubscriptionFlag(boolean subscriptionFlag) {
+		this.subscriptionFlag = subscriptionFlag;
+	}
 
     public void setSubscriptionValidationMessage(String subscriptionValidationMessage) {
         this.subscriptionValidationMessage = subscriptionValidationMessage;

@@ -3137,7 +3137,8 @@ public class OLEConstants {
 
     public static final class AgressoCreateFile{
         public static final String INTER_FACE = getParameterAgresso("INTER_FACE");
-        public static final String VOUCHER_TYPE = getParameterAgresso("VOUCHER_TYPE");
+        public static final String FOREIGN_VOUCHER_TYPE = "FL";
+        public static final String LOCAL_VOUCHER_TYPE = "UL";
         public static final String INVOICE_TRANS_TYPE = getParameterAgresso("INVOICE_TRANS_TYPE");
         public static final String ITEM_TRANS_TYPE = getParameterAgresso("ITEM_TRANS_TYPE");
         public static final String CLIENT = getParameterAgresso("CLIENT");
