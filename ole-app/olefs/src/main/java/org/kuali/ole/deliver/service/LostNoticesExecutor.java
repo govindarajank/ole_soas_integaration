@@ -21,6 +21,7 @@ import org.kuali.rice.core.api.util.type.KualiDecimal;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -305,6 +306,7 @@ public class LostNoticesExecutor extends LoanNoticesExecutor {
         itemStatus1.setFullValue(itemStatus);
         oleItem.setItemStatus(itemStatus1);
         oleItem.setItemStatusEffectiveDate(String.valueOf(new SimpleDateFormat(OLEConstants.DAT_FORMAT_EFFECTIVE).format(new Date())));
+        oleItem.setDueDateTime(convertDateFormat(oleItem.getLoanDueDate()));
         String itemContent = getItemOlemlRecordProcessor().toXML(oleItem);
         return itemContent;
     }
@@ -327,4 +329,16 @@ public class LostNoticesExecutor extends LoanNoticesExecutor {
     public void setNote(String note) {
         this.note = note;
     }
+
+    private String convertDateFormat(String dueDate) {
+        SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("dd/MM/yyyy hh:mma");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mma");
+        try{
+            return  simpleDateFormat.format(simpleDateFormat2.parse(dueDate));
+        } catch (ParseException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return null;
+    }
+
 }
