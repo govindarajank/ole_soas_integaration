@@ -1,5 +1,6 @@
 package org.kuali.ole.select.document.service.impl;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kuali.ole.docstore.common.client.DocstoreClientLocator;
 import org.kuali.ole.docstore.common.document.Holdings;
@@ -94,6 +95,10 @@ public class OleCopyHelperServiceImpl implements OleCopyHelperService {
     @Override
     public HashMap<String, List<OleCopy>> getCopyListBasedOnCopyNumber(List<OleCopy> copyList,Integer noOfParts) {
         HashMap<String, List<OleCopy>> copyMap = new HashMap<>();
+
+        boolean isElectronic = checkForElectronic(copyList);
+        int j=0;
+
         for (OleCopy oleCopy : copyList) {
             Map map = new HashMap();
             if(oleCopy.getCopyNumber()!=null)
@@ -115,7 +120,11 @@ public class OleCopyHelperServiceImpl implements OleCopyHelperService {
                 for(OleCopy copy : oleCopyList){
                     copies.add(copy);
                     if(noOfParts!=null &&( noOfParts==1 || copy.getPartNumber().equalsIgnoreCase(noOfParts.toString()))){
-                        copyMap.put(location+i++, copies);
+                        if(isElectronic){
+                            copyMap.put(location+j++, copies);
+                        }else{
+                            copyMap.put(location+i++, copies);
+                        }
                         copies = new ArrayList<>();
                     }
                 }
@@ -690,6 +699,29 @@ public class OleCopyHelperServiceImpl implements OleCopyHelperService {
             }
         }
         return valid;
+    }
+
+    private boolean checkForElectronic(List<OleCopy> oleCopyList){
+
+        boolean isElectonic = false;
+
+        if(CollectionUtils.isNotEmpty(oleCopyList) && oleCopyList.size() > 0){
+            OleCopy oleCopy  = oleCopyList.get(0);
+            if(oleCopy != null && oleCopy.getPoItemId() != null){
+                Map poItmMap = new HashMap();
+
+                poItmMap.put("documentNumber",oleCopy.getPoDocNum());
+                poItmMap.put("itemIdentifier",oleCopy.getPoItemId());
+
+                OlePurchaseOrderItem olePurchaseOrderItem = (OlePurchaseOrderItem)KRADServiceLocator.getBusinessObjectService().findByPrimaryKey(OlePurchaseOrderItem.class,poItmMap);
+
+                if(olePurchaseOrderItem != null && (olePurchaseOrderItem.getLinkToOrderOption().equalsIgnoreCase(OLEConstants.NB_ELECTRONIC) || olePurchaseOrderItem.getLinkToOrderOption().equalsIgnoreCase(OLEConstants.EB_ELECTRONIC))){
+                    return true;
+                }
+            }
+        }
+
+        return  isElectonic;
     }
 
 }

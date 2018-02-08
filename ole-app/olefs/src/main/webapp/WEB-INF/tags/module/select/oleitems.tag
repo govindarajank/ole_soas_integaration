@@ -1652,7 +1652,7 @@ attributeEntry="${itemAttributes.itemLocation}" width="10%"/>
                 <purap:purapGeneralAccounting itemAttributes="${itemAttributes}"
                                               accountPrefix="document.item[${ctr}]."
                                               itemColSpan="${accountColumnCount}" count="${ctr}" />
-                <c:if test="${(KualiForm.document.items[ctr].linkToOrderOption eq 'NB_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'ORDER_RECORD_IMPORT_MARC_ONLY_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'ORDER_RECORD_IMPORT_MARC_EDI' || KualiForm.document.items[ctr].linkToOrderOption eq 'EB_PRINT') &&( KualiForm.document.items[ctr].itemQuantity >1 || KualiForm.document.items[ctr].itemNoOfParts >1)}">
+                <c:if test="${(KualiForm.document.items[ctr].linkToOrderOption eq 'NB_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'NB_ELECTRONIC' || KualiForm.document.items[ctr].linkToOrderOption eq 'ORDER_RECORD_IMPORT_MARC_ONLY_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'ORDER_RECORD_IMPORT_MARC_EDI' || KualiForm.document.items[ctr].linkToOrderOption eq 'EB_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'EB_ELECTRONIC') &&( KualiForm.document.items[ctr].itemQuantity >1 || KualiForm.document.items[ctr].itemNoOfParts >1)}">
                     <select:oleCopies itemAttributes="${itemAttributes}"
                                       accountPrefix="document.item[${ctr}]."
                                       isATypeOfRCVGDoc="${isATypeOfRCVGDoc}"
@@ -1688,7 +1688,7 @@ attributeEntry="${itemAttributes.itemLocation}" width="10%"/>
                 <purap:purapGeneralAccounting itemAttributes="${itemAttributes}"
                 accountPrefix="document.item[${ctr}]."
                 itemColSpan="${accountColumnCount}" count="${ctr}" />
-                <c:if test="${(KualiForm.document.items[ctr].linkToOrderOption eq 'NB_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'ORDER_RECORD_IMPORT_MARC_ONLY_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'ORDER_RECORD_IMPORT_MARC_EDI' || KualiForm.document.items[ctr].linkToOrderOption eq 'EB_PRINT') && (KualiForm.document.items[ctr].itemQuantity >1 || KualiForm.document.items[ctr].itemNoOfParts >1)}">
+                <c:if test="${(KualiForm.document.items[ctr].linkToOrderOption eq 'NB_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'NB_ELECTRONIC' || KualiForm.document.items[ctr].linkToOrderOption eq 'ORDER_RECORD_IMPORT_MARC_ONLY_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'ORDER_RECORD_IMPORT_MARC_EDI' || KualiForm.document.items[ctr].linkToOrderOption eq 'EB_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'EB_ELECTRONIC') && (KualiForm.document.items[ctr].itemQuantity >1 || KualiForm.document.items[ctr].itemNoOfParts >1)}">
                     <select:oleCopies itemAttributes="${itemAttributes}"
                                       accountPrefix="document.item[${ctr}]."
                                       isATypeOfRCVGDoc="${isATypeOfRCVGDoc}"
@@ -1724,7 +1724,7 @@ attributeEntry="${itemAttributes.itemLocation}" width="10%"/>
         <purap:purapGeneralAccounting itemAttributes="${itemAttributes}"
                                       accountPrefix="document.item[${ctr}]."
                                       itemColSpan="${accountColumnCount}" count="${ctr}" />
-        <c:if test="${(KualiForm.document.items[ctr].linkToOrderOption eq 'NB_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'ORDER_RECORD_IMPORT_MARC_ONLY_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'ORDER_RECORD_IMPORT_MARC_EDI' || KualiForm.document.items[ctr].linkToOrderOption eq 'EB_PRINT') && (KualiForm.document.items[ctr].itemQuantity >1 || KualiForm.document.items[ctr].itemNoOfParts >1)}">
+        <c:if test="${(KualiForm.document.items[ctr].linkToOrderOption eq 'NB_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'NB_ELECTRONIC' || KualiForm.document.items[ctr].linkToOrderOption eq 'ORDER_RECORD_IMPORT_MARC_ONLY_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'ORDER_RECORD_IMPORT_MARC_EDI' || KualiForm.document.items[ctr].linkToOrderOption eq 'EB_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'EB_ELECTRONIC') && (KualiForm.document.items[ctr].itemQuantity >1 || KualiForm.document.items[ctr].itemNoOfParts >1)}">
             <select:oleCopies itemAttributes="${itemAttributes}"
                               accountPrefix="document.item[${ctr}]."
                               isATypeOfRCVGDoc="${isATypeOfRCVGDoc}"
@@ -1761,7 +1761,7 @@ attributeEntry="${itemAttributes.itemLocation}" width="10%"/>
         <purap:purapGeneralAccounting itemAttributes="${itemAttributes}"
                                       accountPrefix="document.item[${ctr}]."
                                       itemColSpan="${accountColumnCount}" count="${ctr}" />
-        <c:if test="${(KualiForm.document.items[ctr].linkToOrderOption eq 'NB_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'ORDER_RECORD_IMPORT_MARC_ONLY_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'ORDER_RECORD_IMPORT_MARC_EDI' || KualiForm.document.items[ctr].linkToOrderOption eq 'EB_PRINT') && (KualiForm.document.items[ctr].itemQuantity >1 || KualiForm.document.items[ctr].itemNoOfParts >1)}">
+        <c:if test="${(KualiForm.document.items[ctr].linkToOrderOption eq 'NB_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'NB_ELECTRONIC' || KualiForm.document.items[ctr].linkToOrderOption eq 'ORDER_RECORD_IMPORT_MARC_ONLY_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'ORDER_RECORD_IMPORT_MARC_EDI' || KualiForm.document.items[ctr].linkToOrderOption eq 'EB_PRINT' || KualiForm.document.items[ctr].linkToOrderOption eq 'EB_ELECTRONIC') && (KualiForm.document.items[ctr].itemQuantity >1 || KualiForm.document.items[ctr].itemNoOfParts >1)}">
             <select:oleCopies itemAttributes="${itemAttributes}"
                               accountPrefix="document.item[${ctr}]."
                               isATypeOfRCVGDoc="${isATypeOfRCVGDoc}"
