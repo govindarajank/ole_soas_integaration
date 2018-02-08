@@ -1880,8 +1880,10 @@ public class OLEInvoiceController extends TransactionalDocumentControllerBase {
         if(CollectionUtils.isNotEmpty(oleInvoiceDocument.getPurchaseOrderDocuments())) {
             for(OlePurchaseOrderDocument olePurchaseOrderDocument : oleInvoiceDocument.getPurchaseOrderDocuments()) {
                 for (OlePurchaseOrderItem olePurchaseOrderItem : (List<OlePurchaseOrderItem>) olePurchaseOrderDocument.getItems()) {
-                    if (olePurchaseOrderItem.getItemType().getItemTypeCode().equalsIgnoreCase("ITEM")) {
-                        itemFormatName.add(getItemCostCentre(olePurchaseOrderItem.getFormatTypeName().getFormatTypeName()));
+                    if(olePurchaseOrderItem.isItemForInvoice()){
+                        if (olePurchaseOrderItem.getItemType().getItemTypeCode().equalsIgnoreCase("ITEM")) {
+                            itemFormatName.add(getItemCostCentre(olePurchaseOrderItem.getFormatTypeName().getFormatTypeName()));
+                        }
                     }
                 }
             }
