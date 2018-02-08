@@ -332,7 +332,7 @@ public class LostNoticesExecutor extends LoanNoticesExecutor {
 
     private String convertDateFormat(String dueDate) {
         SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("dd/MM/yyyy hh:mma");
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mma");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
         try{
             return  simpleDateFormat.format(simpleDateFormat2.parse(dueDate));
         } catch (ParseException e) {
