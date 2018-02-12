@@ -655,11 +655,14 @@ public class OLEConstants {
         public static final String DESTINATION_FIELD_DONOR_PUBLIC_DISPLAY = "Donor Public Display";
         public static final String DESTINATION_FIELD_DONOR_NOTE = "Donor Note";
         public static final String DESTINATION_FIELD_DONOR_CODE = "Donor Code";
+        public static final String DESTINATION_FIELD_DATE_CREATED = "Date Created";
+        public static final String DESTINATION_FIELD_DATE_UPDATED = "Date Updated";
         public static final String PUBLIC_NOTE = "Public Note";
         public static final String NON_PUBLIC_NOTE = "Non Public Note";
         public static final String ACQUIRED_NOTE = "Acquired Note";
         public static final String ACQUIRED_NOTE_DATE = "Acquired Note Date";
         public static final String SOURCE_FIELD_DATE_CREATED = "Date Created";
+        public static final String SOURCE_FIELD_DATE_UPDATED = "Date Updated";
         public static final String LCC = "LCC";
         public static final String LOCAL_IDENTIFIER = "Local Identifier";
         public static final String DESTINATION_FIELD_HOLDING_CALL_NUMBER_TYPE = "Call Number Type";
