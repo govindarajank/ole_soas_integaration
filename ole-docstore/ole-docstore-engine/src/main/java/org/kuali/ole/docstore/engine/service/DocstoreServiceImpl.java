@@ -28,10 +28,8 @@ import org.kuali.rice.coreservice.impl.parameter.ParameterServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -1139,6 +1137,7 @@ public class DocstoreServiceImpl implements DocstoreService {
                     if (itemContent.getItemStatus() != null) {
                         if (StringUtils.isNotBlank(itemContent.getItemStatus().getCodeValue()) || StringUtils.isNotBlank(itemContent.getItemStatus().getFullValue())) {
                             existingItemContent.setItemStatus(itemContent.getItemStatus());
+                            existingItemContent.setItemStatusEffectiveDate(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date()));
                         }
                     }
                     if (canUpdateStaffOnlyFlag.equalsIgnoreCase("true")) {

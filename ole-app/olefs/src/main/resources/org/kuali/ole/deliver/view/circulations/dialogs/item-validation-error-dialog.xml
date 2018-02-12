@@ -46,7 +46,7 @@
                       p:successCallback="jq('#checkoutItem_control').focus();"/>
                 <bean id="itemDonNotLoanButton" parent="Uif-SecondaryActionButton" p:actionLabel="Do Not Loan"
                       p:style="width:100px" p:successCallback="jq('#checkoutItem_control').focus();"
-                      p:methodToCall="resetItemInfoForNextTrans" p:ajaxSubmit="true" p:onClickScript="jq.fancybox.close();"/>
+                      p:methodToCall="resetItemForNextTrans" p:ajaxSubmit="true" p:onClickScript="jq.fancybox.close();"/>
                <!-- <bean id="itemPatronRecordLink" parent="Uif-LinkField" p:target="_blank"
                       p:render = "@{!patronDocument.addressVerified or patronDocument.generalBlock}" p:style="height:25px;font-size:10px"
                       p:href="patronMaintenance?olePatronId=@{patronDocument.olePatronId}&amp;methodToCall=maintenanceEdit&amp;dataObjectClassName=org.kuali.ole.deliver.bo.OlePatronDocument&amp;viewTypeName=MAINTENANCE&amp;dialogMode=true&amp;showHome=false&amp;showHistory=false"
