@@ -268,24 +268,38 @@ public class InvoiceFileServiceImpl extends PurapAccountingServiceImpl {
                         } catch (Exception e) {
                             account = "";
                         }
+                        boolean isCheckForeignVendor = true;
+                        String itemTaxcode = "0";
+                        String voucherType = "";
                         if(!description.contains("BARCLAYCARD")) {
+                            if(vendorCreditMemoDocument.getVendorDetail().getVendorHeader().getVendorForeignIndicator()){
+                                isCheckForeignVendor =false;
+                                voucherType = OLEConstants.AgressoCreateFile.FOREIGN_VOUCHER_TYPE;
+                            } else {
+                                voucherType = OLEConstants.AgressoCreateFile.LOCAL_VOUCHER_TYPE;
+                            }
                             if (costCentre.equalsIgnoreCase("4025") || costCentre.equalsIgnoreCase("4026")) {
                                 if (isForeignCurrency(currencyAlphaCode)) {
                                     fileToWriteForeignVendor.append(getFileContent(batchId, OLEConstants.AgressoCreateFile.INTER_FACE, OLEConstants.AgressoCreateFile.FOREIGN_VOUCHER_TYPE, OLEConstants.AgressoCreateFile.INVOICE_TRANS_TYPE,
                                             OLEConstants.AgressoCreateFile.CLIENT, OLEConstants.AgressoCreateFile.INVOICEACCOUNT, OLEConstants.AgressoCreateFile.BLANK, OLEConstants.AgressoCreateFile.BLANK, OLEConstants.AgressoCreateFile.TAXCODE, currencyAlphaCode, (creditmemoAmt != null ? creditmemoAmt : ""),
-                                            (creditmemoAmt != null ? creditmemoAmt : ""), OLEConstants.AgressoCreateFile.BLANK, voucherDate, String.format ("%015d", voucherNumber), creditMemoNumber, voucherDate,
+                                            (creditmemoAmt != null ? creditmemoAmt : ""), invoiceDescription, voucherDate, String.format ("%015d", voucherNumber), creditMemoNumber, voucherDate,
                                             voucherDate, OLEConstants.AgressoCreateFile.APARTYPE, (aparId != null ? aparId : "10000"), OLEConstants.AgressoCreateFile.RESPONSIBLE) + "\n");
                                     fileToWriteForeignVendor.append(getFileContent(batchId, OLEConstants.AgressoCreateFile.INTER_FACE, OLEConstants.AgressoCreateFile.FOREIGN_VOUCHER_TYPE, OLEConstants.AgressoCreateFile.ITEM_TRANS_TYPE,
-                                            OLEConstants.AgressoCreateFile.CLIENT, costCentre, OLEConstants.AgressoCreateFile.BLANK, account, OLEConstants.AgressoCreateFile.TAXCODE, currencyAlphaCode, (creditmemoAmt != null ? "-" + creditmemoAmt : ""),
+                                            OLEConstants.AgressoCreateFile.CLIENT, costCentre, OLEConstants.AgressoCreateFile.BLANK, account, itemTaxcode, currencyAlphaCode, (creditmemoAmt != null ? "-" + creditmemoAmt : ""),
                                             (creditmemoAmt != null ? "-" + creditmemoAmt : ""), description, voucherDate, String.format ("%015d", voucherNumber), creditMemoNumber, voucherDate,
                                             voucherDate, OLEConstants.AgressoCreateFile.APARTYPE, (aparId != null ? aparId : "10000"), OLEConstants.AgressoCreateFile.RESPONSIBLE) + "\n");
                                 } else {
+                                    if (costCentre.equalsIgnoreCase("4025") && isCheckForeignVendor) {
+                                        itemTaxcode = "Z";
+                                    } else if(isCheckForeignVendor){
+                                        itemTaxcode = "SP";
+                                    }
                                     fileToWriteLocalVendor.append(getFileContent(batchId, OLEConstants.AgressoCreateFile.INTER_FACE, OLEConstants.AgressoCreateFile.LOCAL_VOUCHER_TYPE, OLEConstants.AgressoCreateFile.INVOICE_TRANS_TYPE,
                                             OLEConstants.AgressoCreateFile.CLIENT, OLEConstants.AgressoCreateFile.INVOICEACCOUNT, OLEConstants.AgressoCreateFile.BLANK, OLEConstants.AgressoCreateFile.BLANK, OLEConstants.AgressoCreateFile.TAXCODE, currencyAlphaCode, (creditmemoAmt != null ? creditmemoAmt : ""),
-                                            (creditmemoAmt != null ? creditmemoAmt : ""), OLEConstants.AgressoCreateFile.BLANK, voucherDate, String.format ("%015d", voucherNumber), creditMemoNumber, voucherDate,
+                                            (creditmemoAmt != null ? creditmemoAmt : ""), invoiceDescription, voucherDate, String.format ("%015d", voucherNumber), creditMemoNumber, voucherDate,
                                             OLEConstants.AgressoCreateFile.STATUS, OLEConstants.AgressoCreateFile.APARTYPE, (aparId != null ? aparId : "10000"), OLEConstants.AgressoCreateFile.RESPONSIBLE) + "\n");
-                                    fileToWriteLocalVendor.append(getFileContent(batchId, OLEConstants.AgressoCreateFile.INTER_FACE, OLEConstants.AgressoCreateFile.LOCAL_VOUCHER_TYPE, OLEConstants.AgressoCreateFile.ITEM_TRANS_TYPE,
-                                            OLEConstants.AgressoCreateFile.CLIENT, costCentre, OLEConstants.AgressoCreateFile.BLANK, account, OLEConstants.AgressoCreateFile.TAXCODE, currencyAlphaCode, (creditmemoAmt != null ? "-" + creditmemoAmt : ""),
+                                    fileToWriteLocalVendor.append(getFileContent(batchId, OLEConstants.AgressoCreateFile.INTER_FACE, voucherType, OLEConstants.AgressoCreateFile.ITEM_TRANS_TYPE,
+                                            OLEConstants.AgressoCreateFile.CLIENT, costCentre, OLEConstants.AgressoCreateFile.BLANK, account, itemTaxcode, currencyAlphaCode, (creditmemoAmt != null ? "-" + creditmemoAmt : ""),
                                             (creditmemoAmt != null ? "-" + creditmemoAmt : ""), description, voucherDate, String.format ("%015d", voucherNumber), creditMemoNumber, voucherDate,
                                             OLEConstants.AgressoCreateFile.STATUS, OLEConstants.AgressoCreateFile.APARTYPE, (aparId != null ? aparId : "10000"), OLEConstants.AgressoCreateFile.RESPONSIBLE) + "\n");
                                 }
