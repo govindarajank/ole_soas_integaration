@@ -61,6 +61,7 @@
   <param name="ksb.url">${application.url}/ksb</param>
   <param name="kim.url">${application.url}/kim</param>
   <param name="ksb.client.url" override="false">${application.url}/ksb</param>
+  <param name="ole.cancelrequest.redirect.url">${ole.fs.url.base}/ole-kr-krad/lookup?methodToCall=start&amp;dataObjectClassName=org.kuali.ole.deliver.bo.OleDeliverRequestBo</param>
   <param name="rice.portal.logout.redirectUrl">${application.url}/portal.do</param>
   <param name="rice.server.krad.lookup.url">${application.url}/ole-kr-krad/lookup</param>
   <param name="rice.server.krad.url">${application.url}/ole-kr-krad</param>
