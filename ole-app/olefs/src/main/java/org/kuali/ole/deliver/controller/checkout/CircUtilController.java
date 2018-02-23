@@ -218,6 +218,11 @@ public class CircUtilController extends RuleExecutor {
         org.kuali.ole.docstore.common.document.content.instance.Item oleItem = getExistingItemFromSolr(itemUUID);
         if (oleItem != null) {
             setItemInfoForUpdate(map, oleItem, updateNulls);
+            if(oleItem.isClaimsReturnedFlag()){
+                if(StringUtils.isNotBlank(oleItem.getDueDateTime())) {
+                    oleItem.setDueDateTime(convertDateFormat(oleItem.getDueDateTime()));
+                }
+            }
             try {
                 updateItem(oleItem);
             } catch (Exception e) {
@@ -867,6 +872,17 @@ public class CircUtilController extends RuleExecutor {
 
         }
         return closingTime;
+    }
+
+    private String convertDateFormat(String dueDate) {
+        SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        try{
+            return  simpleDateFormat.format(simpleDateFormat2.parse(dueDate));
+        } catch (ParseException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return null;
     }
 
 }
