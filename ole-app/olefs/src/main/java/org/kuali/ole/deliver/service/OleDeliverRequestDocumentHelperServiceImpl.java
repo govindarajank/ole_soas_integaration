@@ -2013,6 +2013,13 @@ public class OleDeliverRequestDocumentHelperServiceImpl {
         }
     }
 
+
+    public void reExecuteUnDeletedNotices(List<String> loanIdList, LoanNoticesExecutor noticesExecutor, ExecutorService noticeExecutorService){
+        if(CollectionUtils.isNotEmpty(loanIdList) && loanIdList.size() > 0){
+
+        }
+    }
+
     public void generateOverdueNotice() throws Exception {
         OleLoanDocumentDaoOjb oleLoanDocumentDaoOjb = (OleLoanDocumentDaoOjb) SpringContext.getService(OLEConstants.OLE_LOAN_DAO);
         LoanWithNoticesDAO loanWithNoticesDAO = (LoanWithNoticesDAO) SpringContext.getService(OLEConstants.LOAN_WITH_NOTICES_DAO);
