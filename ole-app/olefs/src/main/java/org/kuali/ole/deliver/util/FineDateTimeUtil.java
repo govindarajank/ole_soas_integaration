@@ -141,7 +141,15 @@ public class FineDateTimeUtil {
                     if (activeCalendar != null) {
                         HashMap timeMap = getOpenAndCloseTime(activeCalendar, dueDate);
                         if (timeMap != null && timeMap.size() == 2) {
-                            numberOfWorkingDays++;
+                            if (DateUtils.isSameDay(DateUtils.addDays(dueDate, 1), checkInDate)) {
+                                if(getOpenAndCloseTime(activeCalendar, DateUtils.addDays(dueDate, 1))!=null &&
+                                        getOpenAndCloseTime(activeCalendar, DateUtils.addDays(dueDate, 1)).size() == 2) {
+                                    numberOfWorkingDays++;
+                                }
+                            } else {
+                                numberOfWorkingDays++;
+                            }
+
                         }
                     }
                     dueDate = DateUtils.addDays(dueDate, 1);
