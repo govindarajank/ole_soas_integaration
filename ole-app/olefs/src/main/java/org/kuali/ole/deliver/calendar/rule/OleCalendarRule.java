@@ -2,6 +2,7 @@ package org.kuali.ole.deliver.calendar.rule;
 
 import org.kuali.ole.OLEConstants;
 import org.kuali.ole.deliver.calendar.bo.*;
+import org.kuali.ole.deliver.service.ParameterValueResolver;
 import org.kuali.rice.kim.api.identity.IdentityService;
 import org.kuali.rice.kim.service.UiDocumentService;
 import org.kuali.rice.krad.maintenance.MaintenanceDocument;
@@ -205,6 +206,15 @@ public class OleCalendarRule extends MaintenanceDocumentRuleBase {
                     GlobalVariables.getMessageMap().putErrorForSectionId(OLEConstants.CALENDAR_EXCEPTION, OLEConstants.CALENDAR_EXCEPTION_CLOSE_TIME_EMPTY);
                     isValid &= false;
                 }
+            } else if (oleCalendarExceptionDate.getExceptionType().equalsIgnoreCase(getCalendarExceptionType()) && isValid) {
+                if (!oleCalendarExceptionDate.getOpenTime().equals("")) {
+                    GlobalVariables.getMessageMap().putErrorForSectionId(OLEConstants.CALENDAR_EXCEPTION, OLEConstants.CALENDAR_EXCEPTION_OPEN_TIME_EMPTY);
+                    isValid &= false;
+                }
+                if (!oleCalendarExceptionDate.getCloseTime().equals("")) {
+                    GlobalVariables.getMessageMap().putErrorForSectionId(OLEConstants.CALENDAR_EXCEPTION, OLEConstants.CALENDAR_EXCEPTION_CLOSE_TIME_EMPTY);
+                    isValid &= false;
+                }
             } else if (isValid) {
                 if (oleCalendarExceptionDate.getOpenTime().equals("")) {
                     GlobalVariables.getMessageMap().putErrorForSectionId(OLEConstants.CALENDAR_EXCEPTION, OLEConstants.CALENDAR_EXCEPTION_OPEN_TIME);
@@ -359,7 +369,7 @@ public class OleCalendarRule extends MaintenanceDocumentRuleBase {
                     }
 
                 }
-            if (!oleCalendarExceptionPeriod.getExceptionPeriodType().equals("Holiday") && !oleCalendarExceptionPeriod.getExceptionPeriodType().equals("") && oleCalendarExceptionPeriod.getOleCalendarExceptionPeriodWeekList().size() == 0 ) {
+            if (!oleCalendarExceptionPeriod.getExceptionPeriodType().equals("Holiday") && !oleCalendarExceptionPeriod.getExceptionPeriodType().equals(getCalendarExceptionType()) && !oleCalendarExceptionPeriod.getExceptionPeriodType().equals("") && oleCalendarExceptionPeriod.getOleCalendarExceptionPeriodWeekList().size() == 0 ) {
                 GlobalVariables.getMessageMap().putErrorForSectionId(OLEConstants.CALENDAR_PERIOD, OLEConstants.CALENDAR_PERIOD_LIST_EMPTY);
                 isValid &= false;
             }
@@ -395,6 +405,11 @@ public class OleCalendarRule extends MaintenanceDocumentRuleBase {
             }
         }
         return valid;
+    }
+
+    public String getCalendarExceptionType() {
+        return ParameterValueResolver.getInstance().getParameter(OLEConstants
+                .APPL_ID_OLE, OLEConstants.DLVR_NMSPC, OLEConstants.DLVR_CMPNT, OLEConstants.CLNDR_EXCEPTION_TYPE);
     }
 
 }

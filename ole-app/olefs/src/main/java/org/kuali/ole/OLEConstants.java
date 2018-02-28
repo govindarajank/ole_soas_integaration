@@ -105,6 +105,7 @@ public class OLEConstants {
     public static final String CALENDAR_PERIOD_EXP_PRD_TYP = "error.exp.prd.typ";
     public static final String CALENDAR_PERIOD_LIST_EMPTY = "error.per.list";
     public static final String CALENDAR_EXCEPTION_TYPE = "Holiday";
+    public static final String CLNDR_EXCEPTION_TYPE = "CALENDAR_EXCEPTION_TYPE";
     public static final String CALENDAR_GET_OPEN_TIME = "openTime";
     public static final String CALENDAR_GET_CLOSE_TIME = "closeTime";
     public static final String CALENDER_ID = "calendarGroupId";
