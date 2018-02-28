@@ -235,6 +235,13 @@ public abstract class CheckinBaseController extends CircUtilController {
         droolsResponse = checkForMissingPieceNote(itemRecord);
         setNoOfPieces(oleForm, itemRecord.getNumberOfPieces());
         if (droolsResponse != null) return droolsResponse;
+        return preValidationForCheckInCarrel(itemRecord, oleForm);
+    }
+
+    public DroolsResponse preValidationForCheckInCarrel(ItemRecord itemRecord, OLEForm oleForm) {
+        DroolsResponse droolsResponse;
+        droolsResponse = processIfCheckinCarrel(itemRecord, oleForm);
+        if (droolsResponse != null) return droolsResponse;
         return preValidationForCheckinRequestExists(itemRecord, oleForm);
     }
 
@@ -482,6 +489,20 @@ public abstract class CheckinBaseController extends CircUtilController {
             DroolsResponse droolsResponse = new DroolsResponse();
             droolsResponse.addErrorMessageCode(DroolsConstants.CHECKIN_REQUEST_EXITS_FOR_THIS_ITEM);
             String errorMessage = "Request already exist for this item. <br/><br/> Do you want to checkin this item?.";
+            if(itemRecord.getItemStatusRecord()!=null && itemRecord.getItemStatusRecord().getCode().equalsIgnoreCase(OLEConstants.ITEM_STATUS_LOST)) {
+                errorMessage = errorMessage + "\n Item is marked as lost and/or replacement fee has been billed.Item should only be returned if item has been found.";
+            }
+            droolsResponse.addErrorMessage(errorMessage);
+            return droolsResponse;
+        }
+        return null;
+    }
+
+    private DroolsResponse processIfCheckinCarrel(ItemRecord itemRecord, OLEForm oleForm) {
+        if(itemRecord.getItemTypeRecord().getName().equalsIgnoreCase("Carrel")){
+            DroolsResponse droolsResponse = new DroolsResponse();
+            droolsResponse.addErrorMessageCode(DroolsConstants.CHECKIN_REQUEST_EXITS_FOR_THIS_ITEM);
+            String errorMessage = "Do you want to CheckIn Carrel key?";
             if(itemRecord.getItemStatusRecord()!=null && itemRecord.getItemStatusRecord().getCode().equalsIgnoreCase(OLEConstants.ITEM_STATUS_LOST)) {
                 errorMessage = errorMessage + "\n Item is marked as lost and/or replacement fee has been billed.Item should only be returned if item has been found.";
             }
