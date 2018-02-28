@@ -302,7 +302,7 @@ public class FineDateTimeUtil {
     private boolean isGivenDateInExceptionDateHolidayList(Date date, List<OleCalendarExceptionDate> oleCalendarExceptionDateList) {
         if (CollectionUtils.isNotEmpty(oleCalendarExceptionDateList)) {
             for (OleCalendarExceptionDate oleCalendarExceptionDate : oleCalendarExceptionDateList) {
-                if (oleCalendarExceptionDate != null && oleCalendarExceptionDate.getExceptionType().equalsIgnoreCase(OLEConstants.CALENDAR_EXCEPTION_TYPE)) {
+                if (oleCalendarExceptionDate != null && oleCalendarExceptionDate.getExceptionType().equalsIgnoreCase(getCalendarExceptionType())) {
                     if (oleCalendarExceptionDate.getDate() != null && DateUtils.isSameDay(oleCalendarExceptionDate.getDate(), date)) {
                         return true;
                     }
@@ -315,7 +315,7 @@ public class FineDateTimeUtil {
     private boolean isGivenDateInExceptionPeriodHolidayList(Date date, List<OleCalendarExceptionPeriod> oleCalendarExceptionPeriodList) {
         if (CollectionUtils.isNotEmpty(oleCalendarExceptionPeriodList)) {
             for (OleCalendarExceptionPeriod oleCalendarExceptionPeriod : oleCalendarExceptionPeriodList) {
-                if (oleCalendarExceptionPeriod != null && oleCalendarExceptionPeriod.getExceptionPeriodType().equalsIgnoreCase(OLEConstants.CALENDAR_EXCEPTION_TYPE)
+                if (oleCalendarExceptionPeriod != null && oleCalendarExceptionPeriod.getExceptionPeriodType().equalsIgnoreCase(getCalendarExceptionType())
                         && oleCalendarExceptionPeriod.getBeginDate() != null && oleCalendarExceptionPeriod.getEndDate() != null) {
                     Interval calendarExceptionPeriodInterval = new Interval(oleCalendarExceptionPeriod.getBeginDate().getTime(), oleCalendarExceptionPeriod.getEndDate().getTime());
                     if (calendarExceptionPeriodInterval.contains(date.getTime())) {
@@ -422,5 +422,10 @@ public class FineDateTimeUtil {
     public Boolean isIncludeNonWorkingHoursForFineCalc() {
         return getParameterValueResolver().getParameterAsBoolean(OLEConstants
                 .APPL_ID_OLE, OLEConstants.DLVR_NMSPC, OLEConstants.DLVR_CMPNT, OLEConstants.FINE_FLAG);
+    }
+
+    public String getCalendarExceptionType() {
+        return getParameterValueResolver().getParameter(OLEConstants
+                .APPL_ID_OLE, OLEConstants.DLVR_NMSPC, OLEConstants.DLVR_CMPNT, OLEConstants.CLNDR_EXCEPTION_TYPE);
     }
 }
