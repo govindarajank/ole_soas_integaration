@@ -532,7 +532,7 @@
         </property>
     </bean>
 
-    <bean id="ExceptionPeriodWeek" parent="Uif-TableSubCollection-WithinSection" p:layoutManager.numberOfColumns="3"  p:render="@{#parentLine?.exceptionPeriodType ne 'Holiday' and #parentLine?.exceptionPeriodType ne ''}">      <!--p:render="@{#line?.exceptionPeriodType ne 'Holiday'  and #line?.exceptionPeriodType ne null }"-->
+    <bean id="ExceptionPeriodWeek" parent="Uif-TableSubCollection-WithinSection" p:layoutManager.numberOfColumns="3"  p:render="@{#parentLine?.exceptionPeriodType ne 'Holiday' and #parentLine?.exceptionPeriodType ne 'Fines' and #parentLine?.exceptionPeriodType ne ''}">      <!--p:render="@{#line?.exceptionPeriodType ne 'Holiday'  and #line?.exceptionPeriodType ne null }"-->
         <property name="collectionObjectClass"
                   value="org.kuali.ole.deliver.calendar.bo.OleCalendarExceptionPeriodWeek"/>
         <property name="propertyName" value="oleCalendarExceptionPeriodWeekList"/>

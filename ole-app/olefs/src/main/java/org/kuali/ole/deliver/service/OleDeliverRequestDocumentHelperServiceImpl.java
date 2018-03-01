@@ -145,6 +145,7 @@ public class OleDeliverRequestDocumentHelperServiceImpl {
     private SolrRequestReponseHandler solrRequestReponseHandler;
     private String numberOfRecords = null;
     private OleNoticeService noticeService=new OleNoticeServiceImpl();
+    private Boolean executionFlag = Boolean.FALSE;
 
     public SolrRequestReponseHandler getSolrRequestReponseHandler() {
                 if (null == solrRequestReponseHandler) {
@@ -1962,7 +1963,23 @@ public class OleDeliverRequestDocumentHelperServiceImpl {
                 }
             }
             if(!lostNoticesExecutorService.isShutdown()) {
-                lostNoticesExecutorService.shutdown();
+                if(!executionFlag) {
+                    executionFlag = Boolean.TRUE;
+                    Thread.sleep(1200000);
+                    lostNoticesExecutorService.shutdown();
+                    loanIds = loanWithNoticesDAO.getLoanIdsForNoticesByNoticeType(lostNoticeToDate, OLEConstants.NOTICE_LOST);
+                    if (loanIds.size() > 0) {
+                        loanDocuments = oleLoanDocumentDaoOjb.getLaonDocumentsFromLaondId(loanIds);
+                        loanDocumentsWithItemInfo = getLoanDocumentWithItemInfo(loanDocuments, Boolean.FALSE.toString());
+                        LOG.info("No of Lost loanDocumentsWithItemInfo" + loanDocumentsWithItemInfo.size());
+                        if (loanDocumentsWithItemInfo.size() > 0) {
+                            generateLostNotice();
+                        }
+                    }
+                } else {
+                    executionFlag = Boolean.FALSE;
+                    lostNoticesExecutorService.shutdown();
+                }
             }
         }
     }
@@ -2008,7 +2025,23 @@ public class OleDeliverRequestDocumentHelperServiceImpl {
 
             }
             if(!courtesyNoticesExecutorService.isShutdown()) {
-                courtesyNoticesExecutorService.shutdown();
+                if(!executionFlag) {
+                    executionFlag = Boolean.TRUE;
+                    Thread.sleep(1200000);
+                    courtesyNoticesExecutorService.shutdown();
+                    loanIds = loanWithNoticesDAO.getLoanIdsForNoticesByNoticeType(courtesyNoticeToDate, OLEConstants.COURTESY_NOTICE);
+                    if (loanIds.size() > 0) {
+                        loanDocuments = oleLoanDocumentDaoOjb.getLaonDocumentsFromLaondId(loanIds);
+                        loanDocumentsWithItemInfo = getLoanDocumentWithItemInfo(loanDocuments, Boolean.FALSE.toString());
+                        LOG.info("No of Courtesy loanDocumentsWithItemInfo" + loanDocumentsWithItemInfo.size());
+                        if (loanDocumentsWithItemInfo.size() > 0) {
+                            generateCourtesyNotice();
+                        }
+                    }
+                } else {
+                    executionFlag = Boolean.FALSE;
+                    courtesyNoticesExecutorService.shutdown();
+                }
             }
         }
     }
@@ -2060,7 +2093,23 @@ public class OleDeliverRequestDocumentHelperServiceImpl {
 
             }
             if(!overDueNoticesExecutorService.isShutdown()) {
-                overDueNoticesExecutorService.shutdown();
+                if(!executionFlag) {
+                    executionFlag = Boolean.TRUE;
+                    Thread.sleep(1200000);
+                    overDueNoticesExecutorService.shutdown();
+                    loanIds = loanWithNoticesDAO.getLoanIdsForNoticesByNoticeType(overdueNoticeToDate, OLEConstants.OVERDUE_NOTICE);
+                    if (loanIds.size() > 0) {
+                        loanDocuments = oleLoanDocumentDaoOjb.getLaonDocumentsFromLaondId(loanIds);
+                        loanDocumentsWithItemInfo = getLoanDocumentWithItemInfo(loanDocuments, Boolean.FALSE.toString());
+                        LOG.info("No of Overdue loanDocumentsWithItemInfo" + loanDocumentsWithItemInfo.size());
+                        if (loanDocumentsWithItemInfo.size() > 0) {
+                            generateOverdueNotice();
+                        }
+                    }
+                } else {
+                    executionFlag = Boolean.FALSE;
+                    overDueNoticesExecutorService.shutdown();
+                }
             }
         }
     }
