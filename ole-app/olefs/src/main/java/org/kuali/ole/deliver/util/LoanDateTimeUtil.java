@@ -205,9 +205,11 @@ public class LoanDateTimeUtil extends ExceptionDateLoanDateTimeUtil {
                     int hours = date.getHours();
                     date.setMinutes(0);
                     date.setSeconds(0);
-                    if(hours>=1 && hours<16){
-                        date.setHours(16);
-                    }else{
+                    if(hours>=1 && hours<13){
+                        date.setHours(13);
+                    } else if (hours>=13 && hours<17){
+                        date.setHours(17);
+                    } else{
                         date.setHours(23);
                     }
                     loanDueDate = date;
