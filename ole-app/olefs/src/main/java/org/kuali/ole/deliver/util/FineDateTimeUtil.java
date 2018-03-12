@@ -101,17 +101,37 @@ public class FineDateTimeUtil {
     private long calculateNumberPerDay(Date dueDate, Date checkInDate) {
         long numberOfDues = 0;
         Date checkInDateTimeTemp = new Date();
-        checkInDateTimeTemp.setHours(16);
-        if(checkInDate.getHours() >16){
+        if(checkInDate.getHours() >=1 && checkInDate.getHours() <13){
+            checkInDateTimeTemp.setHours(13);
+        } else if (checkInDate.getHours() >=13 && checkInDate.getHours() < 17) {
+            checkInDateTimeTemp.setHours(17);
+        } else if(checkInDate.getHours() >= 17) {
             checkInDateTimeTemp.setHours(23);
         }
         checkInDateTimeTemp.setMinutes(dueDate.getMinutes());
         checkInDateTimeTemp.setSeconds(dueDate.getSeconds());
-        long diff = checkInDateTimeTemp.getTime() - dueDate.getTime();
-        long diffHours = diff / (60 * 60 * 1000);
-        numberOfDues = diffHours / 12;
-        if(diffHours % 12 !=0){
-            numberOfDues++;
+        while (!DateUtils.isSameDay(checkInDateTimeTemp,dueDate)){
+            long diff = checkInDateTimeTemp.getTime() - dueDate.getTime();
+            long diffHours = TimeUnit.MILLISECONDS.toHours(diff);
+            if(diffHours >= 24) {
+                numberOfDues+= 3 ;
+            } else {
+                if (diffHours == 18 || diffHours == 20) {
+                    numberOfDues+= 2;
+                } else if(diffHours == 16){
+                    numberOfDues++;
+                }
+            }
+            dueDate = DateUtils.addDays(dueDate,1);
+        }
+        if(dueDate.before(checkInDateTimeTemp)) {
+            long diff = checkInDateTimeTemp.getTime() - dueDate.getTime();
+            long diffHours = TimeUnit.MILLISECONDS.toHours(diff);
+            if (diffHours == 10 || diffHours == 8) {
+                numberOfDues+= 2;
+            } else if(diffHours == 4 || diffHours == 6){
+                numberOfDues++;
+            }
         }
         return numberOfDues;
     }
