@@ -100,6 +100,8 @@ import org.kuali.rice.krad.workflow.service.WorkflowDocumentService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -1961,6 +1963,13 @@ public class OleInvoiceDocument extends InvoiceDocument implements Copyable {
     }
 
     public String getInvoiceExtractDate() {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try{
+            invoiceExtractDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(df.parse(invoiceExtractDate));
+        }catch (Exception e){
+            return invoiceExtractDate;
+        }
+
         return invoiceExtractDate;
     }
 

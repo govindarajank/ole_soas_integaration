@@ -3655,6 +3655,7 @@
         <field-descriptor name="vendorShippingPaymentTermsCode" column="VNDR_SHP_PMT_TERM_CD" jdbc-type="VARCHAR"/>
         <field-descriptor name="vendorCustomerNumber" column="VNDR_CUST_NBR" jdbc-type="VARCHAR"/>
         <field-descriptor name="invoicePayDate" column="INV_PAY_DT" jdbc-type="DATE"/>
+        <field-descriptor name="invoiceExtractDate" column="INV_STAT_CD" jdbc-type="VARCHAR"/>
         <!-- field-descriptor name="invoiceCostSourceCode" column="PMT_RQST_CST_SRC_CD" jdbc-type="VARCHAR"/-->
         <field-descriptor name="invoiceCancelIndicator" column="INV_CNCL_IND" jdbc-type="VARCHAR" conversion="org.kuali.rice.core.framework.persistence.ojb.conversion.OjbCharBooleanConversion"/>
         <field-descriptor name="paymentAttachmentIndicator" column="PMT_ATT_IND" jdbc-type="VARCHAR" conversion="org.kuali.rice.core.framework.persistence.ojb.conversion.OjbCharBooleanConversion"/>

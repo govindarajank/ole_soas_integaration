@@ -708,9 +708,9 @@ public class PurapAccountingServiceImpl implements PurapAccountingService {
                 if (currentItem instanceof OleInvoiceItem) {
                     OleInvoiceItem invoiceItem = (OleInvoiceItem) currentItem;
                     if (invoiceItem.getItemForeignListPrice() != null) {
-                        totalForeignAmount = totalForeignAmount.add(invoiceItem.getItemForeignListPrice().bigDecimalValue());
+                        totalForeignAmount = totalForeignAmount.add(invoiceItem.getItemForeignListPrice().bigDecimalValue().multiply(invoiceItem.getItemQuantity().bigDecimalValue()));
                     } else if (invoiceItem.getItemForeignUnitCost() != null) {
-                        totalForeignAmount = totalForeignAmount.add(invoiceItem.getItemForeignUnitCost().bigDecimalValue());
+                        totalForeignAmount = totalForeignAmount.add(invoiceItem.getItemForeignUnitCost().bigDecimalValue().multiply(invoiceItem.getItemQuantity().bigDecimalValue()));
                     }
                 }
                 if (PurApItemUtils.checkItemActive(currentItem)) {
@@ -891,9 +891,9 @@ public class PurapAccountingServiceImpl implements PurapAccountingService {
             if(currentItem instanceof OleInvoiceItem) {
                 OleInvoiceItem invoiceItem = (OleInvoiceItem) currentItem;
                 if(invoiceItem.getItemForeignListPrice() != null ) {
-                    totalForeignAmount = totalForeignAmount.add(invoiceItem.getItemForeignListPrice().bigDecimalValue());
+                    totalForeignAmount = totalForeignAmount.add(invoiceItem.getItemForeignListPrice().bigDecimalValue().multiply(invoiceItem.getItemQuantity().bigDecimalValue()));
                 } else if (invoiceItem.getItemForeignUnitCost() != null) {
-                    totalForeignAmount = totalForeignAmount.add(invoiceItem.getItemForeignUnitCost().bigDecimalValue());
+                    totalForeignAmount = totalForeignAmount.add(invoiceItem.getItemForeignUnitCost().bigDecimalValue().multiply(invoiceItem.getItemQuantity().bigDecimalValue()));
                 }
             }
             if (PurApItemUtils.checkItemActive(currentItem)) {
