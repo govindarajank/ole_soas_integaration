@@ -2059,77 +2059,22 @@ public class OleInvoiceServiceImpl extends InvoiceServiceImpl implements OleInvo
      */
     public String createInvoiceNoMatchQuestionText(OleInvoiceDocument invoiceDocument) {
 
-        String questionText = null;
-        StringBuffer questionTextBuffer = new StringBuffer("");
-        if (invoiceDocument.getInvoiceAmount() != null && invoiceDocument.getInvoicedGrandTotal() != null ) {
+        if (invoiceDocument.getForeignVendorInvoiceAmount() != null && invoiceDocument.getForeignGrandTotal() != null) {
+            KualiDecimal invoiceForeignAmount = new KualiDecimal(invoiceDocument.getForeignVendorInvoiceAmount());
+            KualiDecimal invoiceForeignGrandTotal = new KualiDecimal(invoiceDocument.getInvoicedForeignGrandTotal());
+            if (!invoiceForeignAmount.equals(invoiceForeignGrandTotal)) {
+                return prepareValidationMessage(invoiceDocument);
+            }
+        } else if (invoiceDocument.getInvoiceAmount() != null && invoiceDocument.getInvoicedGrandTotal() != null) {
             KualiDecimal invoiceAmount = new KualiDecimal(invoiceDocument.getInvoiceAmount());
             KualiDecimal invoiceGrandTotal = new KualiDecimal(invoiceDocument.getInvoicedGrandTotal());
-            if(!invoiceAmount.equals(invoiceGrandTotal)) {
-                questionText = SpringContext.getBean(ConfigurationService.class).getPropertyValueAsString(PurapKeyConstants.AP_QUESTION_CONFIRM_INVOICE_MISMATCH);
-                questionText = StringUtils.replace(questionText, "{0}", "");
-                //String questionText = super.createInvoiceNoMatchQuestionText(invoiceDocument);
-
-                CurrencyFormatter cf = new CurrencyFormatter();
-                //PaymentRequestDocument preq = (PaymentRequestDocument) invoiceDocument;
-
-
-                questionTextBuffer.append(questionText);
-                if (StringUtils.isNotBlank(invoiceDocument.getInvoiceCurrencyType())) {
-                    String currencyType = getCurrencyType(invoiceDocument.getInvoiceCurrencyType());
-                    if (StringUtils.isNotBlank(currencyType)) {
-                        if (!currencyType.equalsIgnoreCase(OleSelectConstant.CURRENCY_TYPE_NAME) && invoiceDocument.getForeignVendorInvoiceAmount() != null) {
-                            if (StringUtils.isNotBlank(invoiceDocument.getInvoiceCurrencyExchangeRate())) {
-                                try {
-                                    Double.parseDouble(invoiceDocument.getInvoiceCurrencyExchangeRate());
-                                }
-                                catch (NumberFormatException nfe) {
-                                    throw new RuntimeException("Invalid Exchange Rate", nfe);
-                                }
-                                invoiceDocument.setVendorInvoiceAmount(new KualiDecimal(invoiceDocument.getForeignVendorInvoiceAmount().divide(new BigDecimal(invoiceDocument.getInvoiceCurrencyExchangeRate()), 4, RoundingMode.HALF_UP)));
-                            }   else {
-                                BigDecimal exchangeRate = getExchangeRate(invoiceDocument.getInvoiceCurrencyType()).getExchangeRate();
-                                invoiceDocument.setVendorInvoiceAmount(new KualiDecimal(invoiceDocument.getForeignVendorInvoiceAmount().divide(exchangeRate, 4, RoundingMode.HALF_UP)));
-                            }
-                        }
-                    }
-
-                }
-                questionTextBuffer.append("[br][br][b]Summary Detail Below:[b][br][br][table questionTable]");
-                questionTextBuffer.append("[tr][td leftTd]Vendor Invoice Amount :[/td][td rightTd]" + (String) cf.format(invoiceDocument.getVendorInvoiceAmount()) + "[/td][/tr]");
-                questionTextBuffer.append("[tr][td leftTd]Invoice Total Prior to Additional Charges:[/td][td rightTd]" + (String) cf.format(new KualiDecimal(invoiceDocument.getInvoicedItemTotal())) + "[/td][/tr]");
-
-
-                //only add this line if payment request has a discount
-                if (invoiceDocument.isDiscount()) {
-                    questionTextBuffer.append("[tr][td leftTd]Total Before Discount:[/td][td rightTd]" + (String) cf.format(invoiceDocument.getGrandPreTaxTotalExcludingDiscount()) + "[/td][/tr]");
-                }
-
-                //if sales tax is enabled, show additional summary lines
-                boolean salesTaxInd = SpringContext.getBean(ParameterService.class).getParameterValueAsBoolean(OleParameterConstants.PURCHASING_DOCUMENT.class, PurapParameterConstants.ENABLE_SALES_TAX_IND);
-                if (salesTaxInd) {
-                    questionTextBuffer.append("[tr][td leftTd]Grand Total Prior to Tax:[/td][td rightTd]" + (String) cf.format(invoiceDocument.getGrandPreTaxTotal()) + "[/td][/tr]");
-                    questionTextBuffer.append("[tr][td leftTd]Grand Total Tax:[/td][td rightTd]" + (String) cf.format(invoiceDocument.getGrandTaxAmount()) + "[/td][/tr]");
-                }
-
-                questionTextBuffer.append("[tr][td leftTd]Grand Total:[/td][td rightTd]" + (String) cf.format(new KualiDecimal(invoiceDocument.getInvoicedGrandTotal())) + "[/td][/tr]");
-
-                if (StringUtils.isNotBlank(invoiceDocument.getInvoiceCurrencyType())) {
-                    String currencyType = getCurrencyType(invoiceDocument.getInvoiceCurrencyType());
-                    if (StringUtils.isNotBlank(currencyType)) {
-                        if (!currencyType.equalsIgnoreCase(OleSelectConstant.CURRENCY_TYPE_NAME)) {
-                            questionTextBuffer.append("[tr][td] [/td][/tr]");
-                            questionTextBuffer.append("[tr][td leftTd]Foreign Vendor Invoice Amount :[/td][td rightTd]" + (String) cf.format(new KualiDecimal(invoiceDocument.getForeignVendorInvoiceAmount())) + "[/td][/tr]");
-                            questionTextBuffer.append("[tr][td leftTd]Foreign Invoice Total Prior to Additional Charges:[/td][td rightTd]" + (String) cf.format(new KualiDecimal(invoiceDocument.getInvoicedForeignItemTotal())) + "[/td][/tr]");
-                            questionTextBuffer.append("[tr][td leftTd]Foreign Grand Total:[/td][td rightTd]" + (String) cf.format(new KualiDecimal(invoiceDocument.getInvoicedForeignGrandTotal())) + "[/td][/tr]");
-                        }
-                    }
-                }
-                questionTextBuffer.append("[/table]");
+            if (!invoiceAmount.equals(invoiceGrandTotal)) {
+                return prepareValidationMessage(invoiceDocument);
             }
+
         }
 
-        return questionTextBuffer.toString();
-
+        return  "";
     }
 
 
@@ -3094,5 +3039,79 @@ public class OleInvoiceServiceImpl extends InvoiceServiceImpl implements OleInvo
         continuingOrderType.add(PurapConstants.ORDER_TYPE_CONTINUING);
         return continuingOrderType;
     }
+
+    private String prepareValidationMessage(OleInvoiceDocument invoiceDocument) {
+
+        String questionText = null;
+        StringBuffer questionTextBuffer = new StringBuffer("");
+
+
+
+        //String questionText = super.createInvoiceNoMatchQuestionText(invoiceDocument);
+
+        CurrencyFormatter cf = new CurrencyFormatter();
+        //PaymentRequestDocument preq = (PaymentRequestDocument) invoiceDocument;
+
+
+        if (StringUtils.isNotBlank(invoiceDocument.getInvoiceCurrencyType())) {
+            String currencyType = getCurrencyType(invoiceDocument.getInvoiceCurrencyType());
+            if (StringUtils.isNotBlank(currencyType)) {
+                if (!currencyType.equalsIgnoreCase(OleSelectConstant.CURRENCY_TYPE_NAME) && invoiceDocument.getForeignVendorInvoiceAmount() != null) {
+                    questionText = SpringContext.getBean(ConfigurationService.class).getPropertyValueAsString(PurapKeyConstants.AP_QUESTION_CONFIRM_FOREIGN_INVOICE_MISMATCH);
+                    if (StringUtils.isNotBlank(invoiceDocument.getInvoiceCurrencyExchangeRate())) {
+                        try {
+                            Double.parseDouble(invoiceDocument.getInvoiceCurrencyExchangeRate());
+                        } catch (NumberFormatException nfe) {
+                            throw new RuntimeException("Invalid Exchange Rate", nfe);
+                        }
+                        invoiceDocument.setVendorInvoiceAmount(new KualiDecimal(invoiceDocument.getForeignVendorInvoiceAmount().divide(new BigDecimal(invoiceDocument.getInvoiceCurrencyExchangeRate()), 4, RoundingMode.HALF_UP)));
+                    } else {
+                        BigDecimal exchangeRate = getExchangeRate(invoiceDocument.getInvoiceCurrencyType()).getExchangeRate();
+                        invoiceDocument.setVendorInvoiceAmount(new KualiDecimal(invoiceDocument.getForeignVendorInvoiceAmount().divide(exchangeRate, 4, RoundingMode.HALF_UP)));
+                    }
+                }else{
+                    questionText = SpringContext.getBean(ConfigurationService.class).getPropertyValueAsString(PurapKeyConstants.AP_QUESTION_CONFIRM_INVOICE_MISMATCH);
+                }
+            }
+
+        }
+        questionText = StringUtils.replace(questionText, "{0}", "");
+        questionTextBuffer.append(questionText);
+
+        questionTextBuffer.append("[br][br][b]Summary Detail Below:[b][br][br][table questionTable]");
+        questionTextBuffer.append("[tr][td leftTd]Vendor Invoice Amount :[/td][td rightTd]" + (String) cf.format(invoiceDocument.getVendorInvoiceAmount()) + "[/td][/tr]");
+        questionTextBuffer.append("[tr][td leftTd]Invoice Total Prior to Additional Charges:[/td][td rightTd]" + (String) cf.format(new KualiDecimal(invoiceDocument.getInvoicedItemTotal())) + "[/td][/tr]");
+
+
+        //only add this line if payment request has a discount
+        if (invoiceDocument.isDiscount()) {
+            questionTextBuffer.append("[tr][td leftTd]Total Before Discount:[/td][td rightTd]" + (String) cf.format(invoiceDocument.getGrandPreTaxTotalExcludingDiscount()) + "[/td][/tr]");
+        }
+
+        //if sales tax is enabled, show additional summary lines
+        boolean salesTaxInd = SpringContext.getBean(ParameterService.class).getParameterValueAsBoolean(OleParameterConstants.PURCHASING_DOCUMENT.class, PurapParameterConstants.ENABLE_SALES_TAX_IND);
+        if (salesTaxInd) {
+            questionTextBuffer.append("[tr][td leftTd]Grand Total Prior to Tax:[/td][td rightTd]" + (String) cf.format(invoiceDocument.getGrandPreTaxTotal()) + "[/td][/tr]");
+            questionTextBuffer.append("[tr][td leftTd]Grand Total Tax:[/td][td rightTd]" + (String) cf.format(invoiceDocument.getGrandTaxAmount()) + "[/td][/tr]");
+        }
+
+        questionTextBuffer.append("[tr][td leftTd]Grand Total:[/td][td rightTd]" + (String) cf.format(new KualiDecimal(invoiceDocument.getInvoicedGrandTotal())) + "[/td][/tr]");
+
+        if (StringUtils.isNotBlank(invoiceDocument.getInvoiceCurrencyType())) {
+            String currencyType = getCurrencyType(invoiceDocument.getInvoiceCurrencyType());
+            if (StringUtils.isNotBlank(currencyType)) {
+                if (!currencyType.equalsIgnoreCase(OleSelectConstant.CURRENCY_TYPE_NAME)) {
+                    questionTextBuffer.append("[tr][td] [/td][/tr]");
+                    questionTextBuffer.append("[tr][td leftTd]Foreign Vendor Invoice Amount :[/td][td rightTd]" + (String) cf.format(new KualiDecimal(invoiceDocument.getForeignVendorInvoiceAmount())) + "[/td][/tr]");
+                    questionTextBuffer.append("[tr][td leftTd]Foreign Invoice Total Prior to Additional Charges:[/td][td rightTd]" + (String) cf.format(new KualiDecimal(invoiceDocument.getInvoicedForeignItemTotal())) + "[/td][/tr]");
+                    questionTextBuffer.append("[tr][td leftTd]Foreign Grand Total:[/td][td rightTd]" + (String) cf.format(new KualiDecimal(invoiceDocument.getInvoicedForeignGrandTotal())) + "[/td][/tr]");
+                }
+            }
+        }
+        questionTextBuffer.append("[/table]");
+
+        return questionTextBuffer.toString();
+    }
+
 
 }
