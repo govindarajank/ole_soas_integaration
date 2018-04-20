@@ -324,7 +324,7 @@
     <bean id="InvoicePopupButtonForAmountValidation-HorizontalBoxSection" parent="Uif-HorizontalBoxSubSection" p:disclosure.render="true">
         <property name="items">
             <list>
-                <bean id="continue_invoice" parent="Uif-SecondaryActionButton-Small" p:methodToCall="continueInvoiceRoute" p:actionLabel="Continue" p:ajaxSubmit="true"  p:successCallback="closeInvoiceValidationPopUp();" p:render="@{document.validationFlag}"/>
+                <bean id="continue_invoice" parent="Uif-SecondaryActionButton-Small" p:methodToCall="continueInvoiceRoute" p:actionLabel="Continue" p:ajaxSubmit="true"  p:successCallback="closeInvoiceValidationPopUp();" p:render="false"/>
 
                 <bean id="cancel_invoice" parent="Uif-SecondaryActionButton-Small" p:methodToCall="cancelInvoiceRoute" p:actionLabel="Cancel" p:ajaxSubmit="true"  p:successCallback="closeInvoiceValidationPopUp()" p:render="@{document.validationFlag}"/>
             </list>
@@ -385,7 +385,7 @@
     <bean id="InvoicePopupButtonForBlanketApproveAmountValidation" parent="Uif-HorizontalBoxSubSection" p:disclosure.render="true">
         <property name="items">
             <list>
-                <bean id="continue_blanketApprove_invoice" parent="Uif-SecondaryActionButton-Small" p:methodToCall="continueInvoiceBlanketApprove" p:actionLabel="Continue" p:ajaxSubmit="true"  p:successCallback="closeInvoiceBlanketApproveValidationPopUp();successConfirmationBlanketApprove();" p:render="@{document.blanketApproveValidationFlag}"/>
+                <bean id="continue_blanketApprove_invoice" parent="Uif-SecondaryActionButton-Small" p:methodToCall="continueInvoiceBlanketApprove" p:actionLabel="Continue" p:ajaxSubmit="true"  p:successCallback="closeInvoiceBlanketApproveValidationPopUp();successConfirmationBlanketApprove();" p:render="false"/>
 
                 <bean id="cancel_blanketApprove_invoice" parent="Uif-SecondaryActionButton-Small" p:methodToCall="cancelInvoiceBlanketApprove" p:actionLabel="Cancel" p:ajaxSubmit="true"  p:successCallback="closeInvoiceBlanketApproveValidationPopUp()" p:render="@{document.blanketApproveValidationFlag}"/>
             </list>
