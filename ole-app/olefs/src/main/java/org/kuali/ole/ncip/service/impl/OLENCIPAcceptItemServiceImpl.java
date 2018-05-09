@@ -214,22 +214,16 @@ public class OLENCIPAcceptItemServiceImpl extends OLENCIPUtil implements OLEAcce
         String itemIdentifier = null;
         String bibId = null;
         BibTrees bibTrees = null;
-        String operatorName = null;
         try {
             if(StringUtils.isNotBlank(operatorId)) {
                 IdentityManagementServiceImpl identityManagementService = new IdentityManagementServiceImpl();
                 Principal principal = identityManagementService.getPrincipal(operatorId);
                 if(principal!=null) {
-                    operatorName = principal.getPrincipalName();
+                    operatorId = principal.getPrincipalName();
                 }
             }
             Long startCreationOfItemTime = System.currentTimeMillis();
-            if(StringUtils.isNotBlank(operatorName)) {
-                bibTrees = getOleCirculationHelperService().createItem(itemBarcode, callNumber, title, author, itemType, location, operatorName);
-            }
-            else {
-                bibTrees = getOleCirculationHelperService().createItem(itemBarcode, callNumber, title, author, itemType, location, operatorId);
-            }
+            bibTrees = getOleCirculationHelperService().createItem(itemBarcode, callNumber, title, author, itemType, location, operatorId);
             Long endCreationOfItemTime = System.currentTimeMillis();
             LOG.info("Time taken to create item : " + (endCreationOfItemTime - startCreationOfItemTime));
         } catch (Exception e) {
