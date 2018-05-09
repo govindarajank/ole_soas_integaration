@@ -1877,9 +1877,8 @@ public class OleDeliverRequestDocumentHelperServiceImpl {
             oleDeliverRequestBo = oleDeliverRequestBoList.get(0);
             OleDeliverRequestHistoryRecord oleDeliverRequestHistoryRecord = new OleDeliverRequestHistoryRecord();
             oleDeliverRequestHistoryRecord.setRequestId(oleDeliverRequestBo.getRequestId());
-            oleDeliverRequestHistoryRecord.setItemId(DocumentUniqueIDPrefix.getDocumentId(oleDeliverRequestBo.getItemUuid()));
             oleDeliverRequestHistoryRecord.setPatronId(oleDeliverRequestBo.getOlePatron() != null ? oleDeliverRequestBo.getOlePatron().getOlePatronId() : null);
-            oleDeliverRequestHistoryRecord.setItemBarcode(oleDeliverRequestBo.getItemId());
+            oleDeliverRequestHistoryRecord.setItemId(oleDeliverRequestBo.getItemId());
             oleDeliverRequestHistoryRecord.setArchiveDate(new java.sql.Date(System.currentTimeMillis()));
             oleDeliverRequestHistoryRecord.setPickUpLocationCode(oleDeliverRequestBo.getPickUpLocationCode());
             oleDeliverRequestHistoryRecord.setCreateDate(oleDeliverRequestBo.getCreateDate());
@@ -2044,6 +2043,13 @@ public class OleDeliverRequestDocumentHelperServiceImpl {
                     courtesyNoticesExecutorService.shutdown();
                 }
             }
+        }
+    }
+
+
+    public void reExecuteUnDeletedNotices(List<String> loanIdList, LoanNoticesExecutor noticesExecutor, ExecutorService noticeExecutorService){
+        if(CollectionUtils.isNotEmpty(loanIdList) && loanIdList.size() > 0){
+
         }
     }
 
@@ -2693,32 +2699,6 @@ public class OleDeliverRequestDocumentHelperServiceImpl {
                                     String fieldValue = searchResultField.getFieldValue() != null ? searchResultField.getFieldValue() : "";
                                     if (fieldName.equalsIgnoreCase("id") && !fieldValue.isEmpty() && searchResultField.getDocType().equalsIgnoreCase("holdings")) {
                                         holdingsId = fieldValue;
-                                    } else {
-                                        oleDeliverRequestBo.setItemUuid(fieldValue);
-                                        itemUUID = fieldValue;
-                                    }
-                                }
-                            }
-                        } catch (Exception ex) {
-                            GlobalVariables.getMessageMap().putError(KRADConstants.GLOBAL_ERRORS, ConfigContext.getCurrentContextConfig().getProperty(OLEConstants.ITEM_EXIST));
-                            LOG.error(OLEConstants.ITEM_EXIST + ex);
-                        }
-                    }else if (StringUtils.isBlank(itemBarcode)) {
-                        try {
-                            org.kuali.ole.docstore.common.document.Item item = new ItemOleml();
-                            org.kuali.ole.docstore.common.search.SearchParams search_Params = new org.kuali.ole.docstore.common.search.SearchParams();
-                            SearchResponse searchResponse = null;
-                            search_Params.getSearchConditions().add(search_Params.buildSearchCondition("phrase", search_Params.buildSearchField(org.kuali.ole.docstore.common.document.content.enums.DocType.ITEM.getCode(), item.ID, (itemIdentifier.contains("wio-") ? itemIdentifier : "wio-"+itemIdentifier)), ""));
-                            search_Params.getSearchResultFields().add(search_Params.buildSearchResultField(org.kuali.ole.docstore.common.document.content.enums.DocType.ITEM.getCode(), "id"));
-                            search_Params.getSearchResultFields().add(search_Params.buildSearchResultField(org.kuali.ole.docstore.common.document.content.enums.DocType.ITEM.getCode(), "ItemBarcode_display"));
-
-                            searchResponse = getDocstoreClientLocator().getDocstoreClient().search(search_Params);
-                            for (SearchResult searchResult : searchResponse.getSearchResults()) {
-                                for (SearchResultField searchResultField : searchResult.getSearchResultFields()) {
-                                    String fieldName = searchResultField.getFieldName();
-                                    String fieldValue = searchResultField.getFieldValue() != null ? searchResultField.getFieldValue() : "";
-                                    if (fieldName.equalsIgnoreCase(OLEConstants.ITEMBARCODE_DISPLAY)) {
-                                        itemBarcode = fieldValue;
                                     } else {
                                         oleDeliverRequestBo.setItemUuid(fieldValue);
                                         itemUUID = fieldValue;
@@ -4229,8 +4209,10 @@ public class OleDeliverRequestDocumentHelperServiceImpl {
                     }
                     try {
                         List<OleLoanDocument> processedLoanDocuments = buildSearchResultsFields(searchResponse, loanDocumentMap);
-                        if(!processedLoanDocuments.isEmpty())
+                        if(processedLoanDocuments.size() == 0)
                         {
+                            loanDocumentsWithItemInfo.addAll(oleLoanDocumentList);
+                        }else{
                             loanDocumentsWithItemInfo.addAll(processedLoanDocuments);
                         }
                     } catch (Exception e) {
