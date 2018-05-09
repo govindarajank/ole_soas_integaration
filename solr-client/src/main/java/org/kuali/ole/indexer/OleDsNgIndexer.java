@@ -348,6 +348,7 @@ public abstract class OleDsNgIndexer extends MarcUtil {
         if (null != date) {
             try {
                 DateFormat dateFormat1 = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+                dateFormat1.setTimeZone(TimeZone.getTimeZone("BST"));
                 synchronized (dateFormat1) {
                     return dateFormat1.format(date);
                 }

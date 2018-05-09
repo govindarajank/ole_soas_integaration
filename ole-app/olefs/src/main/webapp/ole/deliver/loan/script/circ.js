@@ -187,7 +187,8 @@ jq(window).load(function () {
 });
 
 function validateCheckInDate() {
-    var checkInDate = (jq("#checkinCustomDueDate_control").val());
+    var checkInDate = jq("#checkinCustomDueDate_control").val().split(/\//).reverse().join('/');
+    checkInDate = new Date(checkInDate);
     jq('#alertBoxSectionForCheckinCustomDueDate').attr('style', 'display:none');
     if (!jq.trim(checkInDate) == "") {
         if (jq("#checkinCustomDueDate_control").valid()) {
@@ -198,15 +199,17 @@ function validateCheckInDate() {
             currentDate.setHours(0);*/
             var today = new Date();
             var dd = today.getDate();
-            var mm = today.getMonth()+1;
+            var mm = today.getMonth() + 1;
             var yyyy = today.getFullYear();
-            if(dd<10) {
+            if (dd < 10) {
                 dd = '0' + dd;
             }
-            if(mm<10) {
+            if (mm < 10) {
                 mm = '0' + mm;
             }
-            var currentDate = dd+'/'+mm+'/'+yyyy;
+            var currentDate = yyyy + '/' + mm + '/' + dd;
+
+            currentDate = new Date(currentDate);
             if (currentDate > checkInDate) {
                 jq('#alertBoxSectionForCheckinCustomDueDate').attr('style', 'display:inline');
             } else if (currentDate < checkInDate) {

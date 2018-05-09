@@ -43,12 +43,12 @@ public class InvoiceFileRecordProcessor{
         record.replace(pos - 1, pos + length, String.format("%-" + length + "s",s));
     }
 
-    public BusinessObjectService getBusinessObjectService() {
+    /*public BusinessObjectService getBusinessObjectService() {
         if (null == businessObjectService) {
             businessObjectService = KRADServiceLocator.getBusinessObjectService();
         }
         return businessObjectService;
-    }
+    }*/
 
     public Timestamp getPreviousRunDate(){
         String parameter = getParameterAgresso(OLEConstants.AgressoCreateFile.LASTBATCHJOBRUNDATE);
@@ -66,7 +66,7 @@ public class InvoiceFileRecordProcessor{
         return null;
     }
 
-    public List<String> getInvoiceDocumentIds(){
+    /*public List<String> getInvoiceDocumentIds(){
         String previousDate = "";
         Timestamp previousRunDateTime = getPreviousRunDate();
         if(previousRunDateTime != null){
@@ -85,26 +85,27 @@ public class InvoiceFileRecordProcessor{
         ResultSet invoiceIdResultSet=null;
         String query = "SELECT D.DOC_HDR_ID FROM KREW_DOC_HDR_T D,KREW_DOC_TYP_T T WHERE D.DOC_TYP_ID = T.DOC_TYP_ID AND D.DOC_HDR_STAT_CD = 'F' AND T.DOC_TYP_NM='OLE_PRQS' AND (D.CRTE_DT BETWEEN '"+previousDate+"' AND '"+currentDate+"')";
         try {
-            PreparedStatement statement = getConnection().prepareStatement(query);
+            Connection connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
             invoiceIdResultSet = statement.executeQuery(query);
             while (invoiceIdResultSet.next()) {
                 invoiceIdList.add(invoiceIdResultSet.getString(1));
             }
             statement.close();
-            getConnection().close();
+            connection.close();
             return invoiceIdList;
         }catch (Exception e){
             e.printStackTrace();
             return null;
         }
-    }
+    }*/
 
-    public String getFormatedDate(Date lastExportDate) {
+    /*public String getFormatedDate(Date lastExportDate) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return format.format(lastExportDate);
-    }
+    }*/
 
-    private Connection getConnection() throws SQLException {
+    /*private Connection getConnection() throws SQLException {
         DataSource dataSource = null;
         try {
             dataSource = DataSource.getInstance();
@@ -116,7 +117,7 @@ public class InvoiceFileRecordProcessor{
            e.printStackTrace();
         }
         return dataSource.getConnection();
-    }
+    }*/
 
     public String toString() {
         return record.toString();
@@ -143,7 +144,7 @@ public class InvoiceFileRecordProcessor{
         }
     }
 
-    public List<String> isDocumentFinal(List<String> documentNbr){
+    /*public List<String> isDocumentFinal(List<String> documentNbr){
         List<String> documentNbrs = new ArrayList<>();
         String document = "";
         String prefix = "";
@@ -166,5 +167,5 @@ public class InvoiceFileRecordProcessor{
             e.printStackTrace();
             return documentNbrs;
         }
-    }
+    }*/
 }
