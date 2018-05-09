@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -251,6 +252,41 @@ public class ExportDao extends PlatformAwareDaoBaseJdbc {
             callNumberType.put(resultSet.getString("SHVLG_SCHM_ID"), resultSet.getString("SHVLG_SCHM_CD") + "|" + resultSet.getString("SHVLG_SCHM_NM"));
         }
         commonFields.put("callNumberType", callNumberType);
+    }
+
+    public List<String> getInvoiceDocumentId() throws SQLException {
+        List<String> invoiceList = new ArrayList<>();
+        String previousRunDateTime = ParameterValueResolver.getInstance().getParameter(OLEConstants
+                .APPL_ID_OLE, OLEConstants.SELECT_NMSPC, OLEConstants.SELECT_CMPNT, OLEConstants.AgressoCreateFile.LASTBATCHJOBRUNDATE);
+        String currentDateString= "";
+        Date currentDate = new Date();
+        SimpleDateFormat datetimeFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss");
+        try {
+            currentDateString = datetimeFormat.format(currentDate);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        SqlRowSet resultSet = getJdbcTemplate().queryForRowSet("SELECT D.DOC_HDR_ID FROM KREW_DOC_HDR_T D,KREW_DOC_TYP_T T WHERE D.DOC_TYP_ID = T.DOC_TYP_ID AND D.DOC_HDR_STAT_CD = 'F' AND T.DOC_TYP_NM='OLE_PRQS' AND (D.CRTE_DT BETWEEN '"+previousRunDateTime+"' AND '"+currentDateString+"')");
+        while (resultSet.next()) {
+            invoiceList.add(resultSet.getString("DOC_HDR_ID"));
+        }
+        return invoiceList;
+    }
+
+    public List<String> isDocumentFinal(List<String> documentNbr) throws SQLException {
+        List<String> documentNbrs = new ArrayList<>();
+        String document = "";
+        String prefix = "";
+        for(String doc : documentNbr) {
+            document = document +prefix+ doc ;
+            prefix =",";
+        }
+        SqlRowSet resultSet = getJdbcTemplate().queryForRowSet("SELECT D.DOC_HDR_ID FROM KREW_DOC_HDR_T D WHERE D.DOC_HDR_STAT_CD = 'F' AND D.DOC_HDR_ID in("+document +")");
+        while (resultSet.next()) {
+            documentNbrs.add(resultSet.getString("DOC_HDR_ID"));
+        }
+        return documentNbrs;
     }
 
     private void fetchReceiptStatus() throws SQLException {
