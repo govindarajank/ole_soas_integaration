@@ -2,6 +2,7 @@ package org.kuali.ole.oleng.dao.export;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.common.SolrDocumentList;
 import org.kuali.ole.OLEConstants;
@@ -9,6 +10,7 @@ import org.kuali.ole.constants.OleNGConstants;
 import org.kuali.ole.deliver.service.ParameterValueResolver;
 import org.kuali.ole.docstore.common.response.OleNGBatchExportResponse;
 import org.kuali.ole.docstore.engine.service.storage.rdbms.pojo.BibDeletionRecord;
+import org.kuali.ole.module.purap.PurapConstants;
 import org.kuali.ole.oleng.batch.process.model.BatchProcessTxObject;
 import org.kuali.ole.oleng.batch.profile.model.BatchProfileFilterCriteria;
 import org.kuali.ole.oleng.handler.BatchExportHandler;
@@ -18,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -254,39 +257,37 @@ public class ExportDao extends PlatformAwareDaoBaseJdbc {
         commonFields.put("callNumberType", callNumberType);
     }
 
-    public List<String> getInvoiceDocumentId() throws SQLException {
-        List<String> invoiceList = new ArrayList<>();
+    public List<String> getDocumentIds(String endDate,String docTypeName) throws SQLException {
+        List<String> documentIdList = new ArrayList<>();
         String previousRunDateTime = ParameterValueResolver.getInstance().getParameter(OLEConstants
                 .APPL_ID_OLE, OLEConstants.SELECT_NMSPC, OLEConstants.SELECT_CMPNT, OLEConstants.AgressoCreateFile.LASTBATCHJOBRUNDATE);
-        String currentDateString= "";
-        Date currentDate = new Date();
-        SimpleDateFormat datetimeFormat = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss");
-        try {
-            currentDateString = datetimeFormat.format(currentDate);
-        }catch(Exception e){
+        Date previousRunDate = null;
+        DateFormat dfFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try{
+            previousRunDate = dfFormat.parse(previousRunDateTime);
+        }catch (Exception e){
             e.printStackTrace();
+            LOG.error("Unable to parse date");
         }
-        SqlRowSet resultSet = getJdbcTemplate().queryForRowSet("SELECT D.DOC_HDR_ID FROM KREW_DOC_HDR_T D,KREW_DOC_TYP_T T WHERE D.DOC_TYP_ID = T.DOC_TYP_ID AND D.DOC_HDR_STAT_CD = 'F' AND T.DOC_TYP_NM='OLE_PRQS' AND (D.CRTE_DT BETWEEN '"+previousRunDateTime+"' AND '"+currentDateString+"')");
-        while (resultSet.next()) {
-            invoiceList.add(resultSet.getString("DOC_HDR_ID"));
-        }
-        return invoiceList;
-    }
 
-    public List<String> isDocumentFinal(List<String> documentNbr) throws SQLException {
-        List<String> documentNbrs = new ArrayList<>();
-        String document = "";
-        String prefix = "";
-        for(String doc : documentNbr) {
-            document = document +prefix+ doc ;
-            prefix =",";
+        String query = "";
+        if(docTypeName.equals(PurapConstants.PurapDocTypeCodes.INVOICE_DOCUMENT)){
+            if(previousRunDate != null){
+                previousRunDate = DateUtils.addMinutes(previousRunDate,-1);
+                previousRunDateTime = dfFormat.format(previousRunDate);
+            }
+            query = "SELECT D.DOC_HDR_ID FROM KREW_DOC_HDR_T D,KREW_DOC_TYP_T T WHERE D.DOC_TYP_ID = T.DOC_TYP_ID AND D.DOC_HDR_STAT_CD = 'F' AND T.DOC_TYP_NM='"+ docTypeName +"' AND (D.APRV_DT BETWEEN '"+previousRunDateTime+"' AND '"+endDate+"')";
+        }else{
+            if(previousRunDate != null) {
+                previousRunDateTime = new SimpleDateFormat("yyyy-MM-dd").format(previousRunDate);
+            }
+            query = "SELECT D.DOC_HDR_ID FROM KREW_DOC_HDR_T D,KREW_DOC_TYP_T T WHERE D.DOC_TYP_ID = T.DOC_TYP_ID AND D.DOC_HDR_STAT_CD = 'F' AND T.DOC_TYP_NM='"+ docTypeName +"' AND (D.CRTE_DT BETWEEN '"+previousRunDateTime+"' AND '"+endDate+"')";
         }
-        SqlRowSet resultSet = getJdbcTemplate().queryForRowSet("SELECT D.DOC_HDR_ID FROM KREW_DOC_HDR_T D WHERE D.DOC_HDR_STAT_CD = 'F' AND D.DOC_HDR_ID in("+document +")");
+        SqlRowSet resultSet = getJdbcTemplate().queryForRowSet(query);
         while (resultSet.next()) {
-            documentNbrs.add(resultSet.getString("DOC_HDR_ID"));
+            documentIdList.add(resultSet.getString("DOC_HDR_ID"));
         }
-        return documentNbrs;
+        return documentIdList;
     }
 
     private void fetchReceiptStatus() throws SQLException {
