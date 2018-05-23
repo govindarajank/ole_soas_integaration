@@ -2504,6 +2504,7 @@ public class OleInvoiceDocument extends InvoiceDocument implements Copyable {
        // this.setRelatedViews(null);
         this.setInvoiceNumber("");
         this.setNoteLine1Text("");
+        this.setInvoiceExtractDate("");
 
         Person currentUser = GlobalVariables.getUserSession().getPerson();
         this.setPurapDocumentIdentifier(null);

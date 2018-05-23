@@ -238,12 +238,12 @@ public class OleOverDueNotice {
     }
 
     public void generateAgressoFile() {
-        LOG.debug("Start of scheduled job to execute deleteRequestHistory.");
+        LOG.debug("Start of scheduled job to execute generate Agresso File.");
         try {
             invoiceFileService= getInvoiceFileService();
             invoiceFileService.createFile();
         } catch (Exception ex) {
-            LOG.error("Exception occurred while performing deleteReturnHistory", ex);
+            LOG.error("Exception occurred while performing generation of Agresso File", ex);
         }
 
     }
