@@ -124,7 +124,7 @@
     <ehcache.version>2.5.0</ehcache.version>
     <filemonitor.version>1.0-kuali</filemonitor.version>
     <freemarker.version>2.3.20-patch2</freemarker.version>
-    <plexus-utils.version>3.0.10</plexus-utils.version>
+    <plexus-utils.version>3.0.16</plexus-utils.version>
     <lesscss.version>1.3.3</lesscss.version>
     <yuicompressor.version>2.4.7</yuicompressor.version>
     <closure.version>v20130603</closure.version>
