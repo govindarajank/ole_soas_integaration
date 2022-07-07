@@ -164,7 +164,7 @@
       Quartz 2.0.x is an impacting api and database-level change -->
     <quartz.version>1.8.4</quartz.version>
     <selenium-java.version>2.33.0</selenium-java.version>
-    <xalan.version>2.7.1</xalan.version>
+    <xalan.version>2.7.2</xalan.version>
     <serializer.version>2.7.1</serializer.version>
     <servlet-api.version>2.5</servlet-api.version>
     <slf4j.version>1.6.4</slf4j.version>
